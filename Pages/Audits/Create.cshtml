@@ -1,0 +1,64 @@
+﻿@page
+@model Van_Authentication.Pages.Audits.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Audit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Audit.CreatedAt" class="control-label"></label>
+                <input asp-for="Audit.CreatedAt" class="form-control" />
+                <span asp-validation-for="Audit.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Shift" class="control-label"></label>
+                <select asp-for="Audit.Shift" class="form-control"></select>
+                <span asp-validation-for="Audit.Shift" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Auditor" class="control-label"></label>
+                <input asp-for="Audit.Auditor" class="form-control" />
+                <span asp-validation-for="Audit.Auditor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Line" class="control-label"></label>
+                <input asp-for="Audit.Line" class="form-control" />
+                <span asp-validation-for="Audit.Line" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Route" class="control-label"></label>
+                <input asp-for="Audit.Route" class="form-control" />
+                <span asp-validation-for="Audit.Route" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Barcode" class="control-label"></label>
+                <input asp-for="Audit.Barcode" class="form-control" />
+                <span asp-validation-for="Audit.Barcode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Result" class="control-label"></label>
+                <input asp-for="Audit.Result" class="form-control" />
+                <span asp-validation-for="Audit.Result" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

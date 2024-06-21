@@ -1,0 +1,26 @@
+﻿@page
+@model Van_Authentication.Pages.HistoryModel
+@{
+}
+
+<h2 class="text-center">Audit History</h2>
+
+<div>
+    First name: @Model.appUser?.FirstName
+</div>
+
+<div>
+    Last name: @Model.appUser?.LastName
+</div>
+
+<div>
+    Shift: @Model.appUser?.Shift
+</div>
+
+<div>
+    Line: @Model.appUser?.Line
+</div>
+
+<div>
+    Created At: @Model.appUser?.CreatedAt.ToString("MM/dd/yyyy")
+</div>

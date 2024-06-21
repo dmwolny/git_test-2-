@@ -1,0 +1,84 @@
+﻿@page "{Line?}"
+@model Van_Authentication.Pages.Robots.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Robots</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<form asp-page="./Index" method="get">
+    <label class="control-label">Pick a Line</label>
+    <select class="form-control" asp-items="@Model.RobotNameSL" name="Line">
+        <option value="">-- Select Line --</option>
+    </select>
+    <input type="submit" value="Select" class="btn btn-primary" />
+</form>
+
+<div class="table-responsive card shadow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Robot[0].Line)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Robot[0].Station)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Robot[0].RobotNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Robot[0].Style)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Robot[0].Graphic)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(Model.Robot != null)
+            {
+               foreach (var item in Model.Robot)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Line)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Station)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RobotNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Style)
+                    </td>
+                    <td>
+                        @if(item.Graphic == null)
+                        {
+                            <img src="~/images/default.PNG" width="100"/>
+                        }
+                        else
+                        {
+                            <img src="~/images/@item.Graphic" width="100" />                            
+                        }
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.RobotID">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.RobotID">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.RobotID">Delete</a>
+                    </td>
+                </tr>
+            } 
+            }
+            
+        </tbody>
+    </table>
+</div>
+

@@ -1,0 +1,67 @@
+﻿@page "{id}"
+@model Van_Authentication.Pages.Robots.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Robot</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Robot.RobotID" />
+            <div class="form-group">
+                <label asp-for="robotDTO.Line" class="control-label"></label>
+                <input asp-for="robotDTO.Line" value="@Model.Robot.Line" class="form-control" />
+                <span asp-validation-for="Robot.Line" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="robotDTO.Station" class="control-label"></label>
+                <input asp-for="robotDTO.Station" value="@Model.Robot.Station" class="form-control" />
+                <span asp-validation-for="robotDTO.Station" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="robotDTO.RobotNumber" class="control-label"></label>
+                <input asp-for="robotDTO.RobotNumber" value="@Model.Robot.RobotNumber" class="form-control" />
+                <span asp-validation-for="robotDTO.RobotNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="robotDTO.Style" class="control-label"></label>
+                <input asp-for="robotDTO.Style" value="@Model.Robot.Style" class="form-control" />
+                <span asp-validation-for="robotDTO.Style" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                @if (Model.Robot.Graphic == null)
+                {
+                    <img src="~/images/default.PNG" width="250" class="shadow my-2" />
+                }
+                else
+                {
+                    <img src="~/images/@Model.Robot.Graphic" width="250" class="shadow my-2" />
+                }
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" asp-for="robotDTO.ImageFile" />
+                <span asp-validation-for="robotDTO.ImageFile" class="text-danger"></span>
+            </div>           
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary mt-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

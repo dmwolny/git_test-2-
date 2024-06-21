@@ -1,0 +1,79 @@
+﻿@page
+@model Van_Authentication.Pages.Robots.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto rounded border p-3 bg-white shadow">
+        <h2 class="text-center mb-5">New Robot</h2>
+
+        @if (Model.errorMessage.Length > 0)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>@Model.errorMessage</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        else if (Model.successMessage.Length > 0)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@Model.successMessage</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Line</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="RobotDTO.Line" />
+                    <span asp-validation-for="RobotDTO.Line" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Station</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="RobotDTO.Station" />
+                    <span asp-validation-for="RobotDTO.Station" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Robot #</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="RobotDTO.RobotNumber" />
+                    <span asp-validation-for="RobotDTO.RobotNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Style</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="RobotDTO.Style" />
+                    <span asp-validation-for="RobotDTO.Style" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Graphic</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="RobotDTO.ImageFile" />
+                    <span asp-validation-for="RobotDTO.ImageFile" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="offset-sm-4 col-sm-4 d-grid">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                <div class="col-sm-4 d-grid">
+                    <a class="btn btn-outline-primary" href="/Robots/Index" role="button">Cancel</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

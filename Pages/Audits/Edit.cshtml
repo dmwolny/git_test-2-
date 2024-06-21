@@ -1,0 +1,119 @@
+﻿@page "{id}"
+@model Van_Authentication.Pages.Audits.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4>Audit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Audit.AuditID" />
+            <div class="form-group">
+                <label asp-for="Audit.CreatedAt" class="control-label"></label>
+                <input readonly asp-for="Audit.CreatedAt" class="form-control" />
+                <span asp-validation-for="Audit.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Shift" class="control-label"></label>
+                <select asp-for="Audit.Shift" class="form-control">
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                </select>
+                <span asp-validation-for="Audit.Shift" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Auditor" class="control-label"></label>
+                <input readonly asp-for="Audit.Auditor" class="form-control" />
+                <span asp-validation-for="Audit.Auditor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Line" class="control-label"></label>
+                <input asp-for="Audit.Line" class="form-control" />
+                <span asp-validation-for="Audit.Line" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Route" class="control-label"></label>
+                <input asp-for="Audit.Route" class="form-control" />
+                <span asp-validation-for="Audit.Route" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Barcode" class="control-label"></label>
+                <input asp-for="Audit.Barcode" class="form-control" />
+                <span asp-validation-for="Audit.Barcode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Add weld concern    
+                </button>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Notes" class="control-label"></label>
+                <textarea asp-for="Audit.Notes" class="form-control" />
+                </textarea>
+                <span asp-validation-for="Audit.Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Result" class="control-label"></label>
+                <input asp-for="Audit.Result" class="form-control" />
+                <span asp-validation-for="Audit.Result" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3> Weld Concerns</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               add drop down for:
+               <ul>Line</ul>
+               <ul>station</ul>
+               <ul>robotnumber</ul>
+               <ul>style</ul>
+                <input type="checkbox" value="TCP">
+                <label>TCP</label><br>
+
+                
+                    <a onclick="getWelds()" class="btn btn-primary">Get Welds</a>
+                
+                <partial name="_Robots" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        async function getWelds() {
+            var tr;
+            const response =  await fetch(`?handler=Welds`);
+            const welds = await response.json();
+            for (var i = 0; i < welds.length; i++) {
+                tr.append("<td>"+welds[i].WeldId + "</td>")
+            }
+        }
+    </script>
+}
