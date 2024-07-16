@@ -33,7 +33,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Audit.Line" class="control-label"></label>
-                <input asp-for="Audit.Line" class="form-control" />
+                <select asp-for="Audit.Line" class="form-control" asp-items="ViewBag.WorkStationName"></select>
                 <span asp-validation-for="Audit.Line" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -47,14 +47,10 @@
                 <span asp-validation-for="Audit.Barcode" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Add weld concern    
-                </button>
             </div>
             <div class="form-group">
                 <label asp-for="Audit.Notes" class="control-label"></label>
-                <textarea asp-for="Audit.Notes" class="form-control" />
-                </textarea>
+                <textarea asp-for="Audit.Notes" class="form-control" >@Model.Audit.Notes</textarea>
                 <span asp-validation-for="Audit.Notes" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -63,14 +59,110 @@
                 <span asp-validation-for="Audit.Result" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Add weld concern
+                </button>
+                <input type="submit" value="Submit" class="btn btn-primary"/>
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
+        <div>
+            <a asp-page="./Index">Back to List</a>
+        </div>
+    </div>
+    <div class="col-md-8">
+        @if (Model.AlertMessage.Length > 0)
+        {
+            <div class="alert alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>@Model.AlertMessage</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label=""></button>
+            </div>
+        }
+        else
+        {
+            <label class="control-label">List of discrepant welds:</label>           
+        }
+
+        <div class="table-responsive card shadow">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="align-top">
+                            @Html.DisplayNameFor(model => model.WeldConcerns[0].Line)
+                        </th>
+                        <th class="align-top">
+                            @Html.DisplayNameFor(model => model.WeldConcerns[0].Station)
+                        </th>
+                        <th class="align-top">
+                            @Html.DisplayNameFor(model => model.WeldConcerns[0].RobotNumber)
+                        </th>
+                        <th class="align-top">
+                            @Html.DisplayNameFor(model => model.WeldConcerns[0].Style)
+                        </th>
+                        <th class="align-top">
+                            @Html.DisplayNameFor(model => model.WeldConcerns[0].WeldID)
+                        </th>
+                        <th class="align-top">
+                            @Html.DisplayNameFor(model => model.WeldConcerns[0].WeldType)
+                        </th>
+                        <th class="align-top">
+                            @Html.DisplayNameFor(model => model.WeldConcerns[0].NuggetSize)
+                        </th>
+                        <th class="align-top">
+                            @Html.DisplayNameFor(model => model.WeldConcerns[0].Defect)
+                        </th>
+                        <th class="align-top">
+                            @Html.DisplayNameFor(model => model.WeldConcerns[0].TcpID)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(Model.WeldConcerns != null)
+                    {
+                        foreach (var item in Model.WeldConcerns)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Line)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Station)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RobotNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Style)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.WeldID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.WeldType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NuggetSize)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Defect)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TcpID)
+                                </td>
+                                <td>
+                                    <a asp-page="./Edit" asp-route-id="@item.AuditID">Edit</a> |
+                                    <a asp-page="./Delete" asp-route-id="@item.AuditID">Delete</a>
+                                </td>
+                            </tr>
+                        }    
+                    }
+                  
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 <!-- Modal -->
@@ -79,25 +171,79 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3> Weld Concerns</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeIcon"></button>
             </div>
             <div class="modal-body">
-               add drop down for:
-               <ul>Line</ul>
-               <ul>station</ul>
-               <ul>robotnumber</ul>
-               <ul>style</ul>
-                <input type="checkbox" value="TCP">
-                <label>TCP</label><br>
+                    <form method="post">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <ul>
+                            <label class="control-label">Pick a Line</label>
+                            <select class="form-control" asp-items="@Model.RobotNameSL" name="Line" id="Line" asp-for="Line">
+                                <option value="">Select Line</option>
+                            </select>
+                        </ul>
+                        <ul>
+                            <select class="form-control" id="station" disabled asp-for="Station">
+                                <option selected disabled>Select Station</option>
+                            </select>
+                        </ul>
+                        <ul>
+                            <select class="form-control" id="robotNumber" disabled asp-for="RobotNumber">
+                                <option selected disabled>Select Robot #</option>
+                            </select>
+                        </ul>
+                        <ul>
+                            <select class="form-control" id="style" disabled asp-for="Style">
+                                <option selected disabled>Select Style</option>
+                            </select>
+                        </ul>
+                    </div>
+                    <div class="col-sm-9">
+                        <ul id="robotGraphic">                          
+                            
+                        </ul>
+                    </div>
+                </div>
+               
 
                 
-                    <a onclick="getWelds()" class="btn btn-primary">Get Welds</a>
+                <button type="button" onclick="getWelds()" class="btn btn-primary" id="getWeldsBtn" disabled>Get Welds</button>
                 
-                <partial name="_Robots" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Add</button>
+                <div class="form-check checkbox">
+                            <input class="form-check-input" type="checkbox" id="tcpcheckbox" asp-for="TcpCheckbox">
+                    <label class="form-check-label" for="tcpcheckbox">
+                        TCP
+                    </label>
+                </div>
+                <table class="table" style="display:none;" id="weldList">
+                    <thead>
+                        <tr>
+                            <th>
+                                Weld #
+                            </th>
+                            <th>
+                                Weld Type
+                            </th>
+                            <th>
+                                Nugget Size
+                            </th>
+                            <th>
+                                Defect
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="welds">
+                    </tbody>
+                </table>
+
+                <div class="modal-footer" id="modalFooter">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeBtn">Close</button>
+                    <button type="submit" class="btn btn-primary" id="addBtn" asp-page-handler="AddConcerns" asp-route-tcp="false" disabled>Add</button>
+                </div>
+                </form>
+                
+
             </div>
         </div>
     </div>
@@ -107,13 +253,295 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+        document.getElementById("addBtn").addEventListener("click", async function () {
+                let tcp = document.getElementById("tcpcheckbox").checked;
+                let lineValue = document.getElementById("Line").value;
+                let stationValue = document.getElementById("station").value;
+                let robotValue = document.getElementById("robotNumber").value;
+                let styleValue = document.getElementById("style").value;
+            console.log(tcp + lineValue + stationValue + robotValue + styleValue);
+
+                await fetch(`?handler=AddConcerns`,{
+                    method: "POST",
+                    body: WeldDTO,
+                    headers:
+                    {
+                        "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                    }
+                    }).then(response => response.json());
+        });
+
         async function getWelds() {
-            var tr;
-            const response =  await fetch(`?handler=Welds`);
+            let lineValue = document.getElementById("Line").value;
+            let stationValue = document.getElementById("station").value;
+            let robotValue = document.getElementById("robotNumber").value;
+            let styleValue = document.getElementById("style").value;
+
+            //call handler with robot parameters
+            const response = await fetch(`?handler=Welds&Line=` + encodeURIComponent(lineValue)
+                + "&Station=" + encodeURIComponent(stationValue)
+                + "&RobotNumber=" + encodeURIComponent(robotValue)
+                + "&Style=" + encodeURIComponent(styleValue));
             const welds = await response.json();
-            for (var i = 0; i < welds.length; i++) {
-                tr.append("<td>"+welds[i].WeldId + "</td>")
+            var JSONwelds = JSON.parse(welds);
+
+            //if no welds are found for this robot
+            //then display a message
+            if (JSONwelds[0].WeldID == 0) {
+                let warning = document.createElement("div");
+                warning.classList = "alert alert-danger alert-dismissible fade show";
+                warning.role ="alert";
+                let text = document.createTextNode("No welds found associated with this robot");
+                warning.appendChild(text);
+                document.getElementById("robotGraphic").innerHTML = '';
+                document.getElementById("robotGraphic").appendChild(warning);
+                document.getElementById("welds").innerHTML = '';
             }
+            else //get welds and add them to the welds concern table
+            {
+                getImage(JSONwelds);
+                JSONwelds = JSONwelds.map(row => { return { WeldID: row.WeldID, WeldType: row.WeldType, NuggetSize: row.NuggetSize } });
+                tableCreate(JSONwelds);
+                document.getElementById("addBtn").removeAttribute('disabled');
+            }
+
         }
+
+        function getImage(JSONobj) {            
+            var graphic = document.getElementById("robotGraphic");
+            graphic.innerHTML = '';
+            graphic.innerHTML += "<img src='/images/" + JSONobj[0].Graphic + "' class='img-fluid'/>";
+        }
+
+        function tableCreate(JSONobj) {
+            //Make table header visible
+            document.getElementById("weldList").removeAttribute("style");
+            //Tbody reference
+            var body = document.getElementById("welds");
+            //remove all child elements
+            body.innerHTML = '';
+
+
+            // create element <tbody>
+            var tblBody = document.createElement("tbody");
+
+            // cells creation
+            var i = 0;
+            JSONobj.forEach((item) => {
+                // table row creation
+                var row = document.createElement("tr");
+                
+                for (var key in item) {
+                    // create element <td> and text node
+                    //Make text node the contents of <td> element
+                    // put <td> at end of the table row
+                    var cell = document.createElement("td");
+                    var formInput = document.createElement("input");
+                    formInput.name = "WeldDTO["+i+"]."+key;
+                    //formInput.readOnly = true;
+                    formInput.value = item[key];
+                    formInput.classList = "form-control";
+                    formInput.style = "border: 0; pointer-events: none;"
+                    var cellText = document.createTextNode(item[key]);
+
+                    cell.appendChild(formInput);
+                    row.appendChild(cell);
+                }                
+
+                //add dropdown menu to last column
+                const drop = defectDropDrop(i);
+                var column = document.createElement("td");
+
+                column.appendChild(drop);
+                row.appendChild(column);
+                //row added to end of table body
+                body.appendChild(row);
+                i++;
+            });
+        }
+
+        function defectDropDrop(i) {
+            //Create array of options to be added
+            var array = ["Indentation", "Misalignment", "Blowthrough", "Scratch", "Edge Weld", "Missing", "Expulsion"];
+
+            //Create and append select list
+            var selectList = document.createElement("select");
+            selectList.name = "WeldDTO[" + i + "].Graphic";
+            selectList.classList = "form-control";
+            var first = document.createElement("option");
+            first.value = null;
+            first.text = "-- Defect --";
+            first.disabled = true;
+            first.selected = true;
+            selectList.appendChild(first);
+
+            //Create and append the options
+            for (var i = 0; i < array.length; i++) {
+                var option = document.createElement("option");
+                option.value = array[i];
+                option.text = array[i];
+                selectList.appendChild(option);
+            }
+
+            return selectList;
+        }
+
+        function closeModal() {
+            
+            //body reference
+            document.getElementById("weldList").style.display = 'none';
+            var body = document.getElementById("welds");
+            //remove all child elements
+            body.innerHTML = '';
+            //remove image
+            var graphic = document.getElementById("robotGraphic");
+            graphic.innerHTML = '';
+        }
+
+
+        // EVENT LISTENERS
+        // Close the Modal
+        document.getElementById("closeBtn").addEventListener("click", function (e) { closeModal() });
+        document.getElementById("closeIcon").addEventListener("click", function (e) { closeModal() });
+        // Track changes in the Line, Barcode and Notes sections
+        // save changes to sessionStorage
+        let route = document.getElementById("Audit_Route");
+        route.addEventListener("change", () => {
+            sessionStorage.setItem("route", route.value);
+        })
+
+        // reset the input values on page refresh
+        if (sessionStorage.getItem("route")) {
+            route.value = sessionStorage.getItem("route");
+        }
+
+        var getParentAnchor = function (element) {
+            while (element !== null) {
+                if (element.tagName && element.tagName.toUpperCase() === "A") {
+                    return element;
+                }
+                element = element.parentNode;
+            }
+            return null;
+        };
+
+        //Clear sessionStorage when user clicks on <a>
+        document.querySelector("body").addEventListener('click', function (e) {
+            var anchor = getParentAnchor(e.target);
+            if (anchor !== null) {
+                sessionStorage.clear();
+            } false
+        });
+
+        //get station numbers when user select line
+        document.getElementById("Line").addEventListener("change", function () {
+            var lineValue = document.getElementById("Line").value;
+
+            fetch("?handler=Station&Line=" + encodeURIComponent(lineValue))
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = '<option value=null selected disabled>Stations</option>';
+                    var stationSelect = document.getElementById("station");
+                    stationSelect.innerHTML = ''; // Clear previous options
+
+                    //Disable dropdowns 
+                    document.getElementById("robotNumber").setAttribute('disabled', true);
+                    document.getElementById("style").setAttribute('disabled', true);
+                    document.getElementById("getWeldsBtn").setAttribute('disabled', true);
+                    document.getElementById("addBtn").setAttribute('disabled', true);
+
+                    //Remove previous data from dropdowns and the weld concern table
+                    document.getElementById("robotNumber").innerHTML = '<option value=null selected disabled>Robot #</option>';
+                    document.getElementById("style").innerHTML = '<option value=null selected disabled>Style</option>';
+                    document.getElementById("welds").innerHTML = '';
+                    document.getElementById("tcpcheckbox").checked = false;
+
+                    data.forEach(function (lineRobots) {
+                        items += "<option value='" + lineRobots.text + "'>" + lineRobots.text + "</option>";
+                    });
+
+                    stationSelect.innerHTML = items; // Add new options
+                    stationSelect.removeAttribute('disabled');
+                })
+                .catch(function (error) {
+                    console.error('Error fetching Stations:', error);
+                });
+        });
+
+        //get robot numbers when user select line && station
+        document.getElementById("station").addEventListener("change", function () {
+            var lineValue = document.getElementById("Line").value;
+            var stationValue = document.getElementById("station").value
+
+            fetch("?handler=RobotNum&Line=" + encodeURIComponent(lineValue) + "&Station=" + encodeURIComponent(stationValue))
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = '<option value=null selected disabled>Robot #</option>';
+                    var robotNumberSelect = document.getElementById("robotNumber");
+                    robotNumberSelect.innerHTML = ''; // Clear previous options
+                    document.getElementById("welds").innerHTML = '';
+
+                    document.getElementById("style").setAttribute('disabled', true);
+                    document.getElementById("getWeldsBtn").setAttribute('disabled', true);
+                    document.getElementById("addBtn").setAttribute('disabled', true);
+                    document.getElementById("tcpcheckbox").checked = false;
+
+                    document.getElementById("style").innerHTML = '<option value =null selected disabled>Style</option>'
+
+                    data.forEach(function (lineRobots) {
+                        items += "<option value='" + lineRobots.text + "'>" + lineRobots.text + "</option>";
+                    });
+
+                    robotNumberSelect.innerHTML = items; // Add new options
+                    robotNumberSelect.removeAttribute('disabled');
+                })
+                .catch(function (error) {
+                    console.error('Error fetching Robot Numbers:', error);
+                });
+        });
+
+        //get robot numbers when user select line && station
+        document.getElementById("robotNumber").addEventListener("change", function () {
+            var lineValue = document.getElementById("Line").value;
+            var stationValue = document.getElementById("station").value
+            var robotValue = document.getElementById("robotNumber").value
+
+            fetch("?handler=Style&Line=" + encodeURIComponent(lineValue) + "&Station=" + encodeURIComponent(stationValue) + "&RobotNumber=" + encodeURIComponent(robotValue))
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = '<option value=null selected disabled>Style</option>';
+                    var robotNumberSelect = document.getElementById("style");
+                    robotNumberSelect.innerHTML = ''; // Clear previous options
+                    document.getElementById("welds").innerHTML = '';
+
+                    document.getElementById("getWeldsBtn").setAttribute('disabled', true);
+                    document.getElementById("addBtn").setAttribute('disabled', true);
+                    document.getElementById("tcpcheckbox").checked = false;
+
+                    data.forEach(function (lineRobots) {
+                        items += "<option value='" + lineRobots.text + "'>" + lineRobots.text + "</option>";
+                    });
+
+                    robotNumberSelect.innerHTML = items; // Add new options
+                    robotNumberSelect.removeAttribute('disabled');
+                })
+                .catch(function (error) {
+                    console.error('Error fetching Style:', error);
+                });
+        });
+
+        document.getElementById("style").addEventListener("change", function () { 
+            document.getElementById("getWeldsBtn").removeAttribute('disabled') ;
+            document.getElementById("addBtn").setAttribute('disabled', true);
+            document.getElementById("welds").innerHTML = '';
+            document.getElementById("tcpcheckbox").checked = false;
+        });
+
     </script>
 }

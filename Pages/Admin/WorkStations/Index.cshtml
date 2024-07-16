@@ -1,0 +1,40 @@
+﻿@page
+@model Van_Authentication.Pages.Admin.WorkStations.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>List of Workstations</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+<div class="table-responsive card shadow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.WorkStation[0].WorkStationName)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.WorkStation)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WorkStationName)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.WorkStationId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.WorkStationId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.WorkStationId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

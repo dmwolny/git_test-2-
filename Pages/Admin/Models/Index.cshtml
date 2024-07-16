@@ -1,0 +1,58 @@
+﻿@page
+@model Van_Authentication.Pages.Admin.Models.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>List of Models(parts)</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+<div class="table-responsive card shadow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PartModel[0].WorkStation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PartModel[0].PartModelName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PartModel[0].PartModelType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PartModel[0].LotControl)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PartModel)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WorkStation.WorkStationName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PartModelName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PartModelType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LotControl)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.PartModelId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.PartModelId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.PartModelId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

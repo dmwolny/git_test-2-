@@ -1,0 +1,53 @@
+﻿@page
+@model Van_Authentication.Pages.Admin.Models.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>PartModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PartModel.WorkStationId" class="control-label"></label>
+                <select asp-for="PartModel.WorkStationId" class="form-control" asp-items="ViewBag.WorkStationId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PartModel.PartModelName" class="control-label"></label>
+                <input asp-for="PartModel.PartModelName" class="form-control" />
+                <span asp-validation-for="PartModel.PartModelName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PartModel.PartModelType" class="control-label"></label>
+                <select asp-for="PartModel.PartModelType" class="form-control" >
+                    <option selected disabled>-- Select Type --</option>
+                    <option>Weld</option>
+                    <option>Sealer</option>
+                    <option>Weld Stud</option>
+                </select>
+                <span asp-validation-for="PartModel.PartModelType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PartModel.LotControl" class="control-label"></label>
+                <input asp-for="PartModel.LotControl" class="form-control" />
+                <span asp-validation-for="PartModel.LotControl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

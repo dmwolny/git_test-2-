@@ -5367,6 +5367,7 @@ textarea.form-control-lg {
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem;
+  z-index:99999;
 }
 .toast.showing {
   opacity: 0;
@@ -5403,8 +5404,9 @@ textarea.form-control-lg {
 }
 
 .toast-body {
-  padding: 0.75rem;
-  word-wrap: break-word;
+    padding: 0.75rem;
+    word-wrap: break-word;
+    background-color: rgba(222, 222, 223, 0.85);
 }
 
 .modal {

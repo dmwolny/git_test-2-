@@ -1,0 +1,201 @@
+﻿@page "{pageIndex?}"
+@model Van_Authentication.Pages.Tcps.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>List of TCPs</h1>
+
+
+<form>
+    <div class="row mb-2">
+            <div class="col-md-3">
+            <input type="text" name="daterange" class="form-control me-2 mb-2" id="dateRangeInput"/>
+            </div>
+
+            <input class="form-control me-2" asp-for="startDate" type="hidden" />
+            <input class="form-control me-2" asp-for="endDate" type="hidden" />
+
+            <div class="col-md-3">
+            <input class="form-control me-2 mb-2" type="search" name="search" value="@Model.search" placeholder="Search by Status, Line or TCP #" aria-label="Search">
+            </div>
+
+            <div class="col-md-1">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+    </div>
+ </form>
+
+
+<div class="table-responsive card shadow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Shift
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tcp[0].TcpId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tcp[0].Status)
+                </th>
+                <th>
+                    Line
+                </th>
+                <th>
+                    Station
+                </th>
+                <th>
+                    Robot
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tcp[0].Production)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tcp[0].Maintenance)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tcp[0].Engineering)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Tcp)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WeldConcerns.FirstOrDefault().Audit.Shift)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TcpId)
+                    </td>
+                    <td class="@item.Status">
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>@if(item.WeldConcerns != null)
+                        {
+                            @item.WeldConcerns.Select(m => m.Line).FirstOrDefault()                            
+                        }
+
+                    </td>
+                    <td>
+                        @if (item.WeldConcerns != null)
+                        {
+                            @item.WeldConcerns.Select(m => m.Station).FirstOrDefault()
+                        }
+                    </td>
+                    <td>
+                        @if (item.WeldConcerns != null)
+                        {
+                            @item.WeldConcerns.Select(m => m.RobotNumber).FirstOrDefault()
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Production)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Maintenance)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Engineering)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.TcpId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.TcpId">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination my-3">
+        @if(Model.pageIndex == 1 || Model.pageIndex < 1)
+        {
+            
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-search="@Model.search">Previous</a>
+            </li>        
+        }
+
+        @for(int i = 1; i <= Model.totalPages; i++)
+        {
+            string active = "";
+            if (i == Model.pageIndex) active = "active";
+            <li class="page-item @active" aria-current="page"><a class="page-link" asp-route-pageIndex="@(i)" asp-route-search="@Model.search">@i</a></li>
+        }
+        @if(Model.pageIndex != Model.totalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-search="@Model.search" )">Next</a>
+            </li>            
+        }
+
+    </ul>
+</nav>
+
+@section Scripts {
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script>
+
+        onload = (event) => 
+        {
+            if (document.getElementById('startDate').value) 
+            {
+                var start = new Date(document.getElementById('startDate').value + "T00:00:00");
+                var end = new Date(document.getElementById('endDate').value + "T00:00:00");
+                console.log("startDate: "+start+" endDate: "+end);
+                var startDate = (start.getMonth() + 1) + "/" + start.getDate() + "/" + start.getFullYear();
+                var endDate = (end.getMonth() + 1) + "/" + end.getDate() + "/" + end.getFullYear();
+                var dateRange = startDate + " - " + endDate;
+                try 
+                {
+                    document.getElementById('dateRangeInput').value = dateRange;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+
+            document.getElementsByClassName('cancelBtn')[0].addEventListener('click', function (ev) {
+                document.getElementById('startDate').value = null;
+                document.getElementById('endDate').value = null;
+                console.log("cancel btn clicked");
+            })
+        };
+
+        $(function () {
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left'
+            }, function (start, end) {
+                var s = start.toJSON();
+                var e = end.toJSON();
+
+                $('#startDate').val(start.format('YYYY-MM-DD'));
+                $('#endDate').val(end.format('YYYY-MM-DD'));
+            });
+        });
+        
+        $('#daterange').on('cancel.daterangepicker', function (ev, picker) {
+            //do something, like clearing an input
+            $('#daterange').val('');
+            console.log("cancel btn clicked");
+        });
+    </script>
+}

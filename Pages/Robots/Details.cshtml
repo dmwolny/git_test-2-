@@ -44,11 +44,11 @@
             <dd class="col-sm-12">
                 @if (Model.Robot.Graphic == null)
                 {
-                    <img src="~/images/default.PNG" class="shadow" />
+                    <img src="~/images/default.PNG" class="img-fluid rounded-start shadow" />
                 }
                 else
                 {
-                    <img src="~/images/@Model.Robot.Graphic" class="shadow"/>
+                    <img src="~/images/@Model.Robot.Graphic" class="img-fluid rounded-start shadow" />
                 }
             </dd>
         </div>
@@ -92,5 +92,5 @@
 
 <div>
     <a asp-page="./Edit" asp-route-id="@Model.Robot.RobotID">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Index" asp-route-Line="@Model.Robot.Line">Back to List</a>
 </div>

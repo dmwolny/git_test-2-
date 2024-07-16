@@ -1,0 +1,40 @@
+﻿@page
+@model Van_Authentication.Pages.Admin.RepairProcedures.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Repair Procedures</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+<div class="table-responsive card shadow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.RepairProcedure[0].RepairProcedureName)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.RepairProcedure)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RepairProcedureName)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.RepairProcedureId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.RepairProcedureId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.RepairProcedureId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

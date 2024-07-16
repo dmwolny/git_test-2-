@@ -51,25 +51,25 @@ namespace Van_Authentication.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ec1b6c25-acd2-4d98-80a3-e3ab47ea6972",
+                            Id = "1379225d-ca7e-421c-b193-6cd85228fa8c",
                             Name = "manager",
                             NormalizedName = "manager"
                         },
                         new
                         {
-                            Id = "82c31ebe-fb90-4f30-8036-7282db0097d5",
+                            Id = "f2983592-21d2-4194-89a9-b6a79de4ec8a",
                             Name = "auditor",
                             NormalizedName = "auditor"
                         },
                         new
                         {
-                            Id = "9ca9e715-2302-4b10-8e1e-eb6be31a8923",
+                            Id = "eab0a1d6-8df0-4584-bcbd-2bfbe0ad3743",
                             Name = "supervisor",
                             NormalizedName = "supervisor"
                         },
                         new
                         {
-                            Id = "8c5c8391-cdf0-4b60-be78-0b9e776e2b17",
+                            Id = "04f7534a-2796-4c59-b328-f4dec022ce3d",
                             Name = "coordinator",
                             NormalizedName = "coordinator"
                         });
@@ -250,7 +250,7 @@ namespace Van_Authentication.Migrations
 
                     b.Property<string>("Shift")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -298,6 +298,9 @@ namespace Van_Authentication.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Model")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
@@ -318,6 +321,43 @@ namespace Van_Authentication.Migrations
                     b.HasKey("AuditID");
 
                     b.ToTable("Audits");
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.AuditRoute", b =>
+                {
+                    b.Property<int>("AuditRouteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuditRouteId"));
+
+                    b.Property<string>("AuditRouteName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PartModelId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuditRouteId");
+
+                    b.HasIndex("PartModelId");
+
+                    b.ToTable("AuditRoutes");
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.AuditRouteWeld", b =>
+                {
+                    b.Property<int>("AuditRouteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WeldId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuditRouteId", "WeldId");
+
+                    b.HasIndex("WeldId");
+
+                    b.ToTable("AuditRouteWelds");
                 });
 
             modelBuilder.Entity("Van_Authentication.Models.Defect", b =>
@@ -357,9 +397,41 @@ namespace Van_Authentication.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("Thickness")
+                        .HasColumnType("int");
+
                     b.HasKey("PartID");
 
                     b.ToTable("Part", (string)null);
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.PartModel", b =>
+                {
+                    b.Property<int>("PartModelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PartModelId"));
+
+                    b.Property<int>("LotControl")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PartModelName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PartModelType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WorkStationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PartModelId");
+
+                    b.HasIndex("WorkStationId");
+
+                    b.ToTable("PartModels");
                 });
 
             modelBuilder.Entity("Van_Authentication.Models.PartWeld", b =>
@@ -375,6 +447,23 @@ namespace Van_Authentication.Migrations
                     b.HasIndex("WeldID");
 
                     b.ToTable("PartWeld", (string)null);
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.RepairProcedure", b =>
+                {
+                    b.Property<int>("RepairProcedureId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RepairProcedureId"));
+
+                    b.Property<string>("RepairProcedureName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RepairProcedureId");
+
+                    b.ToTable("RepairProcedure");
                 });
 
             modelBuilder.Entity("Van_Authentication.Models.Robot", b =>
@@ -436,7 +525,13 @@ namespace Van_Authentication.Migrations
                     b.Property<string>("CorrectiveAction")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Engineering")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EngineeringNotes")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstRepaired")
@@ -444,15 +539,25 @@ namespace Van_Authentication.Migrations
                         .HasColumnType("nvarchar(12)");
 
                     b.Property<string>("LastRepaired")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<string>("Maintenance")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("MaintenanceNotes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Production")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ProductionNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RepairProcedure")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Repaired")
                         .HasColumnType("int");
@@ -462,8 +567,8 @@ namespace Van_Authentication.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
 
                     b.HasKey("TcpId");
 
@@ -490,21 +595,24 @@ namespace Van_Authentication.Migrations
 
             modelBuilder.Entity("Van_Authentication.Models.WeldConcern", b =>
                 {
-                    b.Property<int>("WelConcernID")
+                    b.Property<int>("WeldConcernID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WelConcernID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WeldConcernID"));
 
                     b.Property<int>("AuditID")
                         .HasColumnType("int");
 
-                    b.Property<int>("DefectID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Line")
+                    b.Property<string>("Defect")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Line")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("NuggetSize")
+                        .HasColumnType("real");
 
                     b.Property<int>("RobotNumber")
                         .HasColumnType("int");
@@ -512,19 +620,44 @@ namespace Van_Authentication.Migrations
                     b.Property<int>("Station")
                         .HasColumnType("int");
 
+                    b.Property<string>("Style")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("TcpID")
                         .HasColumnType("int");
 
                     b.Property<int>("WeldID")
                         .HasColumnType("int");
 
-                    b.HasKey("WelConcernID");
+                    b.Property<string>("WeldType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WeldConcernID");
 
                     b.HasIndex("AuditID");
 
                     b.HasIndex("TcpID");
 
                     b.ToTable("WeldAudit", (string)null);
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.WorkStation", b =>
+                {
+                    b.Property<int>("WorkStationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WorkStationId"));
+
+                    b.Property<string>("WorkStationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WorkStationId");
+
+                    b.ToTable("WorkStations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -578,6 +711,47 @@ namespace Van_Authentication.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Van_Authentication.Models.AuditRoute", b =>
+                {
+                    b.HasOne("Van_Authentication.Models.PartModel", "PartModel")
+                        .WithMany("AuditRoutes")
+                        .HasForeignKey("PartModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PartModel");
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.AuditRouteWeld", b =>
+                {
+                    b.HasOne("Van_Authentication.Models.AuditRoute", "AuditRoute")
+                        .WithMany("AuditRouteWelds")
+                        .HasForeignKey("AuditRouteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Van_Authentication.Models.Weld", "Weld")
+                        .WithMany()
+                        .HasForeignKey("WeldId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AuditRoute");
+
+                    b.Navigation("Weld");
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.PartModel", b =>
+                {
+                    b.HasOne("Van_Authentication.Models.WorkStation", "WorkStation")
+                        .WithMany("PartModels")
+                        .HasForeignKey("WorkStationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkStation");
+                });
+
             modelBuilder.Entity("Van_Authentication.Models.PartWeld", b =>
                 {
                     b.HasOne("Van_Authentication.Models.Part", "Part")
@@ -625,7 +799,7 @@ namespace Van_Authentication.Migrations
                         .IsRequired();
 
                     b.HasOne("Van_Authentication.Models.Tcp", "Tcp")
-                        .WithMany()
+                        .WithMany("WeldConcerns")
                         .HasForeignKey("TcpID");
 
                     b.Navigation("Audit");
@@ -638,9 +812,24 @@ namespace Van_Authentication.Migrations
                     b.Navigation("WeldConcerns");
                 });
 
+            modelBuilder.Entity("Van_Authentication.Models.AuditRoute", b =>
+                {
+                    b.Navigation("AuditRouteWelds");
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.PartModel", b =>
+                {
+                    b.Navigation("AuditRoutes");
+                });
+
             modelBuilder.Entity("Van_Authentication.Models.Robot", b =>
                 {
                     b.Navigation("RobotWelds");
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.Tcp", b =>
+                {
+                    b.Navigation("WeldConcerns");
                 });
 
             modelBuilder.Entity("Van_Authentication.Models.Weld", b =>
@@ -648,6 +837,11 @@ namespace Van_Authentication.Migrations
                     b.Navigation("PartWelds");
 
                     b.Navigation("RobotWelds");
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.WorkStation", b =>
+                {
+                    b.Navigation("PartModels");
                 });
 #pragma warning restore 612, 618
         }

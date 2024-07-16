@@ -1,0 +1,58 @@
+﻿@page
+@model Van_Authentication.Pages.Admin.Users.IndexModel
+@{
+}
+<h2>Users</h2>
+<a class="btn btn-primary my-2" asp-area="Identity" asp-page="/Account/Register">Register new user</a>
+
+<div class="table-responsive card shadow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    First Name
+                </th>
+                <th>
+                    Last Name
+                </th>
+                <th>
+                    Shift
+                </th>
+                <th>
+                    Line
+                </th>
+                <th>
+                    Role
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.listUsers)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.firstname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.lastname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.shift)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.line)
+                    </td>
+                    <td style="text-transform:capitalize;">
+                        @Html.DisplayFor(modelItem => item.role)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.id">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.id">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -21,6 +21,10 @@ namespace Van_Authentication.Services
         public DbSet<Audit> Audits { get; set; }
         public DbSet<WeldConcern> WeldConcerns { get; set; }
         public DbSet<Tcp> Tcps { get; set; }
+        public DbSet<WorkStation> WorkStations { get; set; }
+        public DbSet<PartModel> PartModels { get; set; }
+        public DbSet<AuditRoute> AuditRoutes { get; set; }
+        public DbSet<AuditRouteWeld> AuditRouteWelds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -46,7 +50,9 @@ namespace Van_Authentication.Services
             builder.Entity<RobotWeld>().ToTable("RobotWeld").HasKey(r => new { r.RobotID, r.WeldID });
             builder.Entity<RobotWeld>().HasOne(c => c.Robot).WithMany(d => d.RobotWelds).HasForeignKey(e => e.RobotID);
             builder.Entity<PartWeld>().ToTable("PartWeld").HasKey(pw => new {pw.PartID, pw.WeldID});
-            builder.Entity<WeldConcern>().ToTable("WeldAudit").HasKey(wa => wa.WelConcernID);
+            builder.Entity<WeldConcern>().ToTable("WeldAudit").HasKey(wa => wa.WeldConcernID);
+            builder.Entity<AuditRouteWeld>().HasKey(rw => new {rw.AuditRouteId, rw.WeldId});
         }
+        public DbSet<Van_Authentication.Models.RepairProcedure> RepairProcedure { get; set; } = default!;
     }
 }

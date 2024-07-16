@@ -1,0 +1,39 @@
+﻿@page
+@model Van_Authentication.Pages.Admin.Users.EditModel
+@{
+}
+<h2>Edit User</h2>
+
+<div class="row">
+    <div class="col-lg-6 mx-auto rounded border p-3 bg-white">
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <form id="registerForm" method="post">
+
+            <span><h3>@Model.FirstName @Model.LastName</h3></span>
+            <select class="form-control my-3" asp-for="@Model.assignRole">
+            <option value="" disabled>-- Select User Role --</option>
+            <option value="auditor">Auditor</option>
+            @if (User.IsInRole("manager"))
+            {
+                <option value="coordinator">Coordinator</option>
+                <option value="supervisor">Supervisor</option>
+                <option value="manager">Manager</option>
+            }
+            </select>
+            <span asp-validation-for="@Model.assignRole" class="text-danger"></span>
+            <div class="form-floating mb-3">
+                <input asp-for="@Model.Shift" class="form-control" aria-required="true" placeholder="Shift" />
+                <label asp-for="@Model.Shift">Shift</label>
+                <span asp-validation-for="@Model.Shift" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="@Model.Line" class="form-control" aria-required="true" placeholder="Line" />
+                <label asp-for="@Model.Line">Line</label>
+                <span asp-validation-for="@Model.Line" class="text-danger"></span>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Save" />
+            <a href="./Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+
+</div>

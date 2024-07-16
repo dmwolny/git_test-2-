@@ -1,0 +1,74 @@
+﻿@page
+@model Van_Authentication.Pages.Tcps.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Tcp</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Tcp.Status" class="control-label"></label>
+                <input asp-for="Tcp.Status" class="form-control" />
+                <span asp-validation-for="Tcp.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tcp.Production" class="control-label"></label>
+                <input asp-for="Tcp.Production" class="form-control" />
+                <span asp-validation-for="Tcp.Production" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tcp.Repaired" class="control-label"></label>
+                <input asp-for="Tcp.Repaired" class="form-control" />
+                <span asp-validation-for="Tcp.Repaired" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tcp.FirstRepaired" class="control-label"></label>
+                <input asp-for="Tcp.FirstRepaired" class="form-control" />
+                <span asp-validation-for="Tcp.FirstRepaired" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tcp.LastRepaired" class="control-label"></label>
+                <input asp-for="Tcp.LastRepaired" class="form-control" />
+                <span asp-validation-for="Tcp.LastRepaired" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tcp.Maintenance" class="control-label"></label>
+                <input asp-for="Tcp.Maintenance" class="form-control" />
+                <span asp-validation-for="Tcp.Maintenance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tcp.RootCause" class="control-label"></label>
+                <input asp-for="Tcp.RootCause" class="form-control" />
+                <span asp-validation-for="Tcp.RootCause" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tcp.CorrectiveAction" class="control-label"></label>
+                <input asp-for="Tcp.CorrectiveAction" class="form-control" />
+                <span asp-validation-for="Tcp.CorrectiveAction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tcp.Engineering" class="control-label"></label>
+                <input asp-for="Tcp.Engineering" class="form-control" />
+                <span asp-validation-for="Tcp.Engineering" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

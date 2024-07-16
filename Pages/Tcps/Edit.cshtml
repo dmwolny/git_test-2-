@@ -1,0 +1,209 @@
+﻿@page "{id}"
+@model Van_Authentication.Pages.Tcps.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Tcp #@Model.Tcp.TcpId <span class="@Model.Tcp.Status">@Model.Tcp.Status</span></h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Tcp.TcpId" />
+            <div class="form-group">
+                <input asp-for="Tcp.Status" type="hidden" class="form-control" />
+            </div>
+
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            <div class="form-group">
+                                <label asp-for="Tcp.Production" class="control-label"></label>
+                                <input asp-for="Tcp.Production" readonly class="form-control" />
+                                <span asp-validation-for="Tcp.Production" class="text-danger"></span>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label asp-for="Tcp.Repaired" class="control-label"></label>
+                                <input asp-for="Tcp.Repaired" class="form-control" />
+                                <span asp-validation-for="Tcp.Repaired" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Tcp.FirstRepaired" class="control-label"></label>
+                                <input asp-for="Tcp.FirstRepaired" class="form-control" />
+                                <span asp-validation-for="Tcp.FirstRepaired" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Tcp.LastRepaired" class="control-label"></label>
+                                <input asp-for="Tcp.LastRepaired" class="form-control" />
+                                <span asp-validation-for="Tcp.LastRepaired" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Tcp.RepairProcedure" class="control-label"></label>
+                                @* <input asp-for="Tcp.RepairProcedure" class="form-control" /> *@
+                                <select asp-for="Tcp.RepairProcedure" class="form-control" asp-items="ViewBag.RepairProcedures"></select>
+                                <span asp-validation-for="Tcp.RepairProcedure" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Tcp.ProductionNotes" class="control-label"></label>
+                                <textarea asp-for="Tcp.ProductionNotes" class="form-control" ></textarea>
+                                <span asp-validation-for="Tcp.ProductionNotes" class="text-danger"></span>
+                            </div>
+                            <div class="my-2">
+                                <input type="submit" asp-page-handler="Production" value="Save" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                            <div class="form-group">
+                                <label asp-for="Tcp.Maintenance" class="control-label"></label>
+                                <input asp-for="Tcp.Maintenance" readonly class="form-control" />
+                                <span asp-validation-for="Tcp.Maintenance" class="text-danger"></span>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="flush-collapseTwo" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label asp-for="Tcp.RootCause" class="control-label"></label>
+                                <input asp-for="Tcp.RootCause" class="form-control" />
+                                <span asp-validation-for="Tcp.RootCause" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Tcp.CorrectiveAction" class="control-label"></label>
+                                <input asp-for="Tcp.CorrectiveAction" class="form-control" />
+                                <span asp-validation-for="Tcp.CorrectiveAction" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Tcp.MaintenanceNotes" class="control-label"></label>
+                                <textarea asp-for="Tcp.MaintenanceNotes" class="form-control"></textarea>
+                                <span asp-validation-for="Tcp.MaintenanceNotes" class="text-danger"></span>
+                            </div>
+                            <div class="my-2">
+                                <input type="submit" asp-page-handler="Maintenance" value="Save" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                            <div class="form-group">
+                                <label asp-for="Tcp.Engineering" class="control-label"></label>
+                                <input asp-for="Tcp.Engineering" readonly class="form-control" />
+                                <span asp-validation-for="Tcp.Engineering" class="text-danger"></span>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="flush-collapseThree" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label>Close TCP: </label>
+                                <input asp-for="TcpStatus" type="checkbox" />
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Tcp.EngineeringNotes" class="control-label"></label>
+                                <textarea asp-for="Tcp.EngineeringNotes" class="form-control"></textarea>
+                                <span asp-validation-for="Tcp.EngineeringNotes" class="text-danger"></span>
+                            </div>
+                            <div class="my-2">
+                                <input type="submit" asp-page-handler="Engineering" value="Save" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="col-md-8">
+        <div class="card mb-8 shadow">
+            <div class="row g-0">
+                <div class="col-md-8">
+                    @if (Model.Graphic != null)
+                    {
+                        <img src="~/images/@Model.Graphic" class="img-fluid rounded-start" />
+                    }
+                    else
+                    {
+                        <img src="~/images/default.PNG" class="img-fluid rounded-start" />
+                    }
+                </div>
+                <div class="col-md-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.Tcp.WeldConcerns.Select(m => m.Line).FirstOrDefault()</h5>
+                        <p class="card-text">Station: @Model.Tcp.WeldConcerns.Select(m => m.Station).FirstOrDefault()</p>
+                        <p class="card-text"> Robot: @Model.Tcp.WeldConcerns.Select(m => m.RobotNumber).FirstOrDefault()</p>
+                        <p class="card-text">@Model.Tcp.WeldConcerns.Select(m => m.Style).FirstOrDefault()</p>
+                        <p class="card-text">Opened by: @Model.Auditor</p>
+                        <p class="card-text">Number of welds: @Model.Tcp.WeldConcerns.Count</p>
+                        <p class="card-text">Number of safety welds: @Model.Tcp.WeldConcerns.Count(m => m.WeldType.Equals("S"))</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive card shadow">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="align-top">
+                            Weld #
+                        </th>
+                        <th class="align-top">
+                            Weld Type
+                        </th>
+                        <th class="align-top">
+                            Nugget Size
+                        </th>
+                        <th class="align-top">
+                            Defect
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(Model.Tcp.WeldConcerns != null)
+                    {
+                       @foreach (var item in Model.Tcp.WeldConcerns)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.WeldID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.WeldType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NuggetSize)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Defect)
+                                </td>
+                            </tr> 
+                        }
+                    
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div>
+    <a href="/Tcps/Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

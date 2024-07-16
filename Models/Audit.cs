@@ -3,18 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Van_Authentication.Models
 {
-    public enum Shift
-    {
-        A, B, C
-    }
     public class Audit
     {
         [Key]
         public int AuditID { get; set; }
         [Required]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyy HH:mm}")]
-        [DisplayName("Audit created at")]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}")]
+        [DisplayName("Audit Date & Time")]
         public DateTime CreatedAt { get; set; }
         [Required]
         [StringLength(1)]
@@ -35,6 +31,7 @@ namespace Van_Authentication.Models
         [Length(2,3)]
         public string Result { get; set; } = "";
         public string? Notes { get; set; }
+        public string? Model { get; set; } = "";
 
         public ICollection<WeldConcern>? WeldConcerns { get; set; }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,6 +12,7 @@ using Van_Authentication.Services;
 
 namespace Van_Authentication.Pages.Audits
 {
+    [Authorize(Roles = "manager, coordinator, auditor")]
     public class IndexModel : PageModel
     {
         private readonly Van_Authentication.Services.ApplicationDbContext _context;
@@ -23,10 +25,17 @@ namespace Van_Authentication.Pages.Audits
         }
 
         public IList<Audit> Audits { get;set; } = default!;
+        public DateTime? startDate { get; set; }
+        public DateTime? endDate { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(DateTime? startDate, DateTime? endDate)
         {
             Audits = await _context.Audits.ToListAsync();
+            if(startDate != null && endDate != null)
+            {
+                Audits = await _context.Audits.Where(x => x.CreatedAt > startDate && x.CreatedAt < endDate).ToListAsync();
+                DateTime.Now.AddHours(-12);
+            }
         }
         public Audit Audit { get; set; } = default!;
 
@@ -40,6 +49,7 @@ namespace Van_Authentication.Pages.Audits
             data.Auditor = user.FirstName+" "+user.LastName;
             data.Line = user.Line;
             data.CreatedAt = DateTime.Now;
+            data.Result = "OK";
             
             _context.Audits.Add(data);
             await _context.SaveChangesAsync();

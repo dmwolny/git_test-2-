@@ -11,6 +11,15 @@
     <form method="post">
         <input type="submit" value="Create" class="btn btn-primary" />
     </form>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <form class="d-flex">
+                <input class="form-control me-2" asp-for="startDate" type="date" />
+                <input class="form-control me-2" asp-for="endDate" type="date" />
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
     
 </p>
 <div class="table-responsive card shadow">

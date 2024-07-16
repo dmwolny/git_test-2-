@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Van_Authentication.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,7 +34,7 @@ namespace Van_Authentication.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Shift = table.Column<string>(type: "nvarchar(1)", nullable: false),
+                    Shift = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Line = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -97,7 +97,8 @@ namespace Van_Authentication.Migrations
                 {
                     PartID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Material = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    PartDesc = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+                    PartDesc = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Thickness = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -265,19 +266,22 @@ namespace Van_Authentication.Migrations
                 name: "WeldAudit",
                 columns: table => new
                 {
-                    WelConcernID = table.Column<int>(type: "int", nullable: false)
+                    WeldConcernID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AuditID = table.Column<int>(type: "int", nullable: false),
                     WeldID = table.Column<int>(type: "int", nullable: false),
+                    WeldType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NuggetSize = table.Column<float>(type: "real", nullable: false),
                     Line = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Station = table.Column<int>(type: "int", nullable: false),
                     RobotNumber = table.Column<int>(type: "int", nullable: false),
-                    DefectID = table.Column<int>(type: "int", nullable: false),
+                    Style = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Defect = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TcpID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WeldAudit", x => x.WelConcernID);
+                    table.PrimaryKey("PK_WeldAudit", x => x.WeldConcernID);
                     table.ForeignKey(
                         name: "FK_WeldAudit_Audits_AuditID",
                         column: x => x.AuditID,
@@ -344,10 +348,10 @@ namespace Van_Authentication.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "82c31ebe-fb90-4f30-8036-7282db0097d5", null, "auditor", "auditor" },
-                    { "8c5c8391-cdf0-4b60-be78-0b9e776e2b17", null, "coordinator", "coordinator" },
-                    { "9ca9e715-2302-4b10-8e1e-eb6be31a8923", null, "supervisor", "supervisor" },
-                    { "ec1b6c25-acd2-4d98-80a3-e3ab47ea6972", null, "manager", "manager" }
+                    { "51ea7952-69ff-4442-9859-ca71c5353d7c", null, "manager", "manager" },
+                    { "534125a6-516d-46e3-9ef8-90d0a1c4fc56", null, "auditor", "auditor" },
+                    { "9992ccde-44f0-4f29-af48-f1d8498cf943", null, "supervisor", "supervisor" },
+                    { "e5adedd6-c039-48d5-a18f-edca68c3c007", null, "coordinator", "coordinator" }
                 });
 
             migrationBuilder.CreateIndex(

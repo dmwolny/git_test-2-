@@ -18,6 +18,7 @@ namespace Van_Authentication.Models
         [StringLength(50, ErrorMessage = "Part Description can't be longer than 50 characters")]
         [Display(Name = "Part Description")]
         public string? PartDesc { get; set; }
+        public int? Thickness { get; set; }
 
         ICollection<PartWeld> PartWelds { get; set; }
     }

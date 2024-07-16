@@ -12,8 +12,8 @@ using Van_Authentication.Services;
 namespace Van_Authentication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240620134746_Initial")]
-    partial class Initial
+    [Migration("20240703144427_TCP")]
+    partial class TCP
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,25 +54,25 @@ namespace Van_Authentication.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ec1b6c25-acd2-4d98-80a3-e3ab47ea6972",
+                            Id = "41bdb961-0392-4553-9af3-496fce0b83c5",
                             Name = "manager",
                             NormalizedName = "manager"
                         },
                         new
                         {
-                            Id = "82c31ebe-fb90-4f30-8036-7282db0097d5",
+                            Id = "102174d8-23d7-4efe-a67e-6c9f10fcc95a",
                             Name = "auditor",
                             NormalizedName = "auditor"
                         },
                         new
                         {
-                            Id = "9ca9e715-2302-4b10-8e1e-eb6be31a8923",
+                            Id = "8e5fadd9-2af7-4c85-992d-0557d5c97794",
                             Name = "supervisor",
                             NormalizedName = "supervisor"
                         },
                         new
                         {
-                            Id = "8c5c8391-cdf0-4b60-be78-0b9e776e2b17",
+                            Id = "d803cb2e-8463-469c-b3f5-f8c804dcf808",
                             Name = "coordinator",
                             NormalizedName = "coordinator"
                         });
@@ -253,7 +253,7 @@ namespace Van_Authentication.Migrations
 
                     b.Property<string>("Shift")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -360,6 +360,9 @@ namespace Van_Authentication.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("Thickness")
+                        .HasColumnType("int");
+
                     b.HasKey("PartID");
 
                     b.ToTable("Part", (string)null);
@@ -442,20 +445,33 @@ namespace Van_Authentication.Migrations
                     b.Property<string>("Engineering")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EngineeringNotes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FirstRepaired")
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
                     b.Property<string>("LastRepaired")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<string>("Maintenance")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("MaintenanceNotes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Production")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ProductionNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RepairProcedure")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Repaired")
                         .HasColumnType("int");
@@ -465,8 +481,8 @@ namespace Van_Authentication.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
 
                     b.HasKey("TcpId");
 
@@ -493,21 +509,25 @@ namespace Van_Authentication.Migrations
 
             modelBuilder.Entity("Van_Authentication.Models.WeldConcern", b =>
                 {
-                    b.Property<int>("WelConcernID")
+                    b.Property<int>("WeldConcernID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WelConcernID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WeldConcernID"));
 
                     b.Property<int>("AuditID")
                         .HasColumnType("int");
 
-                    b.Property<int>("DefectID")
-                        .HasColumnType("int");
+                    b.Property<string>("Defect")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Line")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("NuggetSize")
+                        .HasColumnType("real");
 
                     b.Property<int>("RobotNumber")
                         .HasColumnType("int");
@@ -515,13 +535,21 @@ namespace Van_Authentication.Migrations
                     b.Property<int>("Station")
                         .HasColumnType("int");
 
+                    b.Property<string>("Style")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("TcpID")
                         .HasColumnType("int");
 
                     b.Property<int>("WeldID")
                         .HasColumnType("int");
 
-                    b.HasKey("WelConcernID");
+                    b.Property<string>("WeldType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WeldConcernID");
 
                     b.HasIndex("AuditID");
 
@@ -628,7 +656,7 @@ namespace Van_Authentication.Migrations
                         .IsRequired();
 
                     b.HasOne("Van_Authentication.Models.Tcp", "Tcp")
-                        .WithMany()
+                        .WithMany("WeldConcerns")
                         .HasForeignKey("TcpID");
 
                     b.Navigation("Audit");
@@ -644,6 +672,11 @@ namespace Van_Authentication.Migrations
             modelBuilder.Entity("Van_Authentication.Models.Robot", b =>
                 {
                     b.Navigation("RobotWelds");
+                });
+
+            modelBuilder.Entity("Van_Authentication.Models.Tcp", b =>
+                {
+                    b.Navigation("WeldConcerns");
                 });
 
             modelBuilder.Entity("Van_Authentication.Models.Weld", b =>
