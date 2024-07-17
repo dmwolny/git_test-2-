@@ -7,7 +7,7 @@ namespace Van_Authentication.Models
         public int AuditRouteId { get; set; }
         public int WeldId { get; set; }
 
-        public Weld Weld { get; set; } = default!;
-        public AuditRoute AuditRoute { get; set; } = default!;
+        public Weld? Weld { get; set; }
+        public AuditRoute? AuditRoute { get; set; }
     }
 }

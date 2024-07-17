@@ -18,6 +18,11 @@
                 <span asp-validation-for="Audit.CreatedAt" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Audit.Auditor" class="control-label"></label>
+                <input readonly asp-for="Audit.Auditor" class="form-control" />
+                <span asp-validation-for="Audit.Auditor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Audit.Shift" class="control-label"></label>
                 <select asp-for="Audit.Shift" class="form-control">
                     <option>A</option>
@@ -27,14 +32,22 @@
                 <span asp-validation-for="Audit.Shift" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Audit.Auditor" class="control-label"></label>
-                <input readonly asp-for="Audit.Auditor" class="form-control" />
-                <span asp-validation-for="Audit.Auditor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Audit.Line" class="control-label"></label>
                 <select asp-for="Audit.Line" class="form-control" asp-items="ViewBag.WorkStationName"></select>
                 <span asp-validation-for="Audit.Line" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Audit Type</label>
+                <select class="form-control">
+                    <option>Weld</option>
+                    <option>Sealer</option>
+                    <option>Stud</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Audit.Model" class="control-label"></label>
+                <select asp-for="Audit.Model" class="form-control" asp-items="ViewBag.ModelName"></select>
+                <span asp-validation-for="Audit.Model" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Audit.Route" class="control-label"></label>
@@ -504,7 +517,7 @@
                 });
         });
 
-        //get robot numbers when user select line && station
+        //get robot styles when user select line && station && robot #
         document.getElementById("robotNumber").addEventListener("change", function () {
             var lineValue = document.getElementById("Line").value;
             var stationValue = document.getElementById("station").value

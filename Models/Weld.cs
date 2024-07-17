@@ -20,6 +20,7 @@ namespace Van_Authentication.Models
 
         public ICollection<RobotWeld> RobotWelds { get; set; }
         public ICollection<PartWeld> PartWelds { get; set; }
+        public ICollection<AuditRouteWeld> AuditRouteWelds { get; set; }
 
     }
 }

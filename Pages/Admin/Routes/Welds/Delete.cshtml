@@ -1,0 +1,35 @@
+﻿@page
+@model Van_Authentication.Pages.Admin.Routes.Welds.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>AuditRouteWeld</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AuditRouteWeld.Weld)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AuditRouteWeld.WeldId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AuditRouteWeld.AuditRoute.AuditRouteName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AuditRouteWeld.AuditRoute.AuditRouteName)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="AuditRouteWeld.AuditRouteId" />
+        <input type="hidden" asp-for="AuditRouteWeld.WeldId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="../Details" asp-route-id="@Model.AuditRouteWeld.AuditRouteId">Back to List</a>
+    </form>
+</div>

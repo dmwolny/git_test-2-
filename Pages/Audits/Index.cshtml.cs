@@ -34,7 +34,6 @@ namespace Van_Authentication.Pages.Audits
             if(startDate != null && endDate != null)
             {
                 Audits = await _context.Audits.Where(x => x.CreatedAt > startDate && x.CreatedAt < endDate).ToListAsync();
-                DateTime.Now.AddHours(-12);
             }
         }
         public Audit Audit { get; set; } = default!;

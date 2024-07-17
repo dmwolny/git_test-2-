@@ -52,6 +52,8 @@ namespace Van_Authentication.Services
             builder.Entity<PartWeld>().ToTable("PartWeld").HasKey(pw => new {pw.PartID, pw.WeldID});
             builder.Entity<WeldConcern>().ToTable("WeldAudit").HasKey(wa => wa.WeldConcernID);
             builder.Entity<AuditRouteWeld>().HasKey(rw => new {rw.AuditRouteId, rw.WeldId});
+            builder.Entity<AuditRouteWeld>().HasOne(r => r.AuditRoute).WithMany(aw => aw.AuditRouteWelds).HasForeignKey(fk => fk.AuditRouteId);
+            builder.Entity<AuditRouteWeld>().HasOne(w => w.Weld).WithMany(aw => aw.AuditRouteWelds).HasForeignKey(fk => fk.WeldId);
         }
         public DbSet<Van_Authentication.Models.RepairProcedure> RepairProcedure { get; set; } = default!;
     }

@@ -1,0 +1,85 @@
+﻿@page
+@model Van_Authentication.Pages.Admin.Routes.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>@Model.AuditRoute.AuditRouteName Route</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AuditRoute.AuditRouteName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AuditRoute.AuditRouteName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AuditRoute.PartModel.PartModelName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AuditRoute.PartModel.PartModelName)
+        </dd>
+    </dl>
+</div>
+<a asp-page="./Welds/Add" asp-route-routeID="@Model.AuditRoute.AuditRouteId" class="btn btn-primary mb-2">Add Weld to Route</a>
+<div class="table-responsive card shadow">
+    <table class="table bg-white">
+        <thead>
+            <tr>
+                <th>Line</th>
+
+                <th>Station</th>
+
+                <th>Robot #</th>
+
+                <th>Weld ID</th>
+
+                <th>Weld Type</th>
+
+                <th>Nugget Size</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.RobotWelds != null)
+            {
+                foreach (var item in Model.RobotWelds)
+                {
+                    <tr>
+                        <td>
+                            @item.Robot.Line
+                        </td>
+                        <td>
+                            @item.Robot.Station
+                        </td>
+                        <td>
+                            @item.Robot.RobotNumber
+                        </td>
+                        <td>
+                            @item.WeldID
+                        </td>
+                        <td>
+                            @item.Weld.WeldType
+                        </td>
+                        <td>
+                            @item.Weld.NuggetSize
+                        </td>
+                        <td>
+                            <a asp-page="./Welds/Delete" asp-route-routeID="@Model.AuditRoute.AuditRouteId" asp-route-weldID="@item.WeldID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+
+    </table>
+</div>
+
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.AuditRoute.AuditRouteId">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

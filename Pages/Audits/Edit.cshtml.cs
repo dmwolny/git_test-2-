@@ -52,6 +52,7 @@ namespace Van_Authentication.Pages.Audits
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             ViewData["WorkStationName"] = new SelectList(_context.WorkStations, "WorkStationName", "WorkStationName");
+            ViewData["ModelName"] = new SelectList(_context.PartModels, "PartModelName", "PartModelName");
             if (id == null)
             {
                 return NotFound();

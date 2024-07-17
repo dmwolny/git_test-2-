@@ -1,0 +1,46 @@
+﻿@page
+@model Van_Authentication.Pages.Admin.Routes.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+<div class="table-responsive card shadow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.AuditRoute[0].AuditRouteName)
+                </th>
+                <th>
+                    Model(Part)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AuditRoute)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuditRouteName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PartModel.PartModelName)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.AuditRouteId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.AuditRouteId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.AuditRouteId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
