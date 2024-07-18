@@ -31,7 +31,8 @@ namespace Van_Authentication.Models
         [Length(2,3)]
         public string Result { get; set; } = "";
         public string? Notes { get; set; }
-        public string? Model { get; set; } = "";
+        [Required]
+        public string Model { get; set; } = "";
 
         public ICollection<WeldConcern>? WeldConcerns { get; set; }
     }

@@ -38,7 +38,8 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Audit Type</label>
-                <select class="form-control">
+                <select asp-for="Type" class="form-control" id="Audit_Type">
+                    <option selected disabled>-- Select Audit Type --</option>
                     <option>Weld</option>
                     <option>Sealer</option>
                     <option>Stud</option>
@@ -46,12 +47,16 @@
             </div>
             <div class="form-group">
                 <label asp-for="Audit.Model" class="control-label"></label>
-                <select asp-for="Audit.Model" class="form-control" asp-items="ViewBag.ModelName"></select>
+                <select asp-for="Audit.Model" class="form-control" asp-items="ViewBag.ModelName" disabled>
+                    <option></option>
+                </select>
                 <span asp-validation-for="Audit.Model" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Audit.Route" class="control-label"></label>
-                <input asp-for="Audit.Route" class="form-control" />
+                <select asp-for="Audit.Route" class="form-control" asp-items="ViewBag.RouteName" disabled>
+                    <option></option>
+                </select>
                 <span asp-validation-for="Audit.Route" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -71,12 +76,22 @@
                 <input asp-for="Audit.Result" class="form-control" />
                 <span asp-validation-for="Audit.Result" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Add weld concern
-                </button>
-                <input type="submit" value="Submit" class="btn btn-primary"/>
-            </div>
+            @if(Model.Audit.Route.Count() > 0)
+            {
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Add weld concern
+                    </button>
+                    <input type="submit" value="Submit" class="btn btn-primary"/>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <input id="setup" type="submit" value="Setup Audit Route" class="btn btn-primary mt-3" asp-page-handler="setup" disabled />
+                </div>
+            }
+
         </form>
 
         <div>
@@ -192,7 +207,7 @@
                     <div class="col-sm-3">
                         <ul>
                             <label class="control-label">Pick a Line</label>
-                            <select class="form-control" asp-items="@Model.RobotNameSL" name="Line" id="Line" asp-for="Line">
+                            <select class="form-control" asp-items="@ViewBag.RouteLine" name="Line" id="Line" asp-for="Line">
                                 <option value="">Select Line</option>
                             </select>
                         </ul>
@@ -416,16 +431,16 @@
         // Close the Modal
         document.getElementById("closeBtn").addEventListener("click", function (e) { closeModal() });
         document.getElementById("closeIcon").addEventListener("click", function (e) { closeModal() });
-        // Track changes in the Line, Barcode and Notes sections
+        // Track changes in the Notes sections
         // save changes to sessionStorage
-        let route = document.getElementById("Audit_Route");
-        route.addEventListener("change", () => {
-            sessionStorage.setItem("route", route.value);
+        let notes = document.getElementById("Audit_Notes");
+        notes.addEventListener("change", () => {
+            sessionStorage.setItem("notes", notes.value);
         })
 
         // reset the input values on page refresh
-        if (sessionStorage.getItem("route")) {
-            route.value = sessionStorage.getItem("route");
+        if (sessionStorage.getItem("notes")) {
+            notes.value = sessionStorage.getItem("notes");
         }
 
         var getParentAnchor = function (element) {
@@ -444,6 +459,66 @@
             if (anchor !== null) {
                 sessionStorage.clear();
             } false
+        });
+
+        //get audit models when user selects Audit_Type
+        document.getElementById("Audit_Type").addEventListener("change", function () {
+            var lineValue = document.getElementById("Audit_Line").value;
+            var typeValue = document.getElementById("Audit_Type").value;
+            console.log("change in audit type drope down");
+
+            fetch("?handler=Model&line=" + encodeURIComponent(lineValue) + "&type=" + encodeURIComponent(typeValue))
+                .then(function (response) {
+                    console.log("get JSON response");
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = '<option value=null selected disabled>Models(Parts)</option>';
+                    var stationSelect = document.getElementById("Audit_Model");
+                    stationSelect.innerHTML = ''; // Clear previous options
+
+                    //Disable dropdowns 
+                    document.getElementById("Audit_Route").setAttribute('disabled', true);
+
+                    //Remove previous data from dropdowns
+                    document.getElementById("Audit_Route").innerHTML = '<option value=null selected disabled>Routes</option>';
+
+                    data.forEach(function (lineRobots) {
+                        items += "<option value='" + lineRobots.text + "'>" + lineRobots.text + "</option>";
+                    });
+
+                    stationSelect.innerHTML = items; // Add new options
+                    stationSelect.removeAttribute('disabled');
+                })
+                .catch(function (error) {
+                    console.error('Error fetching Stations:', error);
+                });
+        });
+
+        //get audit routes when user selects Audit_Model
+        document.getElementById("Audit_Model").addEventListener("change", function () {
+            var lineValue = document.getElementById("Audit_Line").value;
+            var modelValue = document.getElementById("Audit_Model").value;
+
+            fetch("?handler=Route&line=" + encodeURIComponent(lineValue) + "&model=" + encodeURIComponent(modelValue))
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = '<option value=null selected disabled>Routes</option>';
+                    var stationSelect = document.getElementById("Audit_Route");
+                    stationSelect.innerHTML = ''; // Clear previous options
+
+                    data.forEach(function (lineRobots) {
+                        items += "<option value='" + lineRobots.text + "'>" + lineRobots.text + "</option>";
+                    });
+
+                    stationSelect.innerHTML = items; // Add new options
+                    stationSelect.removeAttribute('disabled');
+                })
+                .catch(function (error) {
+                    console.error('Error fetching Stations:', error);
+                });
         });
 
         //get station numbers when user select line
@@ -555,6 +630,10 @@
             document.getElementById("welds").innerHTML = '';
             document.getElementById("tcpcheckbox").checked = false;
         });
+
+        document.getElementById("Audit_Route").addEventListener("change", function(){
+            document.getElementById("setup").removeAttribute('disabled');
+        })
 
     </script>
 }

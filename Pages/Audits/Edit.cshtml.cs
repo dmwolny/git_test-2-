@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Nancy.Routing.Trie;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using Van_Authentication.Models;
@@ -46,6 +48,10 @@ namespace Van_Authentication.Pages.Audits
         public int RobotNumber { get; set; }
         [BindProperty]
         public string? Style { get; set; }
+        public string? Type { get; set; }
+
+        public IList<string> routeLines { get; set; } = default!;
+        public ICollection<Robot> QueryRobots { get; set; } = default!;
 
         public string AlertMessage { get; set; } = "";
 
@@ -53,6 +59,8 @@ namespace Van_Authentication.Pages.Audits
         {
             ViewData["WorkStationName"] = new SelectList(_context.WorkStations, "WorkStationName", "WorkStationName");
             ViewData["ModelName"] = new SelectList(_context.PartModels, "PartModelName", "PartModelName");
+            ViewData["RouteName"] = new SelectList(_context.AuditRoutes, "AuditRouteName", "AuditRouteName");
+
             if (id == null)
             {
                 return NotFound();
@@ -60,6 +68,26 @@ namespace Van_Authentication.Pages.Audits
             PopulateRobotsDropDownList(_context);
 
             var audit =  await _context.Audits.FirstOrDefaultAsync(m => m.AuditID == id);
+            Type = await _context.PartModels.Where(m => m.PartModelName.Equals(audit.Model)).Select(n => n.PartModelType).FirstOrDefaultAsync();
+            if(audit.Route != null)
+            {
+                var queryRoutes = _context.Robots
+                    .Join(_context.RobotWelds,
+                    robots => robots.RobotID,
+                    robotWelds => robotWelds.RobotID,
+                    (robots, robotWelds) => new { robots, robotWelds })
+                    .Join(_context.AuditRouteWelds,
+                    combinedRobots => combinedRobots.robotWelds.WeldID,
+                    routeWelds => routeWelds.WeldId,
+                    (combinedRobots, routeWelds) => new { combinedRobots, routeWelds }).
+                    Join(_context.AuditRoutes,
+                    combinedTables => combinedTables.routeWelds.AuditRouteId,
+                    auditRoute => auditRoute.AuditRouteId,
+                    (combinedTables, auditRoute) => new {combinedTables, auditRoute}).Where(m => m.auditRoute.AuditRouteName.Equals(audit.Route));
+                routeLines = queryRoutes.Select(m => m.combinedTables.combinedRobots.robots.Line).Distinct().ToList();
+                QueryRobots = queryRoutes.Select(m => m.combinedTables.combinedRobots.robots).ToList();
+            }
+            ViewData["RouteLine"] = new SelectList(routeLines);
             List<WeldConcern> discrepant = new List<WeldConcern>();
             discrepant = await _context.WeldConcerns.Where(d => d.AuditID == id).ToListAsync();
 
@@ -80,40 +108,76 @@ namespace Van_Authentication.Pages.Audits
             return Page();
         }
 
-        public async Task<IActionResult> OnGetWeldsAsync(string Line, int Station, int RobotNumber, string Style)
+        public async Task<IActionResult> OnGetWeldsAsync(string Line, int Station, int RobotNumber, string Style, int id)
         {
             List<WeldDTO> weldInfo = new List<WeldDTO>();
-            var weldQuery = await _context.Robots.Where(r => r.Line.Equals(Line) && r.Station == Station && r.RobotNumber == RobotNumber && r.Style.Equals(Style)).Include(rw => rw.RobotWelds).ThenInclude(w => w.Weld).ToListAsync();
-            
-            foreach (Robot r in weldQuery)
+
+            var audit = _context.Audits.FirstOrDefault(m => m.AuditID == id);
+            var rbtID = await _context.Robots.Where(r => r.Line.Equals(Line) && r.Station == Station && r.RobotNumber == RobotNumber && r.Style.Equals(Style))
+                .Select(x => x.RobotID).FirstOrDefaultAsync();
+            var rbtGraphic = await _context.Robots.Where(r => r.Line.Equals(Line) && r.Station == Station && r.RobotNumber == RobotNumber && r.Style.Equals(Style))
+                .Select(x => x.Graphic).FirstOrDefaultAsync();
+            var rtID = await _context.AuditRoutes.Where(x => x.AuditRouteName.Equals(audit.Route))
+                .Select(y => y.AuditRouteId).FirstOrDefaultAsync();
+
+            var anotherway = _context.RobotWelds
+                .Join(_context.Welds,
+                robotWeld => robotWeld.WeldID,
+                weld => weld.WeldID,
+                (robotWeld, weld) => new { robotWeld, weld })
+                .Join(_context.AuditRouteWelds,
+                welds => welds.weld.WeldID,
+                auditwelds => auditwelds.WeldId,
+                (welds, auditwelds) => new { welds, auditwelds })
+                .Where(x => x.auditwelds.AuditRouteId == rtID && x.welds.robotWeld.RobotID == rbtID).Select(y => y.welds.weld).ToList();
+            foreach(Weld rw in anotherway)
             {
-                if (r.RobotWelds.Count() == 0)
+                WeldDTO weld = new WeldDTO();
+                weld.WeldID = rw.WeldID;
+                weld.WeldType = rw.WeldType;
+                weld.NuggetSize = rw.NuggetSize;
+                if (rbtGraphic == null)
                 {
-                    WeldDTO weld1 = new WeldDTO();
-                    weld1.WeldID = 0;
-                    weld1.WeldType = "not found";
-                    weld1.NuggetSize = 0;
-                    weld1.Graphic = "default.PNG";
-                    weldInfo.Add(weld1);
+                    weld.Graphic = "default.PNG";
                 }
-                foreach (RobotWeld rw in r.RobotWelds)
+                else
                 {
-                    WeldDTO weld = new WeldDTO();
-                    weld.WeldID = rw.Weld.WeldID;
-                    weld.WeldType = rw.Weld.WeldType;
-                    weld.NuggetSize = rw.Weld.NuggetSize;
-                    weld.Graphic = r.Graphic;
-                    weldInfo.Add(weld);
-                    if(r.Graphic == null)
-                    {
-                        weld.Graphic = "default.PNG";
-                    }
-                    else
-                    {
-                        weld.Graphic = r.Graphic;
-                    }
+                    weld.Graphic = rbtGraphic;
                 }
-            }          
+                weldInfo.Add(weld);
+            }
+
+            //var weldQuery = await _context.Robots.Where(r => r.Line.Equals(Line) && r.Station == Station && r.RobotNumber == RobotNumber && r.Style.Equals(Style)).Include(rw => rw.RobotWelds).ThenInclude(w => w.Weld).ToListAsync();
+            
+            //foreach (Robot r in weldQuery)
+            //{
+            //    if (r.RobotWelds.Count() == 0)
+            //    {
+            //        WeldDTO weld1 = new WeldDTO();
+            //        weld1.WeldID = 0;
+            //        weld1.WeldType = "not found";
+            //        weld1.NuggetSize = 0;
+            //        weld1.Graphic = "default.PNG";
+            //        weldInfo.Add(weld1);
+            //    }
+            //    foreach (RobotWeld rw in r.RobotWelds)
+            //    {
+            //        WeldDTO weld = new WeldDTO();
+            //        weld.WeldID = rw.Weld.WeldID;
+            //        weld.WeldType = rw.Weld.WeldType;
+            //        weld.NuggetSize = rw.Weld.NuggetSize;
+            //        weld.Graphic = r.Graphic;
+            //        weldInfo.Add(weld);
+            //        if(r.Graphic == null)
+            //        {
+            //            weld.Graphic = "default.PNG";
+            //        }
+            //        else
+            //        {
+            //            weld.Graphic = r.Graphic;
+            //        }
+            //    }
+            //}          
 
             //  Send list of welds back to JS function as a JSON
             var settings = new JsonSerializerSettings();
@@ -151,6 +215,34 @@ namespace Van_Authentication.Pages.Audits
             }
 
             return RedirectToPage("./Index");
+        }
+
+        public async Task<IActionResult> OnPostSetupAsync(int? id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            _context.Attach(Audit).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AuditExists(Audit.AuditID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToPage("./Edit",id);
         }
 
         public async Task<IActionResult> OnPostAddConcernsAsync(int? id)
@@ -249,22 +341,82 @@ namespace Van_Authentication.Pages.Audits
             return _context.Audits.Any(e => e.AuditID == id);
         }
 
-        public JsonResult OnGetStation(string Line)
+        public JsonResult OnGetStation(string Line, int id)
         {
+            var test = new SelectList(RouteData(id)
+                .Where(m => m.Line == Line)
+                .OrderBy(x => x.Station)
+                .Select(y => y.Station)
+                .Distinct(), "Station");
             var lineRobots = new SelectList(_context.Robots.Where(m => m.Line == Line).Select(x => x.Station).Distinct(),"Station");
-            return new JsonResult(lineRobots);
+            return new JsonResult(test);
         }
 
-        public JsonResult OnGetRobotNum(string Line, int Station)
+        public JsonResult OnGetRobotNum(string Line, int Station, int id)
         {
+            var test = new SelectList(RouteData(id)
+                .Where(m => m.Line == Line && m.Station == Station)
+                .OrderBy(x => x.RobotNumber)
+                .Select(y => y.RobotNumber)
+                .Distinct(), "RobotNumber");
             var lineRobots = new SelectList(_context.Robots.Where(m => m.Line == Line && m.Station == Station).Select(x => x.RobotNumber).Distinct(), "RobotNumber");
-            return new JsonResult(lineRobots);
+            return new JsonResult(test);
         }
 
-        public JsonResult OnGetStyle(string Line, int Station, int RobotNumber)
+        public JsonResult OnGetStyle(string Line, int Station, int RobotNumber, int id)
         {
+            var test = new SelectList(RouteData(id)
+                .Where(m => m.Line == Line && m.Station == Station && m.RobotNumber == RobotNumber)
+                .OrderBy(x => x.Style)
+                .Select(y => y.Style)
+                .Distinct(), "Style");
             var lineRobots = new SelectList(_context.Robots.Where(m => m.Line == Line && m.Station == Station && m.RobotNumber == RobotNumber).Select(x => x.Style).Distinct(), "Style");
             return new JsonResult(lineRobots);
+        }
+
+        public JsonResult OnGetModel(string line, string type)
+        {
+            var auditModels = new SelectList(_context.PartModels
+                .Where(m => m.WorkStation.WorkStationName.Equals(line) && m.PartModelType.Equals(type))
+                .Select(x => x.PartModelName)
+                .Distinct(), "PartModelName");
+            return new JsonResult(auditModels);
+        }
+
+        public JsonResult OnGetRoute(string line, string model)
+        {
+            var auditeRoutes = new SelectList(_context.AuditRoutes
+                .Where(m => m.PartModel.WorkStation.WorkStationName.Equals(line) && m.PartModel.PartModelName.Equals(model))
+                .Select(x => x.AuditRouteName)
+                .Distinct(), "AuditRouteName");
+            return new JsonResult(auditeRoutes);
+        }
+
+        public ICollection<Robot> RouteData(int? id)
+        {
+            var audit = _context.Audits.FirstOrDefault(m => m.AuditID == id);
+            Type = _context.PartModels.Where(m => m.PartModelName.Equals(audit.Model)).Select(n => n.PartModelType).FirstOrDefault();
+            if (audit.Route != null)
+            {
+                var queryRoutes = _context.Robots
+                    .Join(_context.RobotWelds,
+                    robots => robots.RobotID,
+                    robotWelds => robotWelds.RobotID,
+                    (robots, robotWelds) => new { robots, robotWelds })
+                    .Join(_context.AuditRouteWelds,
+                    combinedRobots => combinedRobots.robotWelds.WeldID,
+                    routeWelds => routeWelds.WeldId,
+                    (combinedRobots, routeWelds) => new { combinedRobots, routeWelds }).
+                    Join(_context.AuditRoutes,
+                    combinedTables => combinedTables.routeWelds.AuditRouteId,
+                    auditRoute => auditRoute.AuditRouteId,
+                    (combinedTables, auditRoute) => new { combinedTables, auditRoute })
+                    .Where(m => m.auditRoute.AuditRouteName
+                    .Equals(audit.Route));
+
+                return queryRoutes.Select(m => m.combinedTables.combinedRobots.robots).ToList();
+            }
+            return null;
         }
     }
 }
