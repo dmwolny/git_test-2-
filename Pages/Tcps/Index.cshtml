@@ -73,7 +73,8 @@
                         @Html.DisplayFor(modelItem => item.CreatedAt)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.WeldConcerns.FirstOrDefault().Audit.Shift)
+                        @Html.DisplayFor(modelItem => item.Shift)
+                        @* Html.DisplayFor(modelItem => item.WeldConcerns.FirstOrDefault().Audit.Shift)  *@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TcpId)
@@ -81,23 +82,27 @@
                     <td class="@item.Status">
                         @Html.DisplayFor(modelItem => item.Status)
                     </td>
-                    <td>@if(item.WeldConcerns != null)
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Line)
+                       @*  if(item.WeldConcerns != null)
                         {
-                            @item.WeldConcerns.Select(m => m.Line).FirstOrDefault()                            
-                        }
+                            item.WeldConcerns.Select(m => m.Line).FirstOrDefault()                            
+                        } *@
 
                     </td>
                     <td>
-                        @if (item.WeldConcerns != null)
+                        @Html.DisplayFor(modelItem => item.Station)
+                        @* if (item.WeldConcerns != null)
                         {
-                            @item.WeldConcerns.Select(m => m.Station).FirstOrDefault()
-                        }
+                            item.WeldConcerns.Select(m => m.Station).FirstOrDefault()
+                        } *@
                     </td>
                     <td>
-                        @if (item.WeldConcerns != null)
+                        @Html.DisplayFor(modelItem => item.RobotNumber)
+                        @* if (item.WeldConcerns != null)
                         {
-                            @item.WeldConcerns.Select(m => m.RobotNumber).FirstOrDefault()
-                        }
+                            item.WeldConcerns.Select(m => m.RobotNumber).FirstOrDefault()
+                        } *@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Production)
@@ -160,8 +165,7 @@
             if (document.getElementById('startDate').value) 
             {
                 var start = new Date(document.getElementById('startDate').value + "T00:00:00");
-                var end = new Date(document.getElementById('endDate').value + "T00:00:00");
-                console.log("startDate: "+start+" endDate: "+end);
+                var end = new Date(document.getElementById('endDate').value + "T23:59:59");
                 var startDate = (start.getMonth() + 1) + "/" + start.getDate() + "/" + start.getFullYear();
                 var endDate = (end.getMonth() + 1) + "/" + end.getDate() + "/" + end.getFullYear();
                 var dateRange = startDate + " - " + endDate;

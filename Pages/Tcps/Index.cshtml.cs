@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Nancy.Extensions;
+using Van_Authentication.Migrations;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -24,7 +25,8 @@ namespace Van_Authentication.Pages.Tcps
             _context = context;
         }
 
-        public IList<Tcp> Tcp { get;set; } = default!;
+        //public IList<Tcp> Tcp { get;set; } = default!;
+        public IList<TcpFlatten> Tcp {  set; get; } = default!;
 
         //Pagination variables
         public int pageIndex = 1;
@@ -40,16 +42,39 @@ namespace Van_Authentication.Pages.Tcps
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy")]
         public DateTime? endDate { get; set; } = default!;
 
-        public async Task OnGetAsync(int? pageIndex, string? search, DateTime? startDate, DateTime? endDate)
+        public async Task OnGetAsync(int? pageIndex, string? search, DateTime startDate, DateTime endDate)
         {
-            IQueryable<Tcp> query =  _context.Tcps.Include(p => p.WeldConcerns).ThenInclude(a => a.Audit);
+            //IQueryable<Tcp> query =  _context.Tcps.Include(p => p.WeldConcerns).ThenInclude(a => a.Audit);
+            IQueryable<TcpFlatten> query = _context.Tcps
+                .Join(_context.WeldConcerns,
+                tcp => tcp.TcpId,
+                weldAudit => weldAudit.TcpID,
+                (tcp, weldAudit) => new { tcp, weldAudit })
+                .Join(_context.Audits,
+                joined => joined.weldAudit.AuditID,
+                audit => audit.AuditID,
+                (joined, audit) => new TcpFlatten
+                {
+                    TcpId = joined.tcp.TcpId,
+                    CreatedAt = joined.tcp.CreatedAt,
+                    Shift = audit.Shift,
+                    Status = joined.tcp.Status,
+                    Line = joined.weldAudit.Line,
+                    Station = joined.weldAudit.Station,
+                    RobotNumber = joined.weldAudit.RobotNumber,
+                    Production = joined.tcp.Production,
+                    Maintenance = joined.tcp.Maintenance,
+                    Engineering = joined.tcp.Engineering
+                })
+                .Distinct();
             var start = startDate;
             var end = endDate;
-
+            
             // search functionality
             //by daterange if that is the only thing selected.
-            if(startDate != null && endDate != null) 
+            if(startDate != DateTime.MinValue && endDate != DateTime.MinValue) 
             {
+                endDate = endDate.AddHours(24);
                 query = query.Where(x => x.CreatedAt > startDate && x.CreatedAt < endDate);
             }
 
@@ -61,7 +86,7 @@ namespace Van_Authentication.Pages.Tcps
 
                 //check to see if user did not select a date range
                 //then set the date range to 1/1/2024 0:00:00 to DateTime.UTCNow
-                if (startDate == null && endDate == null)
+                if (startDate == DateTime.MinValue && endDate == DateTime.MinValue)
                 {
                     startDate = DateTime.MinValue;
                     endDate = DateTime.UtcNow;
@@ -74,28 +99,29 @@ namespace Van_Authentication.Pages.Tcps
                 }
                 else
                 {
-                    query = (from tcp in _context.Tcps
-                             join wc in _context.WeldConcerns on tcp.TcpId equals wc.TcpID
-                             where (wc.Line.Contains(search) && tcp.CreatedAt > startDate && tcp.CreatedAt < endDate || tcp.Status.Contains(search) && tcp.CreatedAt > startDate && tcp.CreatedAt < endDate)
-                             select new Tcp
-                             {
-                                 TcpId = tcp.TcpId,
-                                 Status = tcp.Status,
-                                 Production = tcp.Production,
-                                 Repaired = tcp.Repaired,
-                                 FirstRepaired = tcp.FirstRepaired,
-                                 LastRepaired = tcp.LastRepaired,
-                                 RepairProcedure = tcp.RepairProcedure,
-                                 ProductionNotes = tcp.ProductionNotes,
-                                 Maintenance = tcp.Maintenance,
-                                 RootCause = tcp.RootCause,
-                                 CorrectiveAction = tcp.CorrectiveAction,
-                                 MaintenanceNotes = tcp.MaintenanceNotes,
-                                 Engineering = tcp.Engineering,
-                                 EngineeringNotes = tcp.EngineeringNotes,
-                                 WeldConcerns = tcp.WeldConcerns,
-                                 CreatedAt = tcp.CreatedAt
-                             }) ;
+                    query = query.Where(x => x.Line.Contains(search) && x.CreatedAt > startDate && x.CreatedAt < endDate || x.Status.Contains(search) && x.CreatedAt > startDate && x.CreatedAt < endDate);
+                    //query = (from tcp in _context.Tcps
+                    //         join wc in _context.WeldConcerns on tcp.TcpId equals wc.TcpID
+                    //         where (wc.Line.Contains(search) && tcp.CreatedAt > startDate && tcp.CreatedAt < endDate || tcp.Status.Contains(search) && tcp.CreatedAt > startDate && tcp.CreatedAt < endDate)
+                    //         select new Tcp
+                    //         {
+                    //             TcpId = tcp.TcpId,
+                    //             Status = tcp.Status,
+                    //             Production = tcp.Production,
+                    //             Repaired = tcp.Repaired,
+                    //             FirstRepaired = tcp.FirstRepaired,
+                    //             LastRepaired = tcp.LastRepaired,
+                    //             RepairProcedure = tcp.RepairProcedure,
+                    //             ProductionNotes = tcp.ProductionNotes,
+                    //             Maintenance = tcp.Maintenance,
+                    //             RootCause = tcp.RootCause,
+                    //             CorrectiveAction = tcp.CorrectiveAction,
+                    //             MaintenanceNotes = tcp.MaintenanceNotes,
+                    //             Engineering = tcp.Engineering,
+                    //             EngineeringNotes = tcp.EngineeringNotes,
+                    //             WeldConcerns = tcp.WeldConcerns,
+                    //             CreatedAt = tcp.CreatedAt
+                    //         });
                 }
             }
 
@@ -114,8 +140,20 @@ namespace Van_Authentication.Pages.Tcps
                 .Take(pageSize);
             Tcp = await query.ToListAsync();
 
-            startDate = null;
-            endDate = null;
         }
+    }
+
+    public class TcpFlatten
+    {
+        public DateTime? CreatedAt;
+        public string? Shift;
+        public int TcpId;
+        public string? Status;
+        public string? Line;
+        public int Station;
+        public int RobotNumber;
+        public string? Production;
+        public string? Maintenance;
+        public string? Engineering;
     }
 }

@@ -108,6 +108,7 @@ namespace Van_Authentication.Pages.Audits
             return Page();
         }
 
+        //Get welds from the selected robot and route
         public async Task<IActionResult> OnGetWeldsAsync(string Line, int Station, int RobotNumber, string Style, int id)
         {
             List<WeldDTO> weldInfo = new List<WeldDTO>();
@@ -145,39 +146,51 @@ namespace Van_Authentication.Pages.Audits
                     weld.Graphic = rbtGraphic;
                 }
                 weldInfo.Add(weld);
-            }
+            }      
 
-            //var weldQuery = await _context.Robots.Where(r => r.Line.Equals(Line) && r.Station == Station && r.RobotNumber == RobotNumber && r.Style.Equals(Style)).Include(rw => rw.RobotWelds).ThenInclude(w => w.Weld).ToListAsync();
-            
-            //foreach (Robot r in weldQuery)
-            //{
-            //    if (r.RobotWelds.Count() == 0)
-            //    {
-            //        WeldDTO weld1 = new WeldDTO();
-            //        weld1.WeldID = 0;
-            //        weld1.WeldType = "not found";
-            //        weld1.NuggetSize = 0;
-            //        weld1.Graphic = "default.PNG";
-            //        weldInfo.Add(weld1);
-            //    }
-            //    foreach (RobotWeld rw in r.RobotWelds)
-            //    {
-            //        WeldDTO weld = new WeldDTO();
-            //        weld.WeldID = rw.Weld.WeldID;
-            //        weld.WeldType = rw.Weld.WeldType;
-            //        weld.NuggetSize = rw.Weld.NuggetSize;
-            //        weld.Graphic = r.Graphic;
-            //        weldInfo.Add(weld);
-            //        if(r.Graphic == null)
-            //        {
-            //            weld.Graphic = "default.PNG";
-            //        }
-            //        else
-            //        {
-            //            weld.Graphic = r.Graphic;
-            //        }
-            //    }
-            //}          
+            //  Send list of welds back to JS function as a JSON
+            var settings = new JsonSerializerSettings();
+            settings.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
+            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            string output = JsonConvert.SerializeObject(weldInfo, settings);
+            return new JsonResult(output);
+        }
+
+        //Get all welds from the selected robot
+        public async Task<IActionResult> OnGetTcpWeldsAsync(string Line, int Station, int RobotNumber, string Style, int id)
+        {
+            List<WeldDTO> weldInfo = new List<WeldDTO>();
+            var weldQuery = await _context.Robots.Where(r => r.Line.Equals(Line) && r.Station == Station && r.RobotNumber == RobotNumber && r.Style.Equals(Style)).Include(rw => rw.RobotWelds).ThenInclude(w => w.Weld).ToListAsync();
+
+            foreach (Robot r in weldQuery)
+            {
+                if (r.RobotWelds.Count() == 0)
+                {
+                    WeldDTO weld1 = new WeldDTO();
+                    weld1.WeldID = 0;
+                    weld1.WeldType = "not found";
+                    weld1.NuggetSize = 0;
+                    weld1.Graphic = "default.PNG";
+                    weldInfo.Add(weld1);
+                }
+                foreach (RobotWeld rw in r.RobotWelds)
+                {
+                    WeldDTO weld = new WeldDTO();
+                    weld.WeldID = rw.Weld.WeldID;
+                    weld.WeldType = rw.Weld.WeldType;
+                    weld.NuggetSize = rw.Weld.NuggetSize;
+                    weld.Graphic = r.Graphic;
+                    weldInfo.Add(weld);
+                    if (r.Graphic == null)
+                    {
+                        weld.Graphic = "default.PNG";
+                    }
+                    else
+                    {
+                        weld.Graphic = r.Graphic;
+                    }
+                }
+            }
 
             //  Send list of welds back to JS function as a JSON
             var settings = new JsonSerializerSettings();

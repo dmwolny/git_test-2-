@@ -1,0 +1,110 @@
+﻿@page
+@model Van_Authentication.Pages.Monitor.AuditsModel
+@{
+}
+<form asp-page-handler="Audits" method="get">
+    <div class="col-2">
+        <div class="form-group">
+            <label class="control-label">Date</label>
+            <input asp-for="date" type="date" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label  class="control-label">Shift</label>
+            <select asp-for="Shift" class="form-control">
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary my-3">Select</button>
+        </div>
+
+    </div>
+
+</form>
+<div class="accordion accordion-flush shadow">
+
+    @if(Model.Parts != null)
+    {
+        @foreach (var item in Model.Parts)
+        {
+            var lineItem = item.WorkStationName;
+            var typeItem = item.PartModelType;
+            <div class="accordion-item">
+            <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@item.WorkStationName.Replace(" ", "")-@item.PartModelType">
+                    @item.WorkStationName @item.PartModelType Audits: 
+                        @Model.Audit.Where(y => y.Line.Equals(lineItem) && y.Type.Equals(typeItem)).Select(x => x.Line).Count()
+                    / @item.NumberOfAudits Completed
+                </button>
+            </h2>
+                <div id="@item.WorkStationName.Replace(" ", "")-@item.PartModelType" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="table-responsive card ">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Audits[0].CreatedAt)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Audits[0].Shift)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Audits[0].Auditor)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Audits[0].Line)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Audits[0].Route)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Audits[0].Barcode)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Audits[0].Result)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var audit in Model.Audit.Where(x => x.Line.Equals(lineItem) && x.Type.Equals(typeItem)))
+                            {
+                                <tr>
+                                    <td>
+                                    @Html.DisplayFor(modelItem => audit.CreatedAt)
+                                    </td>
+                                    <td>
+                                    @Html.DisplayFor(modelItem => audit.Shift)
+                                    </td>
+                                    <td>
+                                    @Html.DisplayFor(modelItem => audit.Auditor)
+                                    </td>
+                                    <td>
+                                    @Html.DisplayFor(modelItem => audit.Line)
+                                    </td>
+                                    <td>
+                                    @Html.DisplayFor(modelItem => audit.Route)
+                                    </td>
+                                    <td>
+                                    @Html.DisplayFor(modelItem => audit.Barcode)
+                                    </td>
+                                    <td>
+                                    @Html.DisplayFor(modelItem => audit.Result)
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        }
+        
+    }
+    
+   
+</div>

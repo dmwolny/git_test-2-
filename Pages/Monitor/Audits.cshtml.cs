@@ -1,0 +1,84 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using Van_Authentication.Models;
+using Van_Authentication.Services;
+
+namespace Van_Authentication.Pages.Monitor
+{
+    public class AuditsModel : PageModel
+    {
+        private readonly ApplicationDbContext _context;
+        public IList<PartModelDTO> Parts { get; set; }
+        public IList<Audit> Audits { get; set; }
+        public IList<AuditDTO> Audit { get; set; }
+        [BindProperty]
+        public DateOnly? date {  get; set; }
+        [BindProperty]
+        public string Shift { get; set; }
+
+        public AuditsModel(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+        public void OnGet(DateOnly? date, string? Shift)
+        {
+            List<PartModelDTO> partModels = new List<PartModelDTO>();
+            var query = from partModel in _context.PartModels
+                        join workstation in _context.WorkStations
+                        on partModel.WorkStationId equals workstation.WorkStationId
+                        group new { partModel, workstation } by new { partModel.PartModelType, workstation.WorkStationName } into grouped
+                        select new PartModelDTO
+                        {
+                            WorkStationName = grouped.Key.WorkStationName,
+                            PartModelType = grouped.Key.PartModelType,
+                            NumberOfAudits = grouped.Sum(x => x.partModel.LotControl)
+                        };
+            partModels = query.ToList();
+            Parts = partModels;
+
+            List<Audit> audits = _context.Audits.Where(x => x.Shift.Equals(Shift) && (DateOnly.FromDateTime(x.CreatedAt)==date) ).ToList();
+            List<AuditDTO> auditsDTO = new List<AuditDTO>();
+            foreach (var item in audits)
+            {
+                AuditDTO audit = new AuditDTO();
+                audit.Type = _context.PartModels
+                    .Where(x => x.WorkStation.WorkStationName.Equals(item.Line)).Select(y => y.PartModelType)
+                    .FirstOrDefault();
+                audit.CreatedAt = item.CreatedAt;
+                audit.Shift = item.Shift;
+                audit.Auditor = item.Auditor;
+                audit.Line = item.Line;
+                audit.Route = item.Route;
+                audit.Barcode = item.Barcode;
+                audit.Result = item.Result;
+                auditsDTO.Add(audit);
+            }
+            Audit = auditsDTO;
+        } 
+    }
+
+    public class PartModelDTO 
+    {
+        public string WorkStationName { get; set; }
+        public string PartModelType { get; set; }
+        public int NumberOfAudits { get; set; }
+    }
+
+    public class AuditDTO
+    {
+        public DateTime CreatedAt { get; set; }
+        public string Shift { get; set; } = "";
+        public string Auditor { get; set; } = "";
+        public string Line { get; set; } = "";
+        public string Route { get; set; } = "";
+        public string Barcode { get; set; } = "";
+        public string Result { get; set; } = "";
+        public string Model { get; set; } = "";
+        public string Type { get; set; } = "";
+    }
+
+}
