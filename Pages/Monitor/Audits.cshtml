@@ -31,13 +31,21 @@
         {
             var lineItem = item.WorkStationName;
             var typeItem = item.PartModelType;
+            var routeList = Model.RouteCount.Where(x => x.Workstation.Equals(lineItem) && x.AuditType.Equals(typeItem)).ToList();
             <div class="accordion-item">
             <h2 class="accordion-header">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@item.WorkStationName.Replace(" ", "")-@item.PartModelType">
                     @item.WorkStationName @item.PartModelType Audits: 
                         @Model.Audit.Where(y => y.Line.Equals(lineItem) && y.Type.Equals(typeItem)).Select(x => x.Line).Count()
-                    / @item.NumberOfAudits Completed
-                </button>
+                        / @item.NumberOfAudits Completed | Audits Missed: @Model.Audit.Where(x => x.Line.Equals(lineItem) && x.Type.Equals(typeItem) && x.Barcode.ToLower().Equals("audit missed")).Count()
+                        | Routes: 
+                        @foreach (var routeItem in routeList)
+                        {
+                            var routename = @routeItem.RouteName;
+                            <div>@routeItem.RouteName: <b>@Model.Audit.Where(x => x.Route.Equals(routename)).Select(y => y.Route).Count() </b> | </div>
+                        }
+                    </button>
+
             </h2>
                 <div id="@item.WorkStationName.Replace(" ", "")-@item.PartModelType" class="accordion-collapse collapse">
                 <div class="accordion-body">

@@ -156,7 +156,7 @@ namespace Van_Authentication.Pages.Audits
             return new JsonResult(output);
         }
 
-        //Get all welds from the selected robot
+        //Get all welds from the selected robot if tcp is selected
         public async Task<IActionResult> OnGetTcpWeldsAsync(string Line, int Station, int RobotNumber, string Style, int id)
         {
             List<WeldDTO> weldInfo = new List<WeldDTO>();

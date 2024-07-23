@@ -15,6 +15,7 @@ namespace Van_Authentication.Pages.Monitor
         public IList<PartModelDTO> Parts { get; set; }
         public IList<Audit> Audits { get; set; }
         public IList<AuditDTO> Audit { get; set; }
+        public IList<RouteCount> RouteCount { get; set; }
         [BindProperty]
         public DateOnly? date {  get; set; }
         [BindProperty]
@@ -58,6 +59,36 @@ namespace Van_Authentication.Pages.Monitor
                 auditsDTO.Add(audit);
             }
             Audit = auditsDTO;
+
+            //Get list of workstations and their routes
+            List<RouteCount> routeCount = new List<RouteCount>();
+            var result = _context.WorkStations
+                .Join(_context.PartModels,
+                workstation => workstation.WorkStationId,
+                partmodel => partmodel.WorkStationId,
+                (workstation, partmodel) => new { workstation, partmodel })
+                .Join(_context.AuditRoutes,
+                combined => combined.partmodel.PartModelId,
+                auditroute => auditroute.PartModelId,
+                (combined, auditroute) => new { combined, auditroute })
+                .Select(x => new
+                {
+                    Workstation = x.combined.workstation.WorkStationName,
+                    AuditType = x.combined.partmodel.PartModelType,
+                    RouteName = x.auditroute.AuditRouteName
+                }).ToList();
+            
+            //sub each workstation/routename into routeCount obj
+            foreach(var item in result)
+            {
+                RouteCount sub = new RouteCount();
+                sub.Workstation = item.Workstation;
+                sub.AuditType = item.AuditType;
+                sub.RouteName = item.RouteName;
+                routeCount.Add(sub);
+            }
+
+            RouteCount = routeCount;
         } 
     }
 
@@ -79,6 +110,13 @@ namespace Van_Authentication.Pages.Monitor
         public string Result { get; set; } = "";
         public string Model { get; set; } = "";
         public string Type { get; set; } = "";
+    }
+
+    public class RouteCount
+    {
+        public string Workstation { get; set; } = "";
+        public string AuditType { get; set; } = "";
+        public string RouteName { get; set; } = "";
     }
 
 }

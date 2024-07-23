@@ -1,0 +1,113 @@
+﻿@page "{pageIndex?}"
+@model Van_Authentication.Pages.Monitor.AuditorModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Auditor History</h1>
+
+<p>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <form class="d-flex">
+                <input class="form-control me-2" asp-for="startDate" type="date" />
+                <input class="form-control me-2" asp-for="endDate" type="date" />
+                <select class="form-control me-2" asp-for="auditor" asp-items="ViewBag.AuditorName"></select>
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+</p>
+<div class="table-responsive card shadow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Audits[0].CreatedAt)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Audits[0].Shift)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Audits[0].Auditor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Audits[0].Line)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Audits[0].Route)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Audits[0].Barcode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Audits[0].Result)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Audits)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Shift)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Auditor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Line)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Route)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Barcode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Result)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.AuditID">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.AuditID">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination my-3">
+        @if (Model.pageIndex == 1 || Model.pageIndex < 1)
+        {
+
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-pageIndex="@(Model.pageIndex - 1)">Previous</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.totalPages; i++)
+        {
+            string active = "";
+            if (i == Model.pageIndex) active = "active";
+            <li class="page-item @active" aria-current="page"><a class="page-link" asp-route-pageIndex="@(i)">@i</a></li>
+        }
+        @if (Model.pageIndex != Model.totalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-pageIndex="@(Model.pageIndex + 1)" )">Next</a>
+            </li>
+        }
+
+    </ul>
+</nav>

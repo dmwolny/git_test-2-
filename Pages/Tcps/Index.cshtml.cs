@@ -100,28 +100,6 @@ namespace Van_Authentication.Pages.Tcps
                 else
                 {
                     query = query.Where(x => x.Line.Contains(search) && x.CreatedAt > startDate && x.CreatedAt < endDate || x.Status.Contains(search) && x.CreatedAt > startDate && x.CreatedAt < endDate);
-                    //query = (from tcp in _context.Tcps
-                    //         join wc in _context.WeldConcerns on tcp.TcpId equals wc.TcpID
-                    //         where (wc.Line.Contains(search) && tcp.CreatedAt > startDate && tcp.CreatedAt < endDate || tcp.Status.Contains(search) && tcp.CreatedAt > startDate && tcp.CreatedAt < endDate)
-                    //         select new Tcp
-                    //         {
-                    //             TcpId = tcp.TcpId,
-                    //             Status = tcp.Status,
-                    //             Production = tcp.Production,
-                    //             Repaired = tcp.Repaired,
-                    //             FirstRepaired = tcp.FirstRepaired,
-                    //             LastRepaired = tcp.LastRepaired,
-                    //             RepairProcedure = tcp.RepairProcedure,
-                    //             ProductionNotes = tcp.ProductionNotes,
-                    //             Maintenance = tcp.Maintenance,
-                    //             RootCause = tcp.RootCause,
-                    //             CorrectiveAction = tcp.CorrectiveAction,
-                    //             MaintenanceNotes = tcp.MaintenanceNotes,
-                    //             Engineering = tcp.Engineering,
-                    //             EngineeringNotes = tcp.EngineeringNotes,
-                    //             WeldConcerns = tcp.WeldConcerns,
-                    //             CreatedAt = tcp.CreatedAt
-                    //         });
                 }
             }
 
