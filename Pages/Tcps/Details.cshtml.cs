@@ -22,6 +22,8 @@ namespace Van_Authentication.Pages.Tcps
         }
 
         public Tcp Tcp { get; set; } = default!;
+        public string? Graphic { get; set; }
+        public string? Auditor { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,7 +32,9 @@ namespace Van_Authentication.Pages.Tcps
                 return NotFound();
             }
 
-            var tcp = await _context.Tcps.FirstOrDefaultAsync(m => m.TcpId == id);
+            var tcp = await _context.Tcps.Include(x => x.WeldConcerns).FirstOrDefaultAsync(m => m.TcpId == id);
+            var audit = tcp.WeldConcerns.Select(x => x.AuditID).FirstOrDefault();
+            Auditor = await _context.Audits.Where(x => x.AuditID == audit).Select(m => m.Auditor).FirstOrDefaultAsync();
             if (tcp == null)
             {
                 return NotFound();
@@ -39,6 +43,14 @@ namespace Van_Authentication.Pages.Tcps
             {
                 Tcp = tcp;
             }
+            //get graphic
+
+            var line = tcp.WeldConcerns.Select(x => x.Line).FirstOrDefault();
+            var station = tcp.WeldConcerns.Select(x => x.Station).FirstOrDefault();
+            var robot = tcp.WeldConcerns.Select(x => x.RobotNumber).FirstOrDefault();
+            var style = tcp.WeldConcerns.Select(x => x.Style).FirstOrDefault();
+            Graphic = await _context.Robots.Where(m => m.Line.Equals(line) && m.Station == station && m.RobotNumber == robot && m.Style.Equals(style)).Select(m => m.Graphic).FirstOrDefaultAsync();
+
             return Page();
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
@@ -25,16 +26,49 @@ namespace Van_Authentication.Pages.Audits
         }
 
         public IList<Audit> Audits { get;set; } = default!;
-        public DateTime? startDate { get; set; }
-        public DateTime? endDate { get; set; }
+        public string? Line {  get; set; }
+        public string? Shift { get; set; }
 
-        public async Task OnGetAsync(DateTime? startDate, DateTime? endDate)
+        public async Task OnGetAsync(string? line, string? shift)
         {
-            Audits = await _context.Audits.ToListAsync();
-            if(startDate != null && endDate != null)
+            var user = await _userManager.GetUserAsync(User);
+            Line = user.Line;
+            Shift = user.Shift;
+            DateTime startDate = DateTime.Today;
+            DateTime endDate = DateTime.Today.AddHours(24);
+            ViewData["WorkStationName"] = new SelectList(_context.WorkStations, "WorkStationName", "WorkStationName");
+
+            IQueryable<Audit> query = _context.Audits
+                .Where(x => x.CreatedAt > startDate && x.CreatedAt < endDate);
+
+            if (User.IsInRole("auditor"))
             {
-                Audits = await _context.Audits.Where(x => x.CreatedAt > startDate && x.CreatedAt < endDate).ToListAsync();
+                query = query.Where(x => x.Line.Equals(Line) && x.Shift.Equals(Shift));
             }
+
+            Audits = await query.ToListAsync();
+
+        }
+        public async Task OnGetAuditsAsync(string? line, string? shift)
+        {
+            DateTime startDate = DateTime.Today;
+            DateTime endDate = DateTime.Today.AddHours(24);
+            IQueryable<Audit> query = _context.Audits.Where(x => x.CreatedAt > startDate && x.CreatedAt < endDate);
+
+            //Search by selected line
+            if (line != null)
+            {
+                query = query.Where(x => x.Line.Equals(line));
+            }
+
+            //Search by selected shift
+            if (shift != null)
+            {
+                query = query.Where(x => x.Shift.Equals(shift));
+            }
+
+            Audits = await query.ToListAsync();
+
         }
         public Audit Audit { get; set; } = default!;
 

@@ -1,0 +1,139 @@
+﻿@page
+@model Van_Authentication.Pages.AskAIModel
+@{
+}
+
+<h1>Ask VAN!</h1>
+<p>Meet VAN, the digital assistant, who is knowledgable in the standards and processes of BIW. VAN is available any time and will
+    help if it is able to. Always verify VAN's answers, he may get tired and reply incorrectly. 
+</p>
+
+<section>
+    <div class="container py-5">
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-6">
+
+                <div class="card" id="chat2">
+                    <div class="card-header d-flex justify-content-between align-items-center p-3">
+                        <h5 class="mb-0">Chat</h5>
+                    </div>
+                    <div id="response" class="card-body scroll" data-mdb-perfect-scrollbar-init style="position: relative; height: 450px">
+
+
+                    </div>
+                    <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+                        <img src="/images/logos/listening.png" id="selfie" class="rounded-circle" style="width: 40px;" />
+                            <input type="text" class="form-control form-control-lg" id="question"
+                               placeholder="Type message" x-webkit-speech>
+
+                            <button type="submit" id="Ask" class="btn btn-primary ms-2"><i class="bi bi-send"></i></button>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+<div id="userName" style="display: none;">
+    @User.Identity.Name
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('Ask').addEventListener('click', function () { askVan() });
+
+        async function askVan() 
+        {
+            let question = document.getElementById('question').value;
+            let responseArea = document.getElementById('response');
+            let user = document.getElementById('userName').innerText;
+
+            //Append the question to the chat window
+            let outerDIV = document.createElement('div');
+            outerDIV.classList = "d-flex flex-row justify-content-end mb-4 pt-1";
+            let innerDIV = document.createElement('div');
+            let chatQuestion = document.createElement('p');
+            chatQuestion.classList = "small p-2 me-3 mb-1 text-white rounded-3 bg-primary";
+            chatQuestion.innerText = question;
+            innerDIV.appendChild(chatQuestion);
+            outerDIV.appendChild(innerDIV);
+            responseArea.appendChild(outerDIV);
+            responseArea.scrollBy({
+                top: responseArea.offsetHeight,
+                left: 0,
+                behavior: 'smooth'
+            });
+            document.getElementById('question').value = "";
+
+            //Send API request
+            const myHeaders = new Headers();
+            myHeaders.append("knowledge-project-apikey", "a4f4fb0d8e044d96bffad282f2fa7243");
+            myHeaders.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+                "text": question,
+                "projectId": "661fb367d0ac71b736e5aae1",
+                "userId": user
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            document.getElementById('selfie').src = "/images/logos/responding.png"
+            //Add typing gif
+            let outerDIVRes = document.createElement('div');
+            outerDIVRes.classList = "d-flex flex-row justify-content-start mb-4 pt-1";
+            let innerDIVRes = document.createElement('div');
+            let chatReply = document.createElement('p');
+            chatReply.classList = 'small p-2 ms-3 mb-1 rounded-3 bg-light';
+
+            chatReply.innerHTML = "<img src='/images/logos/typing.gif' style='height: 30px'/>";
+            innerDIVRes.appendChild(chatReply);
+            outerDIVRes.innerHTML += "<img src='/images/logos/listening.png' class='rounded-circle' style='width: 40px; height: 40px'/>"
+            outerDIVRes.appendChild(innerDIVRes);
+            outerDIVRes.appendChild(innerDIVRes);
+            responseArea.appendChild(outerDIVRes);
+            //Scroll to bottom of chat window
+            responseArea.scrollBy({
+                top: responseArea.offsetHeight,
+                left: 0,
+                behavior: 'smooth'
+            });
+
+            //Get response from API request
+            let responseVAN = await fetch("https://api.stellantis.prisme.ai/v2/workspaces/zWIyhku/webhooks/query", requestOptions)
+                .then((response) => response.text())
+                .catch((error) => console.error(error));
+
+            let data = JSON.parse(responseVAN);
+
+            //Append answer to the chat window
+            responseArea.removeChild(responseArea.lastChild);
+            outerDIVRes = document.createElement('div');
+            outerDIVRes.classList = "d-flex flex-row justify-content-start mb-4 pt-1";
+            innerDIVRes = document.createElement('div');
+            chatReply = document.createElement('p');
+            chatReply.classList = 'small p-2 ms-3 mb-1 rounded-3 bg-light';
+            document.getElementById('selfie').src = "/images/logos/listening.png"
+            console.log(data);
+            chatReply.innerText = data.answer;
+            chatReply.innerHTML += "<br />" + data.sources.html;
+            innerDIVRes.appendChild(chatReply);
+            outerDIVRes.innerHTML += "<img src='/images/logos/listening.png' class='rounded-circle' style='width: 40px; height: 40px'/>"
+            outerDIVRes.appendChild(innerDIVRes);
+            responseArea.appendChild(outerDIVRes);
+            responseArea.scrollBy({
+                top: responseArea.offsetHeight,
+                left: 0, 
+                behavior:'smooth'});
+        }
+                    
+    </script>
+}

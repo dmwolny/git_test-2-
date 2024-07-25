@@ -34,17 +34,19 @@
                 <label asp-for="Input.LastName">Last Name</label>
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Shift" class="form-control" aria-required="true" placeholder="Shift"/>
-                <label asp-for="Input.Shift">Shift</label>
+                <select asp-for="Input.Shift" class="form-control mb-3">
+                    <option selected disabled>--Select Shift--</option>
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                </select>
                 <span asp-validation-for="Input.Shift" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Line" class="form-control" aria-required="true" placeholder="Line"/>
-                <label asp-for="Input.Line">Line</label>
+
+                <select asp-for="Input.Line" class="form-control mb-3" asp-items="@ViewBag.WorkStationName">
+                    <option selected disabled>--Select Line--</option>
+                </select>
                 <span asp-validation-for="Input.Line" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-3" style="display: none;">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Input.Email">Email</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>

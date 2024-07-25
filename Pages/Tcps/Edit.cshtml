@@ -5,12 +5,12 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1 class="d-print-none">Edit</h1>
 
-<h4>Tcp #@Model.Tcp.TcpId <span class="@Model.Tcp.Status">@Model.Tcp.Status</span></h4>
+<h4>Tcp #@Model.Tcp.TcpId <span class="@Model.Tcp.Status">@Model.Tcp.Status</span><i class="bi bi-printer push-right d-print-none" id="print"></i></h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 d-print-none">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Tcp.TcpId" />
@@ -130,7 +130,7 @@
     <div class="col-md-8">
         <div class="card mb-8 shadow">
             <div class="row g-0">
-                <div class="col-md-8">
+                <div class="col-md-8   d-print-inline">
                     @if (Model.Graphic != null)
                     {
                         <img src="~/images/@Model.Graphic" class="img-fluid rounded-start" />
@@ -140,7 +140,7 @@
                         <img src="~/images/default.PNG" class="img-fluid rounded-start" />
                     }
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 d-print-inline">
                     <div class="card-body">
                         <h5 class="card-title">@Model.Tcp.WeldConcerns.Select(m => m.Line).FirstOrDefault()</h5>
                         <p class="card-text">Station: @Model.Tcp.WeldConcerns.Select(m => m.Station).FirstOrDefault()</p>
@@ -170,7 +170,6 @@
                         <th class="align-top">
                             Defect
                         </th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -201,9 +200,15 @@
     </div>
 </div>
 <div>
-    <a href="/Tcps/Index">Back to List</a>
+    <a href="/Tcps/Index" class="d-print-none">Back to List</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('print').addEventListener('click', function () {
+            window.print();
+            console.log("print this page");
+        })
+    </script>
 }

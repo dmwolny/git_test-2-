@@ -9,14 +9,19 @@
 
 <p>
     <form method="post">
-        <input type="submit" value="Create" class="btn btn-primary" />
+        <input type="submit" value="Create" class="btn btn-primary mb-3" />
     </form>
     <div class="row mb-3">
-        <div class="col-md-4">
+        <div class="col-md-12">
             <form class="d-flex">
-                <input class="form-control me-2" asp-for="startDate" type="date" />
-                <input class="form-control me-2" asp-for="endDate" type="date" />
-                <button class="btn btn-primary" type="submit">Search</button>
+                <select class="form-control me-2" asp-for="Line" asp-items="@ViewBag.WorkStationName"><option selected disabled>--Select Line--</option></select>
+                <select class="form-control me-2" asp-for="Shift">
+                    <option selected disabled>--Select Shift--</option>
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                </select>
+                <button class="btn btn-primary" type="submit" asp-page-handler="Audits">Search</button>
             </form>
         </div>
     </div>

@@ -7,12 +7,13 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/print.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     @* <link rel="stylesheet" href="~/Van_Authentication.styles.css" asp-append-version="true" /> *@
 </head>
 <body style="background-image: url(/images/logos/background.png); background-size: cover; background-attachment: fixed;">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 d-print-none">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">
                     <img src="/images/logos/logo.png" height="40" />
@@ -27,7 +28,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">VAN</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Users/Index">Shift Notes</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="ShiftNotes">Shift Notes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">4P's</a>
@@ -68,7 +69,7 @@
         }
     </div>
 
-    <footer class="border-top footer mt-auto text-muted fixed-bottom bg-light">
+    <footer class="border-top footer mt-auto text-muted fixed-bottom bg-light d-print-none">
         <div class="container">
             &copy; 2024 - VAN - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>

@@ -7,65 +7,143 @@
 
 <h1>Details</h1>
 
-<div>
+<div class="row">
+    
     <h4>Tcp</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tcp.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tcp.Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tcp.Production)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tcp.Production)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tcp.Repaired)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tcp.Repaired)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tcp.FirstRepaired)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tcp.FirstRepaired)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tcp.LastRepaired)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tcp.LastRepaired)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tcp.Maintenance)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tcp.Maintenance)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tcp.RootCause)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tcp.RootCause)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tcp.CorrectiveAction)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tcp.CorrectiveAction)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tcp.Engineering)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tcp.Engineering)
-        </dd>
-    </dl>
+    <div class="col-md-5">
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.Status)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Tcp.Status)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.Production)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Tcp.Production)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.Repaired)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Tcp.Repaired)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.FirstRepaired)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Tcp.FirstRepaired)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.LastRepaired)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Tcp.LastRepaired)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.Maintenance)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Tcp.Maintenance)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.RootCause)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Tcp.RootCause)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.CorrectiveAction)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Tcp.CorrectiveAction)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.Engineering)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Tcp.Engineering)
+            </dd>
+        </dl>
+    </div>
+    
+
+    <div class="col-md-7">
+        <div class="card mb-8 shadow">
+            <div class="row g-0">
+                <div class="col-md-8">
+                    @if (Model.Graphic != null)
+                    {
+                        <img src="~/images/@Model.Graphic" class="img-fluid rounded-start" />
+                    }
+                    else
+                    {
+                        <img src="~/images/default.PNG" class="img-fluid rounded-start" />
+                    }
+                </div>
+                <div class="col-md-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.Tcp.WeldConcerns.Select(m => m.Line).FirstOrDefault()</h5>
+                        <p class="card-text">Station: @Model.Tcp.WeldConcerns.Select(m => m.Station).FirstOrDefault()</p>
+                        <p class="card-text"> Robot: @Model.Tcp.WeldConcerns.Select(m => m.RobotNumber).FirstOrDefault()</p>
+                        <p class="card-text">@Model.Tcp.WeldConcerns.Select(m => m.Style).FirstOrDefault()</p>
+                        <p class="card-text">Opened by: @Model.Auditor</p>
+                        <p class="card-text">Number of welds: @Model.Tcp.WeldConcerns.Count</p>
+                        <p class="card-text">Number of safety welds: @Model.Tcp.WeldConcerns.Count(m => m.WeldType.Equals("S"))</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive card shadow">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="align-top">
+                            Weld #
+                        </th>
+                        <th class="align-top">
+                            Weld Type
+                        </th>
+                        <th class="align-top">
+                            Nugget Size
+                        </th>
+                        <th class="align-top">
+                            Defect
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tcp.WeldConcerns != null)
+                    {
+                        @foreach (var item in Model.Tcp.WeldConcerns)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.WeldID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.WeldType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NuggetSize)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Defect)
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 <div>
     <a asp-page="./Edit" asp-route-id="@Model.Tcp.TcpId">Edit</a> |

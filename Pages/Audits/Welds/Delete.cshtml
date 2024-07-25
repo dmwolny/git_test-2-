@@ -1,0 +1,82 @@
+﻿@page
+@model Van_Authentication.Pages.Audits.Welds.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>WeldConcern</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.WeldID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.WeldID)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.WeldType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.WeldType)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.NuggetSize)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.NuggetSize)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.Line)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.Line)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.Station)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.Station)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.RobotNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.RobotNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.Style)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.Style)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.Defect)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.Defect)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.Audit)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.AuditID)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WeldConcern.Tcp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WeldConcern.TcpID)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="WeldConcern.WeldConcernID" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>

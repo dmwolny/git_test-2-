@@ -111,7 +111,15 @@ namespace Van_Authentication.Pages.Admin.Routes.Welds
 
             }
 
+            try
+            {
             _context.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                return Page();
+            }
+
 
             return RedirectToPage("../Details", new { id = id });
 

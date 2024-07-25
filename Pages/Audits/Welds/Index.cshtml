@@ -1,0 +1,90 @@
+﻿@page
+@model Van_Authentication.Pages.Audits.Welds.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].WeldID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].WeldType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].NuggetSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].Line)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].Station)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].RobotNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].Style)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].Defect)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].Audit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeldConcern[0].Tcp)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.WeldConcern) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.WeldID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WeldType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NuggetSize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Line)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Station)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RobotNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Style)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Defect)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Audit.Auditor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tcp.Status)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.WeldConcernID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.WeldConcernID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.WeldConcernID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
