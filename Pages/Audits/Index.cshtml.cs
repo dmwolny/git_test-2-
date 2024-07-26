@@ -82,7 +82,7 @@ namespace Van_Authentication.Pages.Audits
             data.Auditor = user.FirstName+" "+user.LastName;
             data.Line = user.Line;
             data.CreatedAt = DateTime.Now;
-            data.Result = "OK";
+            data.Result = "Open";
             
             _context.Audits.Add(data);
             await _context.SaveChangesAsync();

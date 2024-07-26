@@ -74,6 +74,7 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.Audits[0].Result)
                                     </th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -101,6 +102,9 @@
                                     <td>
                                     @Html.DisplayFor(modelItem => audit.Result)
                                     </td>
+                                    <td>
+                                        <a asp-page="../Audits/Edit" asp-route-id="@audit.AuditId">Details</a>
+                                    </td>
                                 </tr>
                             }
                             </tbody>
@@ -112,7 +116,8 @@
         </div>
         }
         
-    }
-    
-   
+    }   
+</div>
+<div class="row">
+    <a asp-page="Index">Back to History</a>
 </div>

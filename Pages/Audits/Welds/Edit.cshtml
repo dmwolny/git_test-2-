@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id}"
 @model Van_Authentication.Pages.Audits.Welds.EditModel
 
 @{
@@ -14,54 +14,52 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="WeldConcern.WeldConcernID" />
-            <div class="form-group">
-                <label asp-for="WeldConcern.AuditID" class="control-label"></label>
-                <select asp-for="WeldConcern.AuditID" class="form-control" asp-items="ViewBag.AuditID"></select>
-                <span asp-validation-for="WeldConcern.AuditID" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="WeldConcern.AuditID" />
             <div class="form-group">
                 <label asp-for="WeldConcern.WeldID" class="control-label"></label>
-                <input asp-for="WeldConcern.WeldID" class="form-control" />
+                <input asp-for="WeldConcern.WeldID" class="form-control" readonly/>
                 <span asp-validation-for="WeldConcern.WeldID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="WeldConcern.WeldType" class="control-label"></label>
-                <input asp-for="WeldConcern.WeldType" class="form-control" />
+                <input asp-for="WeldConcern.WeldType" class="form-control" readonly />
                 <span asp-validation-for="WeldConcern.WeldType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="WeldConcern.NuggetSize" class="control-label"></label>
-                <input asp-for="WeldConcern.NuggetSize" class="form-control" />
+                <input asp-for="WeldConcern.NuggetSize" class="form-control" readonly />
                 <span asp-validation-for="WeldConcern.NuggetSize" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="WeldConcern.Line" class="control-label"></label>
-                <input asp-for="WeldConcern.Line" class="form-control" />
+                <input asp-for="WeldConcern.Line" class="form-control" readonly />
                 <span asp-validation-for="WeldConcern.Line" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="WeldConcern.Station" class="control-label"></label>
-                <input asp-for="WeldConcern.Station" class="form-control" />
+                <input asp-for="WeldConcern.Station" class="form-control" readonly />
                 <span asp-validation-for="WeldConcern.Station" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="WeldConcern.RobotNumber" class="control-label"></label>
-                <input asp-for="WeldConcern.RobotNumber" class="form-control" />
+                <input asp-for="WeldConcern.RobotNumber" class="form-control" readonly />
                 <span asp-validation-for="WeldConcern.RobotNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="WeldConcern.Style" class="control-label"></label>
-                <input asp-for="WeldConcern.Style" class="form-control" />
+                <input asp-for="WeldConcern.Style" class="form-control" readonly />
                 <span asp-validation-for="WeldConcern.Style" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="WeldConcern.Defect" class="control-label"></label>
-                <input asp-for="WeldConcern.Defect" class="form-control" />
+                <select asp-for="WeldConcern.Defect" class="form-control" asp-items="ViewBag.Defect"></select>
                 <span asp-validation-for="WeldConcern.Defect" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="WeldConcern.TcpID" class="control-label"></label>
-                <select asp-for="WeldConcern.TcpID" class="form-control" asp-items="ViewBag.TcpID"></select>
+                <select asp-for="WeldConcern.TcpID" class="form-control" asp-items="ViewBag.TcpID">
+                    <option value="">No TCP</option>
+                </select>
                 <span asp-validation-for="WeldConcern.TcpID" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -72,7 +70,7 @@
 </div>
 
 <div>
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="../Edit" asp-route-id="@Model.WeldConcern.AuditID" >Back to Audit</a>
 </div>
 
 @section Scripts {

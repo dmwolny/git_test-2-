@@ -28,8 +28,8 @@ body {
     float:right;
 }
 
-.bi-printer{
-    cursor:pointer;
+.bi-printer, .bi-moon-stars-fill {
+    cursor: pointer;
 }
 
 .scroll {

@@ -60,6 +60,10 @@ namespace Van_Authentication.Pages.Audits
             ViewData["WorkStationName"] = new SelectList(_context.WorkStations, "WorkStationName", "WorkStationName");
             ViewData["ModelName"] = new SelectList(_context.PartModels, "PartModelName", "PartModelName");
             ViewData["RouteName"] = new SelectList(_context.AuditRoutes, "AuditRouteName", "AuditRouteName");
+            if (Request.Headers.Referer.Count > 0)
+            {
+                ViewData["Reffer"] = Request.Headers["Referer"].ToString();
+            }
 
             if (id == null)
             {
@@ -95,14 +99,14 @@ namespace Van_Authentication.Pages.Audits
             {
                 return NotFound();
             }
-            if(discrepant.Count == 0)
-            {
-                audit.Result = "OK";
-            }
-            else
-            {
-                audit.Result = "NOK";
-            }
+            //if(discrepant.Count == 0)
+            //{
+            //    audit.Result = "OK";
+            //}
+            //else
+            //{
+            //    audit.Result = "NOK";
+            //}
             Audit = audit;
             WeldConcerns = discrepant;
             return Page();
@@ -208,7 +212,14 @@ namespace Van_Authentication.Pages.Audits
             {
                 return Page();
             }
-
+            if(Audit.WeldConcerns == null)
+            {
+                Audit.Result = "OK";
+            }
+            else
+            {
+                Audit.Result = "NOK";
+            }
             _context.Attach(Audit).State = EntityState.Modified;
 
             try
@@ -332,7 +343,8 @@ namespace Van_Authentication.Pages.Audits
                 if (tcpRecord != null)
                 {
                     ent.Tcp = tcpRecord;
-                    TempData["success"] = "TCP #: " + tcpRecord.TcpId + " has been submitted. Inform your supervisor.";
+                    TempData["success"] = null;
+                    TempData["tcp"] = "TCP #: " + tcpRecord.TcpId + " has been submitted. Inform your supervisor.";
                     TempData["subject"] = "TCP #: " + tcpRecord.TcpId + " has been submitted";
                     TempData["message"] = User.Identity.Name + " has submitted TCP #: " + tcpRecord.TcpId
                         + "<a href= 'http://10.92.16.89:8055/Tcps/Edit/" + tcpRecord.TcpId + "'>Link to form</a>"

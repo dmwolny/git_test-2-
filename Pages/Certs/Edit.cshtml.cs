@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,9 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Audits.Welds
+namespace Van_Authentication.Pages.Certs
 {
-    [Authorize(Roles = "manager, coordinator")]
     public class EditModel : PageModel
     {
         private readonly Van_Authentication.Services.ApplicationDbContext _context;
@@ -23,24 +21,22 @@ namespace Van_Authentication.Pages.Audits.Welds
         }
 
         [BindProperty]
-        public WeldConcern WeldConcern { get; set; } = default!;
+        public Cert Cert { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            ViewData["RouteLine"] = new SelectList(_context.Robots.Select(x => x.Line).Distinct());
             if (id == null)
             {
                 return NotFound();
             }
 
-            var weldconcern =  await _context.WeldConcerns.FirstOrDefaultAsync(m => m.WeldConcernID == id);
-            if (weldconcern == null)
+            var cert =  await _context.Certs.FirstOrDefaultAsync(m => m.CertId == id);
+            if (cert == null)
             {
                 return NotFound();
             }
-            WeldConcern = weldconcern;
-           ViewData["AuditID"] = new SelectList(_context.Audits, "AuditID", "Auditor");
-           ViewData["TcpID"] = new SelectList(_context.Tcps, "TcpId", "TcpId");
-            ViewData["Defect"] = new SelectList(_context.Defects, "DefectDesc", "DefectDesc");
+            Cert = cert;
             return Page();
         }
 
@@ -52,8 +48,11 @@ namespace Van_Authentication.Pages.Audits.Welds
             {
                 return Page();
             }
-
-            _context.Attach(WeldConcern).State = EntityState.Modified;
+            if(Cert.Result.Count() > 0)
+            {
+                Cert.Status = "Closed";
+            }
+            _context.Attach(Cert).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +60,7 @@ namespace Van_Authentication.Pages.Audits.Welds
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!WeldConcernExists(WeldConcern.WeldConcernID))
+                if (!CertExists(Cert.CertId))
                 {
                     return NotFound();
                 }
@@ -71,12 +70,12 @@ namespace Van_Authentication.Pages.Audits.Welds
                 }
             }
 
-            return RedirectToPage("../Edit", new { id = WeldConcern.AuditID});
+            return RedirectToPage("./Index");
         }
 
-        private bool WeldConcernExists(int id)
+        private bool CertExists(int id)
         {
-            return _context.WeldConcerns.Any(e => e.WeldConcernID == id);
+            return _context.Certs.Any(e => e.CertId == id);
         }
     }
 }

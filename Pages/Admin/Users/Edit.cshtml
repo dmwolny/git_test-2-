@@ -26,8 +26,10 @@
                 <label asp-for="@Model.Shift">Shift</label>
                 <span asp-validation-for="@Model.Shift" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="@Model.Line" class="form-control" aria-required="true" placeholder="Line" />
+            <div class="form-floating mb-3">                
+                <select asp-for="@Model.Line" class="form-control mb-3" asp-items="@ViewBag.WorkStationName">
+                    <option selected disabled>--Select Line--</option>
+                </select>
                 <label asp-for="@Model.Line">Line</label>
                 <span asp-validation-for="@Model.Line" class="text-danger"></span>
             </div>

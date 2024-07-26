@@ -49,6 +49,7 @@ namespace Van_Authentication.Pages.Monitor
                 audit.Type = _context.PartModels
                     .Where(x => x.WorkStation.WorkStationName.Equals(item.Line)).Select(y => y.PartModelType)
                     .FirstOrDefault();
+                audit.AuditId = item.AuditID;
                 audit.CreatedAt = item.CreatedAt;
                 audit.Shift = item.Shift;
                 audit.Auditor = item.Auditor;
@@ -102,6 +103,7 @@ namespace Van_Authentication.Pages.Monitor
     public class AuditDTO
     {
         public DateTime CreatedAt { get; set; }
+        public int AuditId { get; set; }
         public string Shift { get; set; } = "";
         public string Auditor { get; set; } = "";
         public string Line { get; set; } = "";

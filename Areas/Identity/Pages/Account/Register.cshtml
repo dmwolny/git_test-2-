@@ -44,6 +44,9 @@
 
                 <select asp-for="Input.Line" class="form-control mb-3" asp-items="@ViewBag.WorkStationName">
                     <option selected disabled>--Select Line--</option>
+                    <option>Production</option>
+                    <option>Maintenance</option>
+                    <option>Engineering</option>
                 </select>
                 <span asp-validation-for="Input.Line" class="text-danger"></span>
             <div class="form-floating mb-3" style="display: none;">

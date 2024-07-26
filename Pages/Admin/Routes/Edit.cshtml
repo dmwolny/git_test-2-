@@ -25,12 +25,13 @@
                 <span asp-validation-for="AuditRoute.PartModelId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary mt-2" />
             </div>
         </form>
     </div>
 </div>
 
+<a asp-page="./Welds/Add" asp-route-routeID="@Model.AuditRoute.AuditRouteId" class="btn btn-primary my-2">Add Welds to Route</a>
 <div>
     <a asp-page="./Index">Back to List</a>
 </div>

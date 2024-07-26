@@ -25,7 +25,7 @@ namespace Van_Authentication.Models
         public string Defect { get; set; } = "";
         [DisplayName("TCP #")]
         public int? TcpID { get; set; }
-        public Audit Audit { get; set; }
+        public Audit? Audit { get; set; }
         public Tcp? Tcp { get; set; }
     }
 }

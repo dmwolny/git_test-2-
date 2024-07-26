@@ -1,19 +1,23 @@
 ﻿@page
 @model Van_Authentication.Pages.ShiftNotesModel
 @{
+    ViewData["Title"] = "Shift Notes";
 }
+
+<h1>Shift Notes</h1>
+
 <div class="container">
-    <div class="row p-1">
+    <div class="row p-1" style="display:none">
         <div class="col-1">User</div>
-        <div class="col-5"><input type="text" id="userInput" /></div>
+        <div class="col-5"><input type="text" id="userInput" hidden /></div>
     </div>
     <div class="row p-1">
-        <div class="col-1">Message</div>
-        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+        <label>Shift Notes</label>
+        <div class="col-6"><textarea class="form-control" id="messageInput"></textarea></div>
     </div>
     <div class="row p-1">
         <div class="col-6 text-end">
-            <input type="button" id="sendButton" value="Send Message" />
+            <input type="button" id="sendButton" value="Send Message" class="btn btn-primary"/>
         </div>
     </div>
     <div class="row p-1">

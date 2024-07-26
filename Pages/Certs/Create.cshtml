@@ -1,0 +1,193 @@
+﻿@page
+@model Van_Authentication.Pages.Certs.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Cert</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Cert.Requestor" class="control-label"></label>
+                <input asp-for="Cert.Requestor" class="form-control" value="@User.Identity.Name" readonly/>
+                <span asp-validation-for="Cert.Requestor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cert.Type" class="control-label"></label>
+                <select asp-for="Cert.Type" class="form-control">
+                    <option>Weld</option>
+                    <option>Sealer</option>
+                    <option>ISD</option>
+                </select>
+                <span asp-validation-for="Cert.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Pick a Line</label>
+                <select class="form-control" asp-items="ViewBag.RouteLine" id="Line" asp-for="Cert.Line">
+                    <option value="">Select Line</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Pick a Station</label>
+                <select class="form-control" id="station" disabled asp-for="Cert.Station">
+                    <option selected disabled>Select Station</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Pick a Robot</label>
+                <select class="form-control" id="robotNumber" disabled asp-for="Cert.RobotNumber">
+                    <option selected disabled>Select Robot #</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Pick a Style</label>
+                <select class="form-control" id="style" disabled asp-for="Cert.Style">
+                    <option selected disabled>Select Style</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cert.Failure" class="control-label"></label>
+                <input asp-for="Cert.Failure" class="form-control" />
+                <span asp-validation-for="Cert.Failure" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cert.FailureDate" class="control-label"></label>
+                <input asp-for="Cert.FailureDate" class="form-control" />
+                <span asp-validation-for="Cert.FailureDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cert.RepairDate" class="control-label"></label>
+                <input asp-for="Cert.RepairDate" class="form-control" />
+                <span asp-validation-for="Cert.RepairDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cert.Trade" class="control-label"></label>
+                <input asp-for="Cert.Trade" class="form-control" />
+                <span asp-validation-for="Cert.Trade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cert.Cleanpoint" class="control-label"></label>
+                <input asp-for="Cert.Cleanpoint" class="form-control" />
+                <span asp-validation-for="Cert.Cleanpoint" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Cert.Status" class="form-control" value="Open" hidden/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary mt-2" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+        //get station numbers when user select line
+        document.getElementById("Line").addEventListener("change", function () {
+            var lineValue = document.getElementById("Line").value;
+
+            fetch("?handler=Station&Line=" + encodeURIComponent(lineValue))
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = '<option value=null selected disabled>Stations</option>';
+                    var stationSelect = document.getElementById("station");
+                    stationSelect.innerHTML = ''; // Clear previous options
+                    stationSelect.removeAttribute('disable');
+
+                    //Disable dropdowns
+                    document.getElementById("robotNumber").setAttribute('disabled', true);
+                    document.getElementById("style").setAttribute('disabled', true);
+
+                    //Remove previous data from dropdowns and the weld concern table
+                    document.getElementById("robotNumber").innerHTML = '<option value=null selected disabled>Robot #</option>';
+                    document.getElementById("style").innerHTML = '<option value=null selected disabled>Style</option>';
+
+                    data.forEach(function (lineRobots) {
+                        items += "<option value='" + lineRobots.text + "'>" + lineRobots.text + "</option>";
+                    });
+
+                    stationSelect.innerHTML = items; // Add new options
+                    stationSelect.removeAttribute('disabled');
+                })
+                .catch(function (error) {
+                    console.error('Error fetching Stations:', error);
+                });
+        });
+
+        //get robot numbers when user select line && station
+        document.getElementById("station").addEventListener("change", function () {
+            var lineValue = document.getElementById("Line").value;
+            var stationValue = document.getElementById("station").value
+
+            fetch("?handler=RobotNum&Line=" + encodeURIComponent(lineValue) + "&Station=" + encodeURIComponent(stationValue))
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = '<option value=null selected disabled>Robot #</option>';
+                    var robotNumberSelect = document.getElementById("robotNumber");
+                    robotNumberSelect.innerHTML = ''; // Clear previous options
+                    robotNumberSelect.removeAttribute('disabled');
+
+                    //Disable cascading dropdowns
+                    document.getElementById("style").setAttribute('disabled', true);
+
+                    document.getElementById("style").innerHTML = '<option value =null selected disabled>Style</option>'
+
+                    data.forEach(function (lineRobots) {
+                        items += "<option value='" + lineRobots.text + "'>" + lineRobots.text + "</option>";
+                    });
+
+                    robotNumberSelect.innerHTML = items; // Add new options
+                    robotNumberSelect.removeAttribute('disabled');
+                })
+                .catch(function (error) {
+                    console.error('Error fetching Robot Numbers:', error);
+                });
+        });
+
+        //get robot styles when user select line && station && robot #
+        document.getElementById("robotNumber").addEventListener("change", function () {
+            var lineValue = document.getElementById("Line").value;
+            var stationValue = document.getElementById("station").value
+            var robotValue = document.getElementById("robotNumber").value
+
+            fetch("?handler=Style&Line=" + encodeURIComponent(lineValue) + "&Station=" + encodeURIComponent(stationValue) + "&RobotNumber=" + encodeURIComponent(robotValue))
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = '<option value=null selected disabled>Style</option>';
+                    var robotNumberSelect = document.getElementById("style");
+                    robotNumberSelect.innerHTML = ''; // Clear previous options
+
+                    //Disable cascading dropdowns and btns
+
+                    data.forEach(function (lineRobots) {
+                        items += "<option value='" + lineRobots.text + "'>" + lineRobots.text + "</option>";
+                    });
+
+                    robotNumberSelect.innerHTML = items; // Add new options
+                    robotNumberSelect.removeAttribute('disabled');
+                })
+                .catch(function (error) {
+                    console.error('Error fetching Style:', error);
+                });
+        });
+
+    </script>
+}

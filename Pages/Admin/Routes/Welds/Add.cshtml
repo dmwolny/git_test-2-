@@ -9,9 +9,9 @@
 
 <h4>Welds to Route</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
+<form method="post">
+    <div class="row">
+        <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label class="control-label">Route Name</label>
@@ -28,49 +28,58 @@
                 </select>
             </div>
             <div class="form-group">
+                <label class="control-label">Pick a Station</label>
                 <select class="form-control" id="station" disabled asp-for="Station">
                     <option selected disabled>Select Station</option>
                 </select>
             </div>
             <div class="form-group">
+                <label class="control-label">Pick a Robot</label>
                 <select class="form-control" id="robotNumber" disabled asp-for="RobotNumber">
                     <option selected disabled>Select Robot #</option>
                 </select>
             </div>
             <div class="form-group">
+                <label class="control-label">Pick a Style</label>
                 <select class="form-control" id="style" disabled asp-for="Style">
                     <option selected disabled>Select Style</option>
                 </select>
              </div>
-            <button type="button" onclick="getWelds(`?handler=Welds&Line=`)" class="btn btn-primary" id="getWeldsBtn" disabled>Get Welds</button>
-
-            <table class="table" style="display:none;" id="weldList">
-                <thead>
-                    <tr>
-                        <th>
-                            Weld #
-                        </th>
-                        <th>
-                            Weld Type
-                        </th>
-                        <th>
-                            Nugget Size
-                        </th>
-                        <th>
-                            Add
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="welds">
-                </tbody>
-            </table>
+            <button type="button" onclick="getWelds(`?handler=Welds&Line=`)" class="btn btn-primary mt-2" id="getWeldsBtn" disabled>Get Welds</button>
+            
+            
 
             <div class="form-group">
-                <input type="submit" value="Add" class="btn btn-primary" />
+                <input type="submit" value="Add" class="btn btn-primary my-2" />
             </div>
-        </form>
+        </div>
+        <div class="col-md-8">
+            <div class="table-responsive card shadow">
+                <table class="table" style="display:none;" id="weldList">
+                    <thead>
+                        <tr>
+                            <th>
+                                Weld #
+                            </th>
+                            <th>
+                                Weld Type
+                            </th>
+                            <th>
+                                Nugget Size
+                            </th>
+                            <th>
+                                Add
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="welds">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
-</div>
+        </form>
 
 <div>
     <a asp-page="../Details" asp-route-id="@Model.id">Back to List</a>

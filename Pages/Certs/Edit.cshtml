@@ -1,0 +1,114 @@
+﻿@page "{id}"
+@model Van_Authentication.Pages.Certs.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Cert</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Cert.CertId" />
+                <div class="form-group">
+                    <label asp-for="Cert.Requestor" class="control-label"></label>
+                    <input asp-for="Cert.Requestor" class="form-control" />
+                    <span asp-validation-for="Cert.Requestor" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.Type" class="control-label"></label>
+                    <select asp-for="Cert.Type" class="form-control" >
+                        <option>Weld</option>
+                        <option>Sealer</option>
+                        <option>ISD</option>
+                    </select>
+                    <span asp-validation-for="Cert.Type" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.Line" class="control-label"></label>
+                    <input asp-for="Cert.Line" class="form-control" />
+                    <span asp-validation-for="Cert.Line" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.Station" class="control-label"></label>
+                    <input asp-for="Cert.Station" class="form-control" />
+                    <span asp-validation-for="Cert.Station" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.RobotNumber" class="control-label"></label>
+                    <input asp-for="Cert.RobotNumber" class="form-control" />
+                    <span asp-validation-for="Cert.RobotNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.Style" class="control-label"></label>
+                    <input asp-for="Cert.Style" class="form-control" />
+                    <span asp-validation-for="Cert.Style" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.Failure" class="control-label"></label>
+                    <input asp-for="Cert.Failure" class="form-control" />
+                    <span asp-validation-for="Cert.Failure" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.FailureDate" class="control-label"></label>
+                    <input asp-for="Cert.FailureDate" class="form-control" />
+                    <span asp-validation-for="Cert.FailureDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.RepairDate" class="control-label"></label>
+                    <input asp-for="Cert.RepairDate" class="form-control" />
+                    <span asp-validation-for="Cert.RepairDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.Trade" class="control-label"></label>
+                    <input asp-for="Cert.Trade" class="form-control" />
+                    <span asp-validation-for="Cert.Trade" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cert.Cleanpoint" class="control-label"></label>
+                    <input asp-for="Cert.Cleanpoint" class="form-control" />
+                    <span asp-validation-for="Cert.Cleanpoint" class="text-danger"></span>
+                </div>      
+
+            <div class="form-group">
+                <label asp-for="Cert.Auditor" class="control-label"></label>
+                <input asp-for="Cert.Auditor" class="form-control" value="@User.Identity.Name"/>
+                <span asp-validation-for="Cert.Auditor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cert.InspectedUnit" class="control-label"></label>
+                <input asp-for="Cert.InspectedUnit" class="form-control" />
+                <span asp-validation-for="Cert.InspectedUnit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cert.Status" class="control-label"></label>
+                <input asp-for="Cert.Status" class="form-control" />
+                <span asp-validation-for="Cert.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cert.Result" class="control-label"></label>
+                <select asp-for="Cert.Result" class="form-control">
+                    <option selected></option>
+                    <option>OK</option>
+                    <option>NOK</option>
+                </select>
+                <span asp-validation-for="Cert.Result" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary mt-2" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

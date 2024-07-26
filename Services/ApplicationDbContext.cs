@@ -25,6 +25,7 @@ namespace Van_Authentication.Services
         public DbSet<PartModel> PartModels { get; set; }
         public DbSet<AuditRoute> AuditRoutes { get; set; }
         public DbSet<AuditRouteWeld> AuditRouteWelds { get; set; }
+        public DbSet<Cert> Certs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

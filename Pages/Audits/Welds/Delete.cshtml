@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id}"
 @model Van_Authentication.Pages.Audits.Welds.DeleteModel
 
 @{
@@ -77,6 +77,6 @@
     <form method="post">
         <input type="hidden" asp-for="WeldConcern.WeldConcernID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
+        <a asp-page="../Edit" asp-route-id="@Model.WeldConcern.AuditID" >Back to Audit</a>
     </form>
 </div>

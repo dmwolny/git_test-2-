@@ -1,0 +1,98 @@
+﻿@page
+@model Van_Authentication.Pages.Certs.IndexModel
+
+@{
+    ViewData["Title"] = "Certs";
+}
+
+<h1>Certs</h1>
+
+@if (!User.IsInRole("auditor"))
+{
+    <p>
+        <a asp-page="Create" class="btn btn-primary">Request New Cert</a>
+    </p>    
+}
+
+<div class="table-responsive card shadow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].Requestor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].Type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].Line)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].Station)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].RobotNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].Failure)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].FailureDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].Cleanpoint)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert[0].Result)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Cert)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Requestor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Line)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Station)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RobotNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Failure)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FailureDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cleanpoint)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Result)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.CertId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.CertId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.CertId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

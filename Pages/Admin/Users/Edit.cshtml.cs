@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 using System.ComponentModel.DataAnnotations;
@@ -38,7 +39,8 @@ namespace Van_Authentication.Pages.Admin.Users
       
         public async Task<IActionResult> OnGetAsync(string? id)
         {
-            if(id == null)
+            ViewData["WorkStationName"] = new SelectList(_context.WorkStations, "WorkStationName", "WorkStationName");
+            if (id == null)
             {
                 return NotFound();
             }

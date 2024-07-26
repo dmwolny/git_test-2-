@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Audits.Welds
+namespace Van_Authentication.Pages.Certs
 {
-    [Authorize(Roles = "manager, coordinator")]
     public class DeleteModel : PageModel
     {
         private readonly Van_Authentication.Services.ApplicationDbContext _context;
@@ -22,7 +20,7 @@ namespace Van_Authentication.Pages.Audits.Welds
         }
 
         [BindProperty]
-        public WeldConcern WeldConcern { get; set; } = default!;
+        public Cert Cert { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,15 +29,15 @@ namespace Van_Authentication.Pages.Audits.Welds
                 return NotFound();
             }
 
-            var weldconcern = await _context.WeldConcerns.FirstOrDefaultAsync(m => m.WeldConcernID == id);
+            var cert = await _context.Certs.FirstOrDefaultAsync(m => m.CertId == id);
 
-            if (weldconcern == null)
+            if (cert == null)
             {
                 return NotFound();
             }
             else
             {
-                WeldConcern = weldconcern;
+                Cert = cert;
             }
             return Page();
         }
@@ -51,11 +49,11 @@ namespace Van_Authentication.Pages.Audits.Welds
                 return NotFound();
             }
 
-            var weldconcern = await _context.WeldConcerns.FindAsync(id);
-            if (weldconcern != null)
+            var cert = await _context.Certs.FindAsync(id);
+            if (cert != null)
             {
-                WeldConcern = weldconcern;
-                _context.WeldConcerns.Remove(WeldConcern);
+                Cert = cert;
+                _context.Certs.Remove(Cert);
                 await _context.SaveChangesAsync();
             }
 

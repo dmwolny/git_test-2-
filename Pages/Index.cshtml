@@ -39,10 +39,20 @@
             </div>
         </div>
     </div>
-</div>
-@if (!User.IsInRole("auditor"))
-{
-    <div class="row my-2">
+
+    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+        <div class="card w-100 shadow">
+            <div class="card-header d-flex flex-column">
+                <h5 class="card-title">Cert</h5>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <p class="card-text">Request Weld, Sealer, or ISD certs. Track completion of certs.</p>
+                <a href="/Certs/Index" class="btn btn-primary mt-auto">Certs</a>
+            </div>
+        </div>
+    </div>
+    @if (!User.IsInRole("auditor"))
+    {
         <div class="col-lg-4 mb-3 d-flex align-items-stretch">
             <div class="card w-100 shadow">
                 <div class="card-header d-flex flex-column">
@@ -65,6 +75,6 @@
                 </div>
             </div>
         </div>
-        
-    </div>    
-}
+
+    }
+</div>

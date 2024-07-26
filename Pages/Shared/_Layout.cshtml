@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,7 +28,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">VAN</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="ShiftNotes">Shift Notes</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ShiftNotes">Shift Notes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">4P's</a>
@@ -61,6 +61,20 @@
                     </div>
                 </div>
             }
+            @if (TempData["tcp"] != null){
+                <div class="toast-container position-fixed top-50 start-50 translate-middle m-4" >
+                    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="liveToast" data-bs-delay="10000">
+                        <div class="toast-header">
+                            <img src="/images/logos/arc weld.PNG" class="rounded me-2" width="20" height="20" alt="...">
+                            <strong class="me-auto">VAN</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body fs-1">
+                            @TempData["tcp"]
+                        </div>
+                    </div>
+                </div>
+            }
         </main>
         @if (TempData["subject"] != null)
         {
@@ -87,6 +101,7 @@
 </html>
 
 <script type="text/javascript">
+
     if (document.getElementById('liveToast')) {
         const toastLiveExample = document.getElementById('liveToast')
         
