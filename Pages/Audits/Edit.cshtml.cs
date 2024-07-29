@@ -212,13 +212,13 @@ namespace Van_Authentication.Pages.Audits
             {
                 return Page();
             }
-            if(Audit.WeldConcerns == null)
+            if(_context.WeldConcerns.Where(x => x.AuditID == id).Count() > 0)
             {
-                Audit.Result = "OK";
+                Audit.Result = "NOK";
             }
             else
             {
-                Audit.Result = "NOK";
+                Audit.Result = "OK";
             }
             _context.Attach(Audit).State = EntityState.Modified;
 
@@ -247,6 +247,10 @@ namespace Van_Authentication.Pages.Audits
             {
                 return Page();
             }
+            if (Audit.Barcode.Equals("Audit Missed"))
+            {
+                Audit.Result = "Missed";
+            }
 
             _context.Attach(Audit).State = EntityState.Modified;
 
@@ -264,6 +268,11 @@ namespace Van_Authentication.Pages.Audits
                 {
                     throw;
                 }
+            }
+            
+            if (Audit.Barcode.Equals("Audit Missed"))
+            {
+                return RedirectToPage("./Index");
             }
 
             return RedirectToPage("./Edit",id);

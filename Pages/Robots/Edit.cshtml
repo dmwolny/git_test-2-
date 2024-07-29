@@ -38,16 +38,16 @@
             <div class="form-group">
                 @if (Model.Robot.Graphic == null)
                 {
-                    <img src="~/images/default.PNG" width="250" class="shadow my-2" />
+                    <img src="~/images/default.PNG" width="250" class="shadow my-2" id="image-preview" />
                 }
                 else
                 {
-                    <img src="~/images/@Model.Robot.Graphic" width="250" class="shadow my-2" />
+                    <img src="~/images/@Model.Robot.Graphic" width="250" class="shadow my-2" id="image-preview" />
                 }
             </div>
             
             <div class="form-group">
-                <input class="form-control" asp-for="robotDTO.ImageFile" />
+                <input class="form-control" asp-for="robotDTO.ImageFile" accept="image/*" onchange="updatePreview(this, 'image-preview')" />
                 <span asp-validation-for="robotDTO.ImageFile" class="text-danger"></span>
             </div>           
 
@@ -64,4 +64,17 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function updatePreview(input, target) {
+            let file = input.files[0];
+            let reader = new FileReader();
+
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                let img = document.getElementById(target);
+                // can also use "this.result"
+                img.src = reader.result;
+            }
+        }
+    </script>
 }

@@ -3,27 +3,33 @@
 @{
 }
 <form asp-page-handler="Audits" method="get">
-    <div class="col-2">
-        <div class="form-group">
-            <label class="control-label">Date</label>
-            <input asp-for="date" type="date" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label  class="control-label">Shift</label>
-            <select asp-for="Shift" class="form-control">
-                <option>A</option>
-                <option>B</option>
-                <option>C</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary my-3">Select</button>
+    <div class="row">
+        <div class="col-2">
+            <div class="form-group">
+                <label class="control-label">Date</label>
+                <input asp-for="date" type="date" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Shift</label>
+                <select asp-for="Shift" class="form-control">
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary my-3">Select</button>
+            </div>
         </div>
 
+        <div class="col-6 card">
+            <canvas id="myChart" class="push-right"></canvas>
+        </div>
     </div>
 
+
 </form>
-<div class="accordion accordion-flush shadow">
+<div class="accordion accordion-flush shadow mt-3">
 
     @if(Model.Parts != null)
     {
@@ -36,13 +42,13 @@
             <h2 class="accordion-header">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@item.WorkStationName.Replace(" ", "")-@item.PartModelType">
                     @item.WorkStationName @item.PartModelType Audits: 
-                        @Model.Audit.Where(y => y.Line.Equals(lineItem) && y.Type.Equals(typeItem)).Select(x => x.Line).Count()
-                        / @item.NumberOfAudits Completed | Audits Missed: @Model.Audit.Where(x => x.Line.Equals(lineItem) && x.Type.Equals(typeItem) && x.Barcode.ToLower().Equals("audit missed")).Count()
+                        @Model.Audit.Where(y => y.Line.Equals(lineItem) && y.Type.Equals(typeItem) && !y.Result.Equals("Open")).Select(x => x.Line).Count()
+                        / @item.NumberOfAudits Completed | Explained Loses: @Model.Audit.Where(x => x.Line.Equals(lineItem) && x.Type.Equals(typeItem) && x.Barcode.ToLower().Equals("audit missed")).Count()
                         | Routes: 
                         @foreach (var routeItem in routeList)
                         {
                             var routename = @routeItem.RouteName;
-                            <div>@routeItem.RouteName: <b>@Model.Audit.Where(x => x.Route.Equals(routename)).Select(y => y.Route).Count() </b> | </div>
+                            <div>&nbsp;@routeItem.RouteName: <b>@Model.Audit.Where(x => x.Route.Equals(routename)).Select(y => y.Route).Count() </b> | </div>
                         }
                     </button>
 
@@ -121,3 +127,62 @@
 <div class="row">
     <a asp-page="Index">Back to History</a>
 </div>
+
+@section Scripts {
+    <script>
+        var myContext = document.getElementById(
+            "myChart").getContext('2d');
+
+        var myChart = new Chart(myContext, {
+            type: 'bar',
+            data: {
+                labels: ["Front Structure", "Rear 1", "Rear 2",
+                    "URS", "ORS"],
+                datasets: [{
+                    label: 'Weld Audits Completed',
+                    backgroundColor: "green",
+                    data: [7, 5, 6, 3, 7],
+                    stack: 'Stack 0',
+                }, {
+                    label: 'Weld Audits Not Completed',
+                    backgroundColor: "gray",
+                    data: [0, 2, 1, 4, 0],
+                    stack: 'Stack 0',
+                }, {
+                    label: 'Sealer Audits Completed',
+                    backgroundColor: "green",
+                    data: [2, 1, 0, 2, 1],
+                    stack: 'Stack 1' // For multiple stacking
+                }, {
+                    label: 'Sealer Audits Not Completed',
+                    backgroundColor: "gray",
+                    data: [0, 1, 2, 0, 1],
+                    stack: 'Stack 1' // For multiple stacking
+                }],
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Audit Completion'
+                    },
+                    legend: {
+                        display: false
+                    },
+                },
+                interaction: {
+                    intersect: false,
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                },
+                responsive: true
+            }
+        });
+    </script>
+}

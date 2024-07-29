@@ -26,6 +26,7 @@ namespace Van_Authentication.Models
         public string Route { get; set; } = "";
         [Required]
         [StringLength(12, ErrorMessage = "Barcode can't be longer than 12 characters.")]
+        [DisplayName("Identifier")]
         public string Barcode { get; set; } = "";
         [Required]
         public string Result { get; set; } = "";

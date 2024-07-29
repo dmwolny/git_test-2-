@@ -28,7 +28,7 @@ body {
     float:right;
 }
 
-.bi-printer, .bi-moon-stars-fill {
+.bi-printer, .bi-moon-stars-fill, .bi {
     cursor: pointer;
 }
 

@@ -59,8 +59,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="Audit.Barcode" class="control-label"></label>
-                <input asp-for="Audit.Barcode" class="form-control" />
-                <div class="fs-2"><i class="bi bi-123 me-2"></i>|<i class="bi bi-clock mx-2"></i>|<i class="bi bi-clipboard-x ms-2"></i></div>
+                @if(Model.Audit.Barcode.Count() > 0)
+                {
+                    <input asp-for="Audit.Barcode" class="form-control" />
+                }
+                else
+                {
+                    <input asp-for="Audit.Barcode" class="form-control" hidden id="barcode" />
+                    <input type="time" asp-for="Audit.Barcode" class="form-control" hidden id="time" />
+
+                    <div class="fs-2"><i class="bi bi-123 me-2" id="barcodeIcon" title="Barcode"></i>|<i class="bi bi-clock mx-2" title="Time" id="timeIcon"></i>|<i class="bi bi-clipboard-x ms-2" title="Missed Audit" id="missedIcon"></i></div>                    
+                }
                 <span asp-validation-for="Audit.Barcode" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -72,7 +81,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Audit.Result" class="control-label"></label>
-                <input asp-for="Audit.Result" class="form-control" />
+                <input asp-for="Audit.Result" class="form-control" readonly/>
                 <span asp-validation-for="Audit.Result" class="text-danger"></span>
             </div>
             @if(Model.Audit.Route.Count() > 0)
@@ -288,6 +297,41 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+        document.getElementById('barcodeIcon').addEventListener('click', function () {
+            if (document.getElementById('barcode').hasAttribute('hidden')) {
+                document.getElementById('barcode').removeAttribute('hidden');
+            }
+            else{
+                document.getElementById('barcode').setAttribute('hidden', true);
+            }
+
+        });
+
+        document.getElementById('timeIcon').addEventListener('click', function () {
+            if (document.getElementById('time').hasAttribute('hidden')) {
+                document.getElementById('time').removeAttribute('hidden');
+            }
+            else {
+                document.getElementById('time').setAttribute('hidden', true);
+            }
+        });
+
+        document.getElementById('missedIcon').addEventListener('click', function () {
+            document.getElementById('barcode').value = "Audit Missed";
+            if (document.getElementById('barcode').hasAttribute('hidden')) {
+                document.getElementById('barcode').removeAttribute('hidden');
+            }
+            else {
+                document.getElementById('barcode').setAttribute('hidden', true);
+            }
+        });
+
+        document.getElementById('time').addEventListener('change', function () {
+            let time = document.getElementById('time').value;
+            document.getElementById('barcode').value = time;
+            console.log(time);
+        })
+
         document.getElementById("addBtn").addEventListener("click", async function () {
                 let tcp = document.getElementById("tcpcheckbox").checked;
                 let lineValue = document.getElementById("Line").value;
