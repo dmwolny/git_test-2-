@@ -64,7 +64,8 @@ namespace Van_Authentication.Pages.Tcps
                     RobotNumber = joined.weldAudit.RobotNumber,
                     Production = joined.tcp.Production,
                     Maintenance = joined.tcp.Maintenance,
-                    Engineering = joined.tcp.Engineering
+                    Engineering = joined.tcp.Engineering,
+                    PurgeSheet = joined.tcp.PurgeSheet
                 })
                 .Distinct();
             var start = startDate;
@@ -133,5 +134,6 @@ namespace Van_Authentication.Pages.Tcps
         public string? Production;
         public string? Maintenance;
         public string? Engineering;
+        public string? PurgeSheet;
     }
 }

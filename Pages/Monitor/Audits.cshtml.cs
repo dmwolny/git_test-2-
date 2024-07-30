@@ -91,6 +91,65 @@ namespace Van_Authentication.Pages.Monitor
 
             RouteCount = routeCount;
         } 
+
+        public JsonResult OnGetCompletedData(DateOnly? date, string? Shift)
+        {
+            var query = from partModel in _context.PartModels
+                        join workstation in _context.WorkStations
+                        on partModel.WorkStationId equals workstation.WorkStationId
+                        group new { partModel, workstation } by new { partModel.PartModelType, workstation.WorkStationName } into grouped
+                        select new PartModelDTO
+                        {
+                            WorkStationName = grouped.Key.WorkStationName,
+                            PartModelType = grouped.Key.PartModelType,
+                            NumberOfAudits = grouped.Sum(x => x.partModel.LotControl)
+                        };
+            List<Audit> audits = _context.Audits.Where(x => x.Shift.Equals(Shift) && (DateOnly.FromDateTime(x.CreatedAt) == date)).ToList();
+            List<AuditDTO> auditsDTO = new List<AuditDTO>();
+            foreach (var item in audits)
+            {
+                AuditDTO audit = new AuditDTO();
+                audit.Type = _context.PartModels
+                    .Where(x => x.WorkStation.WorkStationName.Equals(item.Line)).Select(y => y.PartModelType)
+                    .FirstOrDefault();
+                audit.AuditId = item.AuditID;
+                audit.CreatedAt = item.CreatedAt;
+                audit.Shift = item.Shift;
+                audit.Auditor = item.Auditor;
+                audit.Line = item.Line;
+                audit.Route = item.Route;
+                audit.Barcode = item.Barcode;
+                audit.Result = item.Result;
+                auditsDTO.Add(audit);
+            }
+            
+            List<int> completed = new List<int>();
+            List<int> required = new List<int>();
+            List<int> completedSealer = new List<int>();
+            List<int> requiredSealer = new List<int>();
+            List<string> workstations = new List<string>();
+
+            // Get number of completed audits for Welds
+            foreach(var item in query.Where(x => x.PartModelType.Equals("Weld")))
+            {
+                workstations.Add(item.WorkStationName);
+                completed.Add(auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Weld") && !x.Result.Equals("Open")).Select(y => y.Line).Count());
+                required.Add(item.NumberOfAudits -
+                    auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Weld") && !x.Result.Equals("Open")).Select(y => y.Line).Count());
+            }
+
+            // Get number of completed audits for Sealer
+            foreach (var item in query.Where(x => x.PartModelType.Equals("Sealer")))
+            {
+                completedSealer.Add(auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Sealer") && !x.Result.Equals("Open")).Select(y => y.Line).Count());
+                requiredSealer.Add(item.NumberOfAudits -
+                    auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Sealer") && !x.Result.Equals("Open")).Select(y => y.Line).Count());
+            }
+
+
+            return new JsonResult( new {name = workstations, completed = completed,  required = required, completedSealer = completedSealer, requiredSealer = requiredSealer} );
+        }
+
     }
 
     public class PartModelDTO 

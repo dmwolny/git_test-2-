@@ -62,6 +62,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Tcp[0].Engineering)
                 </th>
+                <th>PAN</th>
                 <th></th>
             </tr>
         </thead>
@@ -112,6 +113,12 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Engineering)
+                    </td>
+                    <td>
+                        @if(item.PurgeSheet != null)
+                        {
+                            <a href="~/docs/@item.PurgeSheet"><i class="bi bi-file-earmark-arrow-down fs-5"></i></a>
+                        }
                     </td>
                     <td>
                         <a asp-page="./Edit" asp-route-id="@item.TcpId">Edit</a> |

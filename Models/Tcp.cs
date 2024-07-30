@@ -40,6 +40,7 @@ namespace Van_Authentication.Models
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         [DisplayName("TCP created at")]
         public DateTime? CreatedAt { get; set; }
+        public string? PurgeSheet { get; set; }
 
         public ICollection<WeldConcern>? WeldConcerns { get; set; }
     }

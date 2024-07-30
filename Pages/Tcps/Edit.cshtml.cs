@@ -16,11 +16,15 @@ namespace Van_Authentication.Pages.Tcps
     [Authorize(Roles = "manager, coordinator, supervisor")]
     public class EditModel : PageModel
     {
+        private readonly IWebHostEnvironment _env;
         private readonly Van_Authentication.Services.ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public EditModel(Van_Authentication.Services.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public EditModel(Van_Authentication.Services.ApplicationDbContext context, 
+            UserManager<ApplicationUser> userManager, 
+            IWebHostEnvironment env)
         {
+            _env = env;
             _context = context;
             _userManager = userManager;
         }
@@ -29,6 +33,8 @@ namespace Van_Authentication.Pages.Tcps
         public Tcp Tcp { get; set; } = default!;
         [BindProperty]
         public bool TcpStatus { get; set; } = false;
+        [BindProperty]
+        public IFormFile? PAN {  get; set; }
         public string? Graphic { get; set; }
         public string? Auditor { get; set; }
 
@@ -70,6 +76,22 @@ namespace Van_Authentication.Pages.Tcps
                 return Page();
             }
 
+
+            // Update the image file if we have a new image file
+            string newFileName = "";
+            if (PAN != null)
+            {
+                newFileName = "TCP-" + Tcp.TcpId.ToString() ;
+                newFileName += Path.GetExtension(PAN.FileName);
+
+                string imageFullPath = _env.WebRootPath + "/Images/" + newFileName;
+                using (var stream = System.IO.File.Create(imageFullPath))
+                {
+                    PAN.CopyTo(stream);
+                }
+            }
+
+            Tcp.PurgeSheet = newFileName;
             _context.Attach(Tcp).State = EntityState.Modified;
 
             try

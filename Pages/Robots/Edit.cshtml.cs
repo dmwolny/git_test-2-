@@ -75,7 +75,7 @@ namespace Van_Authentication.Pages.Robots
                 return NotFound();
             }
 
-            // Update the iamge file if we have a new image file
+            // Update the image file if we have a new image file
             string newFileName = robot.Graphic;
             if (robotDTO.ImageFile != null)
             {

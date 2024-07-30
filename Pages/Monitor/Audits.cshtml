@@ -22,8 +22,8 @@
             </div>
         </div>
 
-        <div class="col-6 card">
-            <canvas id="myChart" class="push-right"></canvas>
+        <div class="col-10">
+            <div class="col-8 card" style="position: relative;"><canvas id="myChart"></canvas></div>
         </div>
     </div>
 
@@ -40,7 +40,7 @@
             var routeList = Model.RouteCount.Where(x => x.Workstation.Equals(lineItem) && x.AuditType.Equals(typeItem)).ToList();
             <div class="accordion-item">
             <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@item.WorkStationName.Replace(" ", "")-@item.PartModelType">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@item.WorkStationName.Replace(" ", "")-@item.PartModelType">
                     @item.WorkStationName @item.PartModelType Audits: 
                         @Model.Audit.Where(y => y.Line.Equals(lineItem) && y.Type.Equals(typeItem) && !y.Result.Equals("Open")).Select(x => x.Line).Count()
                         / @item.NumberOfAudits Completed | Explained Loses: @Model.Audit.Where(x => x.Line.Equals(lineItem) && x.Type.Equals(typeItem) && x.Barcode.ToLower().Equals("audit missed")).Count()
@@ -124,65 +124,130 @@
         
     }   
 </div>
-<div class="row">
+<div class="row mt-3">
     <a asp-page="Index">Back to History</a>
 </div>
 
 @section Scripts {
     <script>
-        var myContext = document.getElementById(
-            "myChart").getContext('2d');
+        document.addEventListener("DOMContentLoaded", function () {
+            let date = document.getElementById('date').value;
+            let shift = document.getElementById('Shift').value;
+            
+            fetch(`?handler=CompletedData&date=` + encodeURIComponent(date) + "&Shift=" + encodeURIComponent(shift))
+                .then(res => res.json())
+                .then(jsondata => {
+                    console.log(jsondata);
 
-        var myChart = new Chart(myContext, {
-            type: 'bar',
-            data: {
-                labels: ["Front Structure", "Rear 1", "Rear 2",
-                    "URS", "ORS"],
-                datasets: [{
-                    label: 'Weld Audits Completed',
-                    backgroundColor: "green",
-                    data: [7, 5, 6, 3, 7],
-                    stack: 'Stack 0',
-                }, {
-                    label: 'Weld Audits Not Completed',
-                    backgroundColor: "gray",
-                    data: [0, 2, 1, 4, 0],
-                    stack: 'Stack 0',
-                }, {
-                    label: 'Sealer Audits Completed',
-                    backgroundColor: "green",
-                    data: [2, 1, 0, 2, 1],
-                    stack: 'Stack 1' // For multiple stacking
-                }, {
-                    label: 'Sealer Audits Not Completed',
-                    backgroundColor: "gray",
-                    data: [0, 1, 2, 0, 1],
-                    stack: 'Stack 1' // For multiple stacking
-                }],
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Audit Completion'
-                    },
-                    legend: {
-                        display: false
-                    },
-                },
-                interaction: {
-                    intersect: false,
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                    },
-                    y: {
-                        stacked: true
-                    }
-                },
-                responsive: true
-            }
+                    var myContext = document.getElementById('myChart').getContext('2d');
+                    var myChart = new Chart(myContext, {
+                        type: 'bar',
+                        data: {
+                            labels: jsondata.name,
+                            datasets: [{
+                                label: 'Weld Audits Completed',
+                                backgroundColor: 'rgb(67,170,160,0.8)',
+                                data: jsondata.completed,
+                                stack: 'Stack 0',
+                            }, {
+                                label: 'Weld Audits Not Completed',
+                                backgroundColor: 'rgb(216,89,53,0.8)',
+                                data: jsondata.required,
+                                stack: 'Stack 0',
+                            }, {
+                                label: 'Sealer Audits Completed',
+                                backgroundColor: 'rgb(67,170,160,0.8)',
+                                data: jsondata.completedSealer,
+                                stack: 'Stack 1' // For multiple stacking
+                            }, {
+                                label: 'Sealer Audits Not Completed',
+                                backgroundColor: 'rgb(216,89,53,0.8)',
+                                data: jsondata.requiredSealer,
+                                stack: 'Stack 1' // For multiple stacking
+                            }],
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Audit Completion'
+                                },
+                                legend: {
+                                    display: false
+                                },
+                            },
+                            interaction: {
+                                intersect: false,
+                            },
+                            scales: {
+                                x: {
+                                    stacked: true,
+                                },
+                                y: {
+                                    stacked: true
+                                }
+                            },
+                            responsive: true
+                        }
+                    });
+
+                });            
         });
+
+
+        // var myContext = document.getElementById(
+        //     "myChart").getContext('2d');
+
+        // var myChart = new Chart(myContext, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ["Front Structure", "Rear 1", "Rear 2",
+        //             "URS", "ORS"],
+        //         datasets: [{
+        //             label: 'Weld Audits Completed',
+        //             backgroundColor: "green",
+        //             data: [7, 5, 6, 3, 7],
+        //             stack: 'Stack 0',
+        //         }, {
+        //             label: 'Weld Audits Not Completed',
+        //             backgroundColor: "gray",
+        //             data: [0, 2, 1, 4, 0],
+        //             stack: 'Stack 0',
+        //         }, {
+        //             label: 'Sealer Audits Completed',
+        //             backgroundColor: "green",
+        //             data: [2, 1, 0, 2, 1],
+        //             stack: 'Stack 1' // For multiple stacking
+        //         }, {
+        //             label: 'Sealer Audits Not Completed',
+        //             backgroundColor: "gray",
+        //             data: [0, 1, 2, 0, 1],
+        //             stack: 'Stack 1' // For multiple stacking
+        //         }],
+        //     },
+        //     options: {
+        //         plugins: {
+        //             title: {
+        //                 display: true,
+        //                 text: 'Audit Completion'
+        //             },
+        //             legend: {
+        //                 display: false
+        //             },
+        //         },
+        //         interaction: {
+        //             intersect: false,
+        //         },
+        //         scales: {
+        //             x: {
+        //                 stacked: true,
+        //             },
+        //             y: {
+        //                 stacked: true
+        //             }
+        //         },
+        //         responsive: true
+        //     }
+        // });
     </script>
 }

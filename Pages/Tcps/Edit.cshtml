@@ -11,9 +11,10 @@
 <hr />
 <div class="row">
     <div class="col-md-4 d-print-none">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Tcp.TcpId" />
+            <input type="hidden" asp-for="Tcp.CreatedAt" />
             <div class="form-group">
                 <input asp-for="Tcp.Status" type="hidden" class="form-control" />
             </div>
@@ -119,6 +120,36 @@
                             </div>
                             <div class="my-2">
                                 <input type="submit" asp-page-handler="Engineering" value="Save" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                            @if (Model.Tcp.PurgeSheet != null)
+                            {
+                                <div class="form-group">
+                                    <a href="~/docs/@Model.Tcp.PurgeSheet"><i class="bi bi-file-earmark-arrow-down fs-2"></i>@Model.Tcp.PurgeSheet</a>
+                                </div>
+                            }
+                            else
+                            {
+                                <i class="bi bi-file-earmark-arrow-down fs-2"></i>
+
+                                <span>No File found</span>
+                            }
+                        </button>
+                    </h2>
+                    <div id="flush-collapseFour" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label asp-for="PAN" class="control-label">Upload PAN Purge Sheet</label>
+                                <input type="file" asp-for="PAN" class="form-control" />
+                                <input asp-for="Tcp.PurgeSheet" hidden />
+                            </div>
+                            <div class="my-2">
+                                <input type="submit" value="Save" class="btn btn-primary" />
                             </div>
                         </div>
                     </div>
