@@ -62,6 +62,8 @@
                 @if(Model.Audit.Barcode.Count() > 0)
                 {
                     <input asp-for="Audit.Barcode" class="form-control" />
+                    <input type="time" asp-for="Audit.Barcode" class="form-control" hidden id="time" />
+                    <div class="fs-2" hidden><i class="bi bi-123 me-2" id="barcodeIcon" title="Barcode"></i>|<i class="bi bi-clock mx-2" title="Time" id="timeIcon"></i>|<i class="bi bi-clipboard-x ms-2" title="Missed Audit" id="missedIcon"></i></div>
                 }
                 else
                 {
@@ -87,7 +89,7 @@
             @if(Model.Audit.Route.Count() > 0)
             {
                 <div class="form-group">
-                    <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#weldModal">
                         Add weld concern
                     </button>
                     <input type="submit" value="Submit" class="btn btn-primary"/>
@@ -210,11 +212,11 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="weldModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h3> Weld Concerns</h3>
+                <h3 class="modal-title" id="weldModalLabel"> Weld Concerns</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeIcon"></button>
             </div>
             <div class="modal-body">
