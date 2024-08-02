@@ -210,7 +210,8 @@ namespace Van_Authentication.Pages.Audits
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                return await OnGetAsync(id);
+                //return Page();
             }
             if(_context.WeldConcerns.Where(x => x.AuditID == id).Count() > 0)
             {
@@ -245,7 +246,7 @@ namespace Van_Authentication.Pages.Audits
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                return await OnGetAsync(id);
             }
             if (Audit.Barcode.Equals("Audit Missed"))
             {

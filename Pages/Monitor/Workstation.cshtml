@@ -7,19 +7,29 @@
 
 <h1>Workstation History</h1>
 
-<p>
-    <div class="row mb-8">
-        <div class="col-md-6">
-            <form class="d-flex">
-                <input class="form-control me-2" asp-for="startDate" type="date" />
-                <input class="form-control me-2" asp-for="endDate" type="date" />
-                <select class="form-control me-2" asp-for="workstation" asp-items="ViewBag.WorkStationName"></select>
-                <button class="btn btn-primary" type="submit">Search</button>
-            </form>
-        </div>
+<div class="row mb-12">
+    <div class="col-md-7">
+        <form class="d-flex">
+            <input class="form-control me-2" asp-for="startDate" type="date"/>
+            <input class="form-control me-2" asp-for="endDate" type="date" />
+            <select class="form-control me-2" asp-for="Workstation" asp-items="ViewBag.WorkStationName">
+                <option value="">-- Select Workstation --</option>
+            </select>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
     </div>
+    <div class="col-md-5">
+        <form method="post">
+            <input class="form-control me-2" asp-for="startDate" type="date" hidden/>
+            <input class="form-control me-2" asp-for="endDate" type="date" hidden/>
+            <select class="form-control me-2" asp-for="Workstation" asp-items="ViewBag.WorkStationName" hidden>
+                <option value="">--Select Workstation</option>
+            </select>
+            <button class="btn btn-link push-right" style="padding:0rem 0rem;" type="submit" asp-page-handler="Export" asp-route-workstation="@Model.Workstation" asp-route-startDate="@Model.startDate" asp-route-endDate="@Model.endDate"><i class="bi bi-file-earmark-arrow-down fs-2"></i></button>
+        </form>
+    </div>
+</div>
 
-</p>
 <div class="table-responsive card shadow">
     <table class="table">
         <thead>
@@ -74,7 +84,7 @@
                         @Html.DisplayFor(modelItem => item.Result)
                     </td>
                     <td>
-                        <a asp-page="../Audits/Edit" asp-route-id="@item.AuditID">Edit</a> |
+                        <a asp-page="../Audits/Edit" asp-route-id="@item.AuditID" onclick="referer()">Edit</a> |
                         <a asp-page="../Audits/Details" asp-route-id="@item.AuditID">Details</a>
                     </td>
                 </tr>
@@ -92,20 +102,21 @@
         else
         {
             <li class="page-item">
-                <a class="page-link" asp-route-pageIndex="@(Model.pageIndex - 1)">Previous</a>
+                <a class="page-link" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-Workstation="@Model.Workstation" asp-route-startDate="@Model.startDate" asp-route-endDate="@Model.endDate">Previous</a>
             </li>
         }
 
         @for (int i = 1; i <= Model.totalPages; i++)
         {
+            var station = ViewBag.WorkstationName;
             string active = "";
             if (i == Model.pageIndex) active = "active";
-            <li class="page-item @active" aria-current="page"><a class="page-link" asp-route-pageIndex="@(i)">@i</a></li>
+            <li class="page-item @active" aria-current="page"><a class="page-link" asp-route-pageIndex="@(i)" asp-route-Workstation="@Model.Workstation" asp-route-startDate="@Model.startDate" asp-route-endDate="@Model.endDate" >@i</a></li>
         }
         @if (Model.pageIndex != Model.totalPages)
         {
             <li class="page-item">
-                <a class="page-link" asp-route-pageIndex="@(Model.pageIndex + 1)")">Next</a>
+                <a class="page-link" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-Workstation="@Model.Workstation" asp-route-startDate="@Model.startDate" asp-route-endDate="@Model.endDate">Next</a>
             </li>
         }
 
@@ -114,3 +125,11 @@
 <div class="row">
     <a asp-page="Index">Back to History</a>
 </div>
+
+@section Scripts {
+    <script>
+        function referer() {
+            sessionStorage.setItem("referer", window.location.pathname + window.location.search);
+        }
+    </script>
+}

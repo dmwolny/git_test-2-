@@ -109,7 +109,7 @@
                                     @Html.DisplayFor(modelItem => audit.Result)
                                     </td>
                                     <td>
-                                        <a asp-page="../Audits/Edit" asp-route-id="@audit.AuditId">Details</a>
+                                        <a asp-page="../Audits/Edit" asp-route-id="@audit.AuditId" onclick="referer()">Details</a>
                                     </td>
                                 </tr>
                             }
@@ -150,8 +150,13 @@
                                 data: jsondata.completed,
                                 stack: 'Stack 0',
                             }, {
+                                label: 'Weld Audits Missed',
+                                backgroundColor: 'rgb(254,205,80,0.8)',
+                                data: jsondata.missedWeld,
+                                stack: 'Stack 0',
+                            }, {
                                 label: 'Weld Audits Not Completed',
-                                backgroundColor: 'rgb(216,89,53,0.8)',
+                                backgroundColor: 'rgb(228,35,19,0.8)',
                                 data: jsondata.required,
                                 stack: 'Stack 0',
                             }, {
@@ -194,60 +199,8 @@
                 });            
         });
 
-
-        // var myContext = document.getElementById(
-        //     "myChart").getContext('2d');
-
-        // var myChart = new Chart(myContext, {
-        //     type: 'bar',
-        //     data: {
-        //         labels: ["Front Structure", "Rear 1", "Rear 2",
-        //             "URS", "ORS"],
-        //         datasets: [{
-        //             label: 'Weld Audits Completed',
-        //             backgroundColor: "green",
-        //             data: [7, 5, 6, 3, 7],
-        //             stack: 'Stack 0',
-        //         }, {
-        //             label: 'Weld Audits Not Completed',
-        //             backgroundColor: "gray",
-        //             data: [0, 2, 1, 4, 0],
-        //             stack: 'Stack 0',
-        //         }, {
-        //             label: 'Sealer Audits Completed',
-        //             backgroundColor: "green",
-        //             data: [2, 1, 0, 2, 1],
-        //             stack: 'Stack 1' // For multiple stacking
-        //         }, {
-        //             label: 'Sealer Audits Not Completed',
-        //             backgroundColor: "gray",
-        //             data: [0, 1, 2, 0, 1],
-        //             stack: 'Stack 1' // For multiple stacking
-        //         }],
-        //     },
-        //     options: {
-        //         plugins: {
-        //             title: {
-        //                 display: true,
-        //                 text: 'Audit Completion'
-        //             },
-        //             legend: {
-        //                 display: false
-        //             },
-        //         },
-        //         interaction: {
-        //             intersect: false,
-        //         },
-        //         scales: {
-        //             x: {
-        //                 stacked: true,
-        //             },
-        //             y: {
-        //                 stacked: true
-        //             }
-        //         },
-        //         responsive: true
-        //     }
-        // });
+        function referer() {
+            sessionStorage.setItem("referer", window.location.pathname + window.location.search);
+        }
     </script>
 }

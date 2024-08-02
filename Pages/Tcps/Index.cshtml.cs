@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Nancy.Extensions;
 using Van_Authentication.Migrations;
 using Van_Authentication.Models;
@@ -44,30 +45,56 @@ namespace Van_Authentication.Pages.Tcps
 
         public async Task OnGetAsync(int? pageIndex, string? search, DateTime startDate, DateTime endDate)
         {
-            //IQueryable<Tcp> query =  _context.Tcps.Include(p => p.WeldConcerns).ThenInclude(a => a.Audit);
             IQueryable<TcpFlatten> query = _context.Tcps
-                .Join(_context.WeldConcerns,
-                tcp => tcp.TcpId,
-                weldAudit => weldAudit.TcpID,
-                (tcp, weldAudit) => new { tcp, weldAudit })
-                .Join(_context.Audits,
-                joined => joined.weldAudit.AuditID,
-                audit => audit.AuditID,
-                (joined, audit) => new TcpFlatten
-                {
-                    TcpId = joined.tcp.TcpId,
-                    CreatedAt = joined.tcp.CreatedAt,
-                    Shift = audit.Shift,
-                    Status = joined.tcp.Status,
-                    Line = joined.weldAudit.Line,
-                    Station = joined.weldAudit.Station,
-                    RobotNumber = joined.weldAudit.RobotNumber,
-                    Production = joined.tcp.Production,
-                    Maintenance = joined.tcp.Maintenance,
-                    Engineering = joined.tcp.Engineering,
-                    PurgeSheet = joined.tcp.PurgeSheet
-                })
-                .Distinct();
+                .GroupJoin(_context.WeldConcerns
+                    .Join(_context.Audits,
+                        weldConcern => weldConcern.AuditID,
+                        audit => audit.AuditID,
+                        (weldConcern, audit) => new { weldConcern, audit }
+                        ),
+                    tcp => tcp.TcpId,
+                    wc => wc.weldConcern.TcpID,
+                    (tcp, wcGroup) => new { tcp, wcGroup }
+                    ).SelectMany(
+                        x => x.wcGroup.DefaultIfEmpty(),
+                        (x, wc) => new TcpFlatten
+                        {
+                            TcpId = x.tcp.TcpId,
+                            CreatedAt = x.tcp.CreatedAt,
+                            Shift = wc.audit != null ? wc.audit.Shift : null,
+                            Status = x.tcp.Status,
+                            Line = wc.weldConcern != null ? wc.weldConcern.Line : null,
+                            Station = wc.weldConcern != null ? wc.weldConcern.Station : (int?)null,
+                            RobotNumber = wc.weldConcern != null ? wc.weldConcern.RobotNumber : (int?)null,
+                            Production = x.tcp.Production,
+                            Maintenance = x.tcp.Maintenance,
+                            Engineering = x.tcp.Engineering,
+                            PurgeSheet = x.tcp.PurgeSheet
+                        }).Distinct();
+            //IQueryable<Tcp> query =  _context.Tcps.Include(p => p.WeldConcerns).ThenInclude(a => a.Audit);
+            //IQueryable<TcpFlatten> query = _context.Tcps
+            //    .Join(_context.WeldConcerns,
+            //    tcp => tcp.TcpId,
+            //    weldAudit => weldAudit.TcpID,
+            //    (tcp, weldAudit) => new { tcp, weldAudit })
+            //    .Join(_context.Audits,
+            //    joined => joined.weldAudit.AuditID,
+            //    audit => audit.AuditID,
+            //    (joined, audit) => new TcpFlatten
+            //    {
+            //        TcpId = joined.tcp.TcpId,
+            //        CreatedAt = joined.tcp.CreatedAt,
+            //        Shift = audit.Shift,
+            //        Status = joined.tcp.Status,
+            //        Line = joined.weldAudit.Line,
+            //        Station = joined.weldAudit.Station,
+            //        RobotNumber = joined.weldAudit.RobotNumber,
+            //        Production = joined.tcp.Production,
+            //        Maintenance = joined.tcp.Maintenance,
+            //        Engineering = joined.tcp.Engineering,
+            //        PurgeSheet = joined.tcp.PurgeSheet
+            //    })
+            //    .Distinct();
             var start = startDate;
             var end = endDate;
             
@@ -129,8 +156,8 @@ namespace Van_Authentication.Pages.Tcps
         public int TcpId;
         public string? Status;
         public string? Line;
-        public int Station;
-        public int RobotNumber;
+        public int? Station;
+        public int? RobotNumber;
         public string? Production;
         public string? Maintenance;
         public string? Engineering;

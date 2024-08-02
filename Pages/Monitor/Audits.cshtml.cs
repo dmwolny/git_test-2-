@@ -124,6 +124,7 @@ namespace Van_Authentication.Pages.Monitor
             }
             
             List<int> completed = new List<int>();
+            List<int> missedWeld = new List<int>();
             List<int> required = new List<int>();
             List<int> completedSealer = new List<int>();
             List<int> requiredSealer = new List<int>();
@@ -132,10 +133,12 @@ namespace Van_Authentication.Pages.Monitor
             // Get number of completed audits for Welds
             foreach(var item in query.Where(x => x.PartModelType.Equals("Weld")))
             {
+                var numberOfMissedWelds = auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Result.Equals("Missed") && x.Type.Equals("Weld")).Select(z => z.Line).Count();
+                var numberOfCompleted = auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Weld") && !x.Result.Equals("Open")).Select(y => y.Line).Count();
                 workstations.Add(item.WorkStationName);
-                completed.Add(auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Weld") && !x.Result.Equals("Open")).Select(y => y.Line).Count());
-                required.Add(item.NumberOfAudits -
-                    auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Weld") && !x.Result.Equals("Open")).Select(y => y.Line).Count());
+                missedWeld.Add(numberOfMissedWelds);
+                completed.Add(numberOfCompleted - numberOfMissedWelds);
+                required.Add(item.NumberOfAudits - numberOfCompleted);
             }
 
             // Get number of completed audits for Sealer
@@ -147,7 +150,7 @@ namespace Van_Authentication.Pages.Monitor
             }
 
 
-            return new JsonResult( new {name = workstations, completed = completed,  required = required, completedSealer = completedSealer, requiredSealer = requiredSealer} );
+            return new JsonResult( new {name = workstations, completed = completed, missedWeld = missedWeld, required = required, completedSealer = completedSealer, requiredSealer = requiredSealer} );
         }
 
     }

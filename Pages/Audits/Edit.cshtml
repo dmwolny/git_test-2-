@@ -59,10 +59,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Audit.Barcode" class="control-label"></label>
-                @if(Model.Audit.Barcode.Count() > 0)
+                @if(Model.Audit.Barcode != "")
                 {
                     <input asp-for="Audit.Barcode" class="form-control" />
-                    <input type="time" asp-for="Audit.Barcode" class="form-control" hidden id="time" />
+                    <input type="time" class="form-control" hidden id="time" />
                     <div class="fs-2" hidden><i class="bi bi-123 me-2" id="barcodeIcon" title="Barcode"></i>|<i class="bi bi-clock mx-2" title="Time" id="timeIcon"></i>|<i class="bi bi-clipboard-x ms-2" title="Missed Audit" id="missedIcon"></i></div>
                 }
                 else
@@ -105,7 +105,7 @@
         </form>
 
         <div>
-            <a href="@ViewData["Reffer"]">Back to List</a>
+            <a href="../Index" id="back">Back to List</a>
         </div>
     </div>
     <div class="col-md-8">
@@ -152,9 +152,13 @@
                         <th class="align-top">
                             @Html.DisplayNameFor(model => model.WeldConcerns[0].TcpID)
                         </th>
-                        @if (!User.IsInRole("auditor"))
+                        @if (!User.IsInRole("auditor, supervisor") && Model.WeldConcerns.Where(y => y.TcpID != null).Count() > 0)
                         {
-                            <th></th>                            
+                            <th><a href="/Tcps/Remove/@Model.Audit.AuditID"><i class="bi bi-trash fs-3 align-top" title="Remove TCP"></i></a></th>
+                        }
+                        else if (!User.IsInRole("auditor, supervisor"))
+                        {
+                            <th></th>
                         }
 
                     </tr>
@@ -192,7 +196,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.TcpID)
                                 </td>
-                                @if (!User.IsInRole("auditor"))
+                                @if (!User.IsInRole("auditor, supervisor"))
                                 {
                                     <td>
                                         <a asp-page="./Welds/Edit" asp-route-id="@item.WeldConcernID">Edit</a> |
@@ -502,6 +506,10 @@
         // reset the input values on page refresh
         if (sessionStorage.getItem("notes")) {
             notes.value = sessionStorage.getItem("notes");
+        }
+
+        if (sessionStorage.getItem("referer")) {
+            document.getElementById('back').href = sessionStorage.getItem("referer");
         }
 
         var getParentAnchor = function (element) {
