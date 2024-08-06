@@ -19,9 +19,9 @@ namespace Van_Authentication.Pages.Monitor
         }
         public IList<Audit> Audits { get; set; } = default!;
         [BindProperty(SupportsGet = true)]
-        public DateTime? startDate { get; set; }
+        public string? startDate { get; set; }
         [BindProperty(SupportsGet = true)]
-        public DateTime? endDate { get; set; }
+        public string? endDate { get; set; }
         public Audit Audit { get; set; } = default!;
         [BindProperty(SupportsGet = true)]
         public string Workstation { get; set; } = "";
@@ -33,6 +33,12 @@ namespace Van_Authentication.Pages.Monitor
 
         public async Task OnGetAsync(int? pageIndex, string? workstation, DateTime startDate, DateTime endDate)
         {
+            if(startDate != DateTime.MinValue && endDate != DateTime.MinValue)
+            {
+                this.startDate = startDate.ToString("yyyy-MM-dd");
+                this.endDate = endDate.ToString("yyyy-MM-dd");
+            }
+
             ViewData["WorkStationName"] = new SelectList(_context.WorkStations, "WorkStationName", "WorkStationName");
             IQueryable<Audit> query = _context.Audits;
 
@@ -93,7 +99,11 @@ namespace Van_Authentication.Pages.Monitor
                 sb.Append(Audits[i].Route + ',');
                 sb.Append(Audits[i].Barcode + ',');
                 sb.Append(Audits[i].Result + ",");
-                sb.Append(Audits[i].Notes + ",");
+                if (Audits[i].Notes != null)
+                {
+                    sb.Append(Audits[i].Notes.Replace("\r\n"," ") + ",");
+                }
+                else sb.Append(Audits[i].Notes + ",");
 
                 //Append new line character
                 sb.Append("\r\n");

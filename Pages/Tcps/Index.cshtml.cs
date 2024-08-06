@@ -36,15 +36,22 @@ namespace Van_Authentication.Pages.Tcps
 
         // Search variable
         public string search = "";
-        [BindProperty]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateTime? startDate { get; set; } = default!;
-        [BindProperty]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy")]
-        public DateTime? endDate { get; set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        public string? startDate { get; set; }
+        [BindProperty(SupportsGet = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd")]
+        public string? endDate { get; set; }
 
         public async Task OnGetAsync(int? pageIndex, string? search, DateTime startDate, DateTime endDate)
         {
+            if(startDate != DateTime.MinValue && endDate != DateTime.MinValue)
+            {
+                this.startDate = startDate.ToString("yyyy-MM-dd");
+                this.endDate = endDate.ToString("yyyy-MM-dd");
+            }
+
+
             IQueryable<TcpFlatten> query = _context.Tcps
                 .GroupJoin(_context.WeldConcerns
                     .Join(_context.Audits,

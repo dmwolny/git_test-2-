@@ -5,13 +5,11 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
 
-connection.on("ReceiveMessage", function (user, message) {
-    var li = document.createElement("li");
-    document.getElementById("messageInput").value = message;
+connection.on("ReceiveMessage", function (input, message) {
+    document.getElementById(input).value = message;
     // We can assign user-supplied strings to an element's textContent because it
     // is not interpreted as markup. If you're assigning in any other way, you 
     // should be aware of possible script injection concerns.
-    li.textContent = `${user} says ${message}`;
 });
 
 connection.start().then(function () {
@@ -20,10 +18,42 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
-document.getElementById("messageInput").addEventListener("input", function (event) {
-    var user = document.getElementById("userInput").value;
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
+document.getElementById("safety").addEventListener("input", function (event) {
+    var input = event.target.id;
+    var message = document.getElementById(input).value;
+    connection.invoke("SendMessage", input, message).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+document.getElementById("quality").addEventListener("input", function (event) {
+    var input = event.target.id;
+    var message = document.getElementById(input).value;
+    connection.invoke("SendMessage", input, message).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+document.getElementById("delivery").addEventListener("input", function (event) {
+    var input = event.target.id;
+    var message = document.getElementById(input).value;
+    connection.invoke("SendMessage", input, message).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+document.getElementById("cost").addEventListener("input", function (event) {
+    var input = event.target.id;
+    var message = document.getElementById(input).value;
+    connection.invoke("SendMessage", input, message).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+document.getElementById("morale").addEventListener("input", function (event) {
+    var input = event.target.id;
+    var message = document.getElementById(input).value;
+    connection.invoke("SendMessage", input, message).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

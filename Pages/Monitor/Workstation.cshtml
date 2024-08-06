@@ -131,5 +131,23 @@
         function referer() {
             sessionStorage.setItem("referer", window.location.pathname + window.location.search);
         }
+
+        // Set the minimum Date for endDate Datepicker if user selects a date
+        // from the startDate datepicker.
+        document.getElementById('startDate').addEventListener('change', function (event) {
+            let min = event.target.value;
+            let endDate = document.getElementById('endDate');
+
+            endDate.setAttribute('min', min);
+        });
+
+        // Set the maximum Date for startDate Datepicker if user selects a date
+        // from the endDate datepicker.
+        document.getElementById('endDate').addEventListener('change', function (event) {
+            let max = event.target.value;
+            let startDate = document.getElementById('startDate');
+
+            startDate.setAttribute('max', max);
+        })
     </script>
 }

@@ -148,7 +148,7 @@
         {
             string active = "";
             if (i == Model.pageIndex) active = "active";
-            <li class="page-item @active" aria-current="page"><a class="page-link" asp-route-pageIndex="@(i)" asp-route-search="@Model.search">@i</a></li>
+            <li class="page-item @active" aria-current="page"><a class="page-link" asp-route-pageIndex="@(i)" asp-route-search="@Model.search" asp-route-startDate="@Model.startDate" asp-route-endDate="@Model.endDate">@i</a></li>
         }
         @if(Model.pageIndex != Model.totalPages)
         {
@@ -169,6 +169,7 @@
 
         onload = (event) => 
         {
+            document.getElementById('dateRangeInput').placeholder = "Pick a Date Range";
             if (document.getElementById('startDate').value) 
             {
                 var start = new Date(document.getElementById('startDate').value + "T00:00:00");
@@ -193,7 +194,7 @@
 
         $(function () {
             $('input[name="daterange"]').daterangepicker({
-                opens: 'left'
+                opens: 'left', 
             }, function (start, end) {
                 var s = start.toJSON();
                 var e = end.toJSON();
@@ -202,6 +203,8 @@
                 $('#endDate').val(end.format('YYYY-MM-DD'));
             });
         });
+
+        $('input[name="daterange"]').attr("placeholder", "Pick a date range");
         
         $('#daterange').on('cancel.daterangepicker', function (ev, picker) {
             //do something, like clearing an input
