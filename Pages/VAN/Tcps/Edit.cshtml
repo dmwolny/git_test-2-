@@ -131,7 +131,7 @@
                             @if (Model.Tcp.PurgeSheet != null)
                             {
                                 <div class="form-group">
-                                    <a href="~/docs/@Model.Tcp.PurgeSheet"><i class="bi bi-file-earmark-arrow-down fs-2"></i>@Model.Tcp.PurgeSheet</a>
+                                    <i class="bi bi-file-earmark-arrow-down fs-2"></i>@Model.Tcp.PurgeSheet
                                 </div>
                             }
                             else
@@ -148,6 +148,19 @@
                                 <label asp-for="PAN" class="control-label">Upload PAN Purge Sheet</label>
                                 <input type="file" asp-for="PAN" class="form-control" />
                                 <input asp-for="Tcp.PurgeSheet" hidden />
+                                @if (Model.Tcp.PurgeSheet != null)
+                                {
+                                    <div class="form-group">
+                                        <a href="~/docs/@Model.Tcp.PurgeSheet"><i class="bi bi-file-earmark-arrow-down fs-2"></i>@Model.Tcp.PurgeSheet</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-file-earmark-arrow-down fs-2"></i>
+
+                                    <span>No File found</span>
+                                }
+                                
                             </div>
                             <div class="my-2">
                                 <input type="submit" value="Save" class="btn btn-primary" />

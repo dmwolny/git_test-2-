@@ -1,5 +1,5 @@
 ﻿@page
-@model IndexModel
+@model EditModel
 @{
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
@@ -7,24 +7,41 @@
 
 <h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
+
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <form id="registerForm" method="post">
+
+            <span><h3>@Model.FirstName @Model.LastName</h3></span>
+            <span><h5>@Model.assignRole.ToUpper()</h5></span>
             <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
+                
+                <select asp-for="@Model.Shift" class="form-control">
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                </select>
+                <label asp-for="@Model.Shift">Shift</label>
+                <span asp-validation-for="@Model.Shift" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            <div class="form-floating mb-3">                
+                <select asp-for="@Model.Line" class="form-control mb-3" asp-items="@ViewBag.WorkStationName">
+                    <option selected disabled>--Select Line--</option>
+                    @if (User.IsInRole("manager"))
+                    {
+                        <option>Production</option>
+                        <option>Maintenance</option>
+                        <option>Engineering</option>                       
+                    }
+                    <option>Specialist</option>
+                </select>
+                <label asp-for="@Model.Line">Line</label>
+                <span asp-validation-for="@Model.Line" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <input type="submit" class="btn btn-primary" value="Save" />
+            <a href="/Index" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
-</div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+</div>

@@ -28,7 +28,7 @@ namespace Van_Authentication.Pages.Admin.Models
                 return NotFound();
             }
 
-            var partmodel = await _context.PartModels.FirstOrDefaultAsync(m => m.PartModelId == id);
+            var partmodel = await _context.PartModels.Include(x => x.WorkStation).FirstOrDefaultAsync(m => m.PartModelId == id);
             if (partmodel == null)
             {
                 return NotFound();

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Van_Authentication.Pages
 {
-    public class IndexModel : PageModel
+    public class ComingSoonModel : PageModel
     {
         public void OnGet()
         {

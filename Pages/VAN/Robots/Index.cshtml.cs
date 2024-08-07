@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
+using Van_Authentication.Pages.VAN.Robots;
 using Van_Authentication.Services;
 
 namespace Van_Authentication.Pages.Robots

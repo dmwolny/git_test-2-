@@ -67,6 +67,16 @@
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Tcp.Engineering)
             </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Tcp.PurgeSheet)
+            </dt>
+            <dd class="col-sm-8">
+                @if (Model.Tcp.PurgeSheet != null)
+                {
+                    <a href="~/docs/@Model.Tcp.PurgeSheet"><i class="bi bi-file-earmark-arrow-down"></i>@Html.DisplayFor(model => model.Tcp.PurgeSheet)</a> 
+                }
+               
+            </dd>
         </dl>
     </div>
     

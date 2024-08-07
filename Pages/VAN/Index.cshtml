@@ -1,0 +1,80 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "VAN";
+}
+<div class="row">
+    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+        <div class="card w-100 shadow" >
+            <div class="card-header d-flex flex-column">
+                <h5 class="card-title">Robots</h5>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <p class="card-text">Explore any of the robots in BIW to view what they weld.</p>
+                <a asp-page="/VAN/Robots/Index" class="btn btn-primary mt-auto">View Robots</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+        <div class="card w-100 shadow">
+            <div class="card-header d-flex flex-column">
+                <h5 class="card-title">Audits</h5>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <p class="card-text">Verify the process quality with audits.</p>
+                <a href="/VAN/Audits/Index" class="btn btn-primary mt-auto">Audits</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+        <div class="card w-100 shadow">
+            <div class="card-header d-flex flex-column">
+                <h5 class="card-title">Containments</h5>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <p class="card-text">This is where we record the activities that rectify non-conforming welds.</p>
+                <a href="/VAN/Tcps/Index" class="btn btn-primary mt-auto">Containments</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+        <div class="card w-100 shadow">
+            <div class="card-header d-flex flex-column">
+                <h5 class="card-title">Cert</h5>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <p class="card-text">Request Weld, Sealer, or ISD certs. Track completion of certs.</p>
+                <a href="/VAN/Certs/Index" class="btn btn-primary mt-auto">Certs</a>
+            </div>
+        </div>
+    </div>
+    @if (!User.IsInRole("auditor"))
+    {
+        <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+            <div class="card w-100 shadow">
+                <div class="card-header d-flex flex-column">
+                    <h5 class="card-title">History</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Weld Coordinators are able to verify audits are completed. Only available to coordinator/manager role.</p>
+                    <a href="/VAN/Monitor/Index" class="btn btn-primary mt-auto">History</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+            <div class="card w-100 shadow">
+                <div class="card-header d-flex flex-column">
+                    <h5 class="card-title">Ask VAN</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Ask VAN, the BIW AI assistant, any process/standards questions.</p>
+                    <a href="AskVAN" class="btn btn-primary mt-auto">Ask VAN</a>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>

@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using NuGet.Protocol;
 using Van_Authentication.Models;
 using Van_Authentication.Models.DTO;
-using Van_Authentication.Pages.Robots;
+using Van_Authentication.Pages.VAN.Robots;
 using Van_Authentication.Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 

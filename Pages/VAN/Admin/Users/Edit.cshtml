@@ -29,6 +29,13 @@
             <div class="form-floating mb-3">                
                 <select asp-for="@Model.Line" class="form-control mb-3" asp-items="@ViewBag.WorkStationName">
                     <option selected disabled>--Select Line--</option>
+                    @if (User.IsInRole("manager"))
+                    {
+                        <option>Production</option>
+                        <option>Maintenance</option>
+                        <option>Engineering</option>                       
+                    }
+                    <option>Specialist</option>
                 </select>
                 <label asp-for="@Model.Line">Line</label>
                 <span asp-validation-for="@Model.Line" class="text-danger"></span>

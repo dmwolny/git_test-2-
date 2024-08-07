@@ -305,6 +305,7 @@
     <script>
         document.getElementById('barcodeIcon').addEventListener('click', function () {
             if (document.getElementById('barcode').hasAttribute('hidden')) {
+                document.getElementById('time').setAttribute('hidden', true);
                 document.getElementById('barcode').removeAttribute('hidden');
             }
             else{
@@ -315,6 +316,7 @@
 
         document.getElementById('timeIcon').addEventListener('click', function () {
             if (document.getElementById('time').hasAttribute('hidden')) {
+                document.getElementById('barcode').setAttribute('hidden', true);
                 document.getElementById('time').removeAttribute('hidden');
             }
             else {
@@ -325,6 +327,7 @@
         document.getElementById('missedIcon').addEventListener('click', function () {
             document.getElementById('barcode').value = "Audit Missed";
             if (document.getElementById('barcode').hasAttribute('hidden')) {
+                document.getElementById('time').setAttribute('hidden', true);
                 document.getElementById('barcode').removeAttribute('hidden');
             }
             else {

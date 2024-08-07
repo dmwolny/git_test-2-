@@ -36,7 +36,7 @@ namespace Van_Authentication.Pages.Admin.Models
                 return NotFound();
             }
             PartModel = partmodel;
-           ViewData["WorkStationId"] = new SelectList(_context.WorkStations, "WorkStationId", "WorkStationId");
+           ViewData["WorkStationId"] = new SelectList(_context.WorkStations, "WorkStationId", "WorkStationName");
             return Page();
         }
 

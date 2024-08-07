@@ -1,80 +1,33 @@
 ﻿@page
-@model IndexModel
+@model Van_Authentication.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "BIW Homepage";
 }
-<div class="row">
-    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
-        <div class="card w-100 shadow" >
-            <div class="card-header d-flex flex-column">
-                <h5 class="card-title">Robots</h5>
-            </div>
-            <div class="card-body d-flex flex-column">
-                <p class="card-text">Explore any of the robots in BIW to view what they weld.</p>
-                <a asp-page="/Robots/Index" class="btn btn-primary mt-auto">View Robots</a>
+<div class="container col-xxl-12 py-5 card">
+    <div class="row flex-lg-row-reverse align-items-center g-5 pt-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+            <img src="/images/logos/IMG_8595.jpg" class="d-block mx-lg-auto img-fluid rounded shadow" alt="BIW" width="700" height="500" loading="lazy">
+        </div>
+        <div class="col-lg-6">
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Body In White</h1>
+            <p class="lead">Welcome to the site for BIW. Here you can manage various aspects of our daily acitivities such as Weld Audits, certifications for welds, ISD, tracking 4Ps. Use the site from anywhere in the plant to look up critical data, collaboratively write shift notes.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Primary</button>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Default</button>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
-        <div class="card w-100 shadow">
-            <div class="card-header d-flex flex-column">
-                <h5 class="card-title">Audits</h5>
-            </div>
-            <div class="card-body d-flex flex-column">
-                <p class="card-text">Verify the process quality with audits.</p>
-                <a href="/Audits/Index" class="btn btn-primary mt-auto">Audits</a>
+    <div class="row col-xxk-8 flex-lg-row align-items-center g-5 pt-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+            <img src="/images/logos/van profile.png" class="d-block mx-lg-auto img-fluid rounded-circle shadow-lg" alt="BIW" width="230" height="230" loading="lazy">
+        </div>
+        <div class="col-lg-6">
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Meet VAN, BIW's own AI</h1>
+            <p class="lead">Leverage the power of AI. Use BIW's own AI assistant (VAN) to find info on standards, processes or technical specs.​</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="/AskVAN" type="button" class="btn btn-primary btn-lg px-4 me-md-2">Say Hi to VAN</a>
             </div>
         </div>
     </div>
-
-    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
-        <div class="card w-100 shadow">
-            <div class="card-header d-flex flex-column">
-                <h5 class="card-title">Containments</h5>
-            </div>
-            <div class="card-body d-flex flex-column">
-                <p class="card-text">This is where we record the activities that rectify non-conforming welds.</p>
-                <a href="/Tcps/Index" class="btn btn-primary mt-auto">Containments</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-4 mb-3 d-flex align-items-stretch">
-        <div class="card w-100 shadow">
-            <div class="card-header d-flex flex-column">
-                <h5 class="card-title">Cert</h5>
-            </div>
-            <div class="card-body d-flex flex-column">
-                <p class="card-text">Request Weld, Sealer, or ISD certs. Track completion of certs.</p>
-                <a href="/Certs/Index" class="btn btn-primary mt-auto">Certs</a>
-            </div>
-        </div>
-    </div>
-    @if (!User.IsInRole("auditor"))
-    {
-        <div class="col-lg-4 mb-3 d-flex align-items-stretch">
-            <div class="card w-100 shadow">
-                <div class="card-header d-flex flex-column">
-                    <h5 class="card-title">History</h5>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <p class="card-text">Weld Coordinators are able to verify audits are completed. Only available to coordinator/manager role.</p>
-                    <a href="/Monitor/Index" class="btn btn-primary mt-auto">History</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-3 d-flex align-items-stretch">
-            <div class="card w-100 shadow">
-                <div class="card-header d-flex flex-column">
-                    <h5 class="card-title">Ask VAN</h5>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <p class="card-text">Ask VAN, the BIW AI assistant, any process/standards questions.</p>
-                    <a href="AskVAN" class="btn btn-primary mt-auto">Ask VAN</a>
-                </div>
-            </div>
-        </div>
-
-    }
 </div>

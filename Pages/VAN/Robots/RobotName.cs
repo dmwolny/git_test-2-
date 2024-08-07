@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Robots
+namespace Van_Authentication.Pages.VAN.Robots
 {
     public class RobotName : PageModel
     {
