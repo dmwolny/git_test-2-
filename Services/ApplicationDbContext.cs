@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Van_Authentication.Models;
+using Van_Authentication.Models.Notes;
 
 namespace Van_Authentication.Services
 {
@@ -26,13 +27,14 @@ namespace Van_Authentication.Services
         public DbSet<AuditRoute> AuditRoutes { get; set; }
         public DbSet<AuditRouteWeld> AuditRouteWelds { get; set; }
         public DbSet<Cert> Certs { get; set; }
+        public DbSet<MaintenanceNote> maintenanceNotes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
             base.OnModelCreating(builder);
 
-            var manager = new IdentityRole("manager");
+/*            var manager = new IdentityRole("manager");
             manager.NormalizedName = "manager";
 
             var auditor = new IdentityRole("auditor");
@@ -42,9 +44,9 @@ namespace Van_Authentication.Services
             supervisor.NormalizedName = "supervisor";
 
             var coordinator = new IdentityRole("coordinator");
-            coordinator.NormalizedName = "coordinator";
+            coordinator.NormalizedName = "coordinator";*/
 
-            builder.Entity<IdentityRole>().HasData(manager, auditor, supervisor, coordinator);
+            //builder.Entity<IdentityRole>().HasData(manager, auditor, supervisor, coordinator);
             builder.Entity<Part>().ToTable("Part").HasKey(p => p.PartID);
             builder.Entity<Robot>().ToTable("Robot").HasKey(r => r.RobotID);
             builder.Entity<Weld>().ToTable("Weld").HasKey(w => new { w.WeldID });

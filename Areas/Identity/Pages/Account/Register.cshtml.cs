@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Van_Authentication.Models;
+using Van_Authentication.Pages.VAN.Admin.Defects;
 using Van_Authentication.Services;
 
 namespace Van_Authentication.Areas.Identity.Pages.Account
@@ -169,7 +170,7 @@ namespace Van_Authentication.Areas.Identity.Pages.Account
                     {
                         // await _signInManager.SignInAsync(user, isPersistent: false);
                         TempData["success"] = Input.FirstName + " " + Input.LastName + " was successfully added as a " + assignRole;
-                        return LocalRedirect(returnUrl);
+                        return RedirectToPage("/VAN/Admin/Index");
                     }
                 }
                 foreach (var error in result.Errors)

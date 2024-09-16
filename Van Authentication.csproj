@@ -27,4 +27,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\BIW\Maintenance\" />
+    <Folder Include="Pages\BIW\Engineering\" />
+    <Folder Include="Pages\BIW\Production\" />
+  </ItemGroup>
+
 </Project>

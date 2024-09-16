@@ -357,7 +357,7 @@ namespace Van_Authentication.Pages.Audits
                     TempData["tcp"] = "TCP #: " + tcpRecord.TcpId + " has been submitted. Inform your supervisor.";
                     TempData["subject"] = "TCP #: " + tcpRecord.TcpId + " has been submitted";
                     TempData["message"] = User.Identity.Name + " has submitted TCP #: " + tcpRecord.TcpId
-                        + "<a href= 'http://10.92.16.89:8055/Tcps/Edit/" + tcpRecord.TcpId + "'>Link to form</a>"
+                        + "<a href= 'http://10.92.16.89:8055/VAN/Tcps/Edit/" + tcpRecord.TcpId + "'>Link to form</a>"
                         + " from " + ent.Line + "<br>Station: " + ent.Station + "<br>Robot #: " + ent.RobotNumber + htmlTable;
 
                 }
@@ -368,7 +368,7 @@ namespace Van_Authentication.Pages.Audits
             _context.SaveChanges();
 
             //Redirect back to edit page including the audit ID
-            return Redirect("/Audits/Edit/" + Audit.AuditID);
+            return Redirect("/VAN/Audits/Edit/" + Audit.AuditID);
         }
 
         private bool AuditExists(int id)

@@ -154,7 +154,7 @@
                         </th>
                         @if (!User.IsInRole("auditor, supervisor") && Model.WeldConcerns.Where(y => y.TcpID != null).Count() > 0)
                         {
-                            <th><a href="/Tcps/Remove/@Model.Audit.AuditID"><i class="bi bi-trash fs-3 align-top" title="Remove TCP"></i></a></th>
+                            <th><a href="/VAN/Tcps/Remove/@Model.Audit.AuditID"><i class="bi bi-trash fs-3 align-top" title="Remove TCP"></i></a></th>
                         }
                         else if (!User.IsInRole("auditor, supervisor"))
                         {
