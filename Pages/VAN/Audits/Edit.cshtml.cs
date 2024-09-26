@@ -20,14 +20,14 @@ using Van_Authentication.Pages.VAN.Robots;
 using Van_Authentication.Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Van_Authentication.Pages.Audits
+namespace Van_Authentication.Pages.VAN.Audits
 {
     [Authorize(Roles = "manager, coordinator, auditor")]
     public class EditModel : RobotName
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public EditModel(Van_Authentication.Services.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -71,9 +71,9 @@ namespace Van_Authentication.Pages.Audits
             }
             PopulateRobotsDropDownList(_context);
 
-            var audit =  await _context.Audits.FirstOrDefaultAsync(m => m.AuditID == id);
+            var audit = await _context.Audits.FirstOrDefaultAsync(m => m.AuditID == id);
             Type = await _context.PartModels.Where(m => m.PartModelName.Equals(audit.Model)).Select(n => n.PartModelType).FirstOrDefaultAsync();
-            if(audit.Route != null)
+            if (audit.Route != null)
             {
                 var queryRoutes = _context.Robots
                     .Join(_context.RobotWelds,
@@ -87,7 +87,7 @@ namespace Van_Authentication.Pages.Audits
                     Join(_context.AuditRoutes,
                     combinedTables => combinedTables.routeWelds.AuditRouteId,
                     auditRoute => auditRoute.AuditRouteId,
-                    (combinedTables, auditRoute) => new {combinedTables, auditRoute}).Where(m => m.auditRoute.AuditRouteName.Equals(audit.Route));
+                    (combinedTables, auditRoute) => new { combinedTables, auditRoute }).Where(m => m.auditRoute.AuditRouteName.Equals(audit.Route));
                 routeLines = queryRoutes.Select(m => m.combinedTables.combinedRobots.robots.Line).Distinct().ToList();
                 QueryRobots = queryRoutes.Select(m => m.combinedTables.combinedRobots.robots).ToList();
             }
@@ -135,7 +135,7 @@ namespace Van_Authentication.Pages.Audits
                 auditwelds => auditwelds.WeldId,
                 (welds, auditwelds) => new { welds, auditwelds })
                 .Where(x => x.auditwelds.AuditRouteId == rtID && x.welds.robotWeld.RobotID == rbtID).Select(y => y.welds.weld).ToList();
-            foreach(Weld rw in anotherway)
+            foreach (Weld rw in anotherway)
             {
                 WeldDTO weld = new WeldDTO();
                 weld.WeldID = rw.WeldID;
@@ -150,7 +150,7 @@ namespace Van_Authentication.Pages.Audits
                     weld.Graphic = rbtGraphic;
                 }
                 weldInfo.Add(weld);
-            }      
+            }
 
             //  Send list of welds back to JS function as a JSON
             var settings = new JsonSerializerSettings();
@@ -213,7 +213,7 @@ namespace Van_Authentication.Pages.Audits
                 return await OnGetAsync(id);
                 //return Page();
             }
-            if(_context.WeldConcerns.Where(x => x.AuditID == id).Count() > 0)
+            if (_context.WeldConcerns.Where(x => x.AuditID == id).Count() > 0)
             {
                 Audit.Result = "NOK";
             }
@@ -270,13 +270,13 @@ namespace Van_Authentication.Pages.Audits
                     throw;
                 }
             }
-            
+
             if (Audit.Barcode.Equals("Audit Missed"))
             {
                 return RedirectToPage("./Index");
             }
 
-            return RedirectToPage("./Edit",id);
+            return RedirectToPage("./Edit", id);
         }
 
         public async Task<IActionResult> OnPostAddConcernsAsync(int? id)
@@ -287,14 +287,14 @@ namespace Van_Authentication.Pages.Audits
             bool tcpFlag = false;
 
             //Get the Audit record
-            if(id != null)
+            if (id != null)
             {
                 var audit = await _context.Audits.FirstOrDefaultAsync(m => m.AuditID == id);
-                if(audit != null)
+                if (audit != null)
                 {
                     Audit = audit;
                 }
-                
+
             }
             var htmlTable = "<table><thead><tr><th>Weld #</th><th>Weld Type</th><th>Nugget Size</th><th>Defect</th></thead><tbody>";
             //Iterate through the list of Weldconcerns and add those that have a defect to List<WeldConcern>
@@ -304,7 +304,7 @@ namespace Van_Authentication.Pages.Audits
                 htmlTable += "<tr>";
 
                 //If the weldconcern has a defect then add it
-                if(item.Graphic.Length > 0)
+                if (item.Graphic.Length > 0)
                 {
                     WeldConcern weldConcern = new WeldConcern();
                     weldConcern.WeldID = item.WeldID;
@@ -316,9 +316,9 @@ namespace Van_Authentication.Pages.Audits
                     weldConcern.Style = Style;
                     weldConcern.Defect = item.Graphic;
                     weldConcern.Audit = Audit;
-                    
+
                     //Set the tcp flag to true if tcp checkbox is checked
-                    if(TcpCheckbox == true)
+                    if (TcpCheckbox == true)
                     {
                         tcpFlag = true;
                     }
@@ -383,7 +383,7 @@ namespace Van_Authentication.Pages.Audits
                 .OrderBy(x => x.Station)
                 .Select(y => y.Station)
                 .Distinct(), "Station");
-            var lineRobots = new SelectList(_context.Robots.Where(m => m.Line == Line).Select(x => x.Station).Distinct(),"Station");
+            var lineRobots = new SelectList(_context.Robots.Where(m => m.Line == Line).Select(x => x.Station).Distinct(), "Station");
             return new JsonResult(test);
         }
 

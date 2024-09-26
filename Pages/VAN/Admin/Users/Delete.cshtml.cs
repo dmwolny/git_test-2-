@@ -7,7 +7,7 @@ using System.ComponentModel;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Users
+namespace Van_Authentication.Pages.VAN.Admin.Users
 {
     [Authorize(Roles = "manager, coordinator")]
     public class DeleteModel : PageModel
@@ -23,7 +23,7 @@ namespace Van_Authentication.Pages.Admin.Users
         [DisplayName("Last Name:")]
         public string? LastName { get; set; }
         public string? Shift { get; set; }
-        public string? Line {  get; set; }
+        public string? Line { get; set; }
         public string? Id { get; set; }
         public UserInfo UserInfo { get; set; }
         public async Task<IActionResult> OnGetAsync(string? id)
@@ -50,7 +50,7 @@ namespace Van_Authentication.Pages.Admin.Users
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync (string? id)
+        public async Task<IActionResult> OnPostAsync(string? id)
         {
             if (id == null)
             {
@@ -68,5 +68,5 @@ namespace Van_Authentication.Pages.Admin.Users
             return RedirectToPage("./Index");
         }
     }
- 
+
 }

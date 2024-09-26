@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Robots
+namespace Van_Authentication.Pages.VAN.Robots
 {
     [Authorize(Roles = "manager, coordinator")]
     public class CreateModel : PageModel

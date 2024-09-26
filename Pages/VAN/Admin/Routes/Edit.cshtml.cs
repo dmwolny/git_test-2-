@@ -9,13 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Routes
+namespace Van_Authentication.Pages.VAN.Admin.Routes
 {
     public class EditModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public EditModel(Van_Authentication.Services.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -30,13 +30,13 @@ namespace Van_Authentication.Pages.Admin.Routes
                 return NotFound();
             }
 
-            var auditroute =  await _context.AuditRoutes.FirstOrDefaultAsync(m => m.AuditRouteId == id);
+            var auditroute = await _context.AuditRoutes.FirstOrDefaultAsync(m => m.AuditRouteId == id);
             if (auditroute == null)
             {
                 return NotFound();
             }
             AuditRoute = auditroute;
-           ViewData["PartModelId"] = new SelectList(_context.PartModels, "PartModelId", "PartModelName");
+            ViewData["PartModelId"] = new SelectList(_context.PartModels, "PartModelId", "PartModelName");
             return Page();
         }
 

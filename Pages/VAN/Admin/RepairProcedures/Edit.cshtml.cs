@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.RepairProcedures
+namespace Van_Authentication.Pages.VAN.Admin.RepairProcedures
 {
     [Authorize(Roles = "manager, coordinator")]
     public class EditModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public EditModel(Van_Authentication.Services.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -32,7 +32,7 @@ namespace Van_Authentication.Pages.Admin.RepairProcedures
                 return NotFound();
             }
 
-            var repairprocedure =  await _context.RepairProcedure.FirstOrDefaultAsync(m => m.RepairProcedureId == id);
+            var repairprocedure = await _context.RepairProcedure.FirstOrDefaultAsync(m => m.RepairProcedureId == id);
             if (repairprocedure == null)
             {
                 return NotFound();

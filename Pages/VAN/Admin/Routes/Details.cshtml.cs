@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Routes
+namespace Van_Authentication.Pages.VAN.Admin.Routes
 {
     public class DetailsModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DetailsModel(Van_Authentication.Services.ApplicationDbContext context)
+        public DetailsModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -39,9 +39,9 @@ namespace Van_Authentication.Pages.Admin.Routes
                 AuditRoute = auditroute;
                 List<RobotWeld> tempWelds = new List<RobotWeld>();
                 var welds = await _context.AuditRouteWelds.Where(x => x.AuditRouteId == id).ToListAsync();
-                if(welds != null)
+                if (welds != null)
                 {
-                    foreach(var weld in welds)
+                    foreach (var weld in welds)
                     {
                         RobotWeld robotWeld = new RobotWeld();
                         robotWeld = await _context.RobotWelds.Include(m => m.Robot).Include(p => p.Weld).FirstOrDefaultAsync(x => x.WeldID == weld.WeldId);

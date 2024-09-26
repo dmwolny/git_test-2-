@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Defects
+namespace Van_Authentication.Pages.VAN.Admin.Defects
 {
     [Authorize(Roles = "manager, coordinator")]
     public class EditModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public EditModel(Van_Authentication.Services.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -32,7 +32,7 @@ namespace Van_Authentication.Pages.Admin.Defects
                 return NotFound();
             }
 
-            var defect =  await _context.Defects.FirstOrDefaultAsync(m => m.DefectID == id);
+            var defect = await _context.Defects.FirstOrDefaultAsync(m => m.DefectID == id);
             if (defect == null)
             {
                 return NotFound();

@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Audits
+namespace Van_Authentication.Pages.VAN.Audits
 {
     public class DeleteModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DeleteModel(Van_Authentication.Services.ApplicationDbContext context)
+        public DeleteModel(ApplicationDbContext context)
         {
             _context = context;
         }

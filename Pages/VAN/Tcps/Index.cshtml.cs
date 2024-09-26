@@ -14,20 +14,20 @@ using Van_Authentication.Models;
 using Van_Authentication.Services;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace Van_Authentication.Pages.Tcps
+namespace Van_Authentication.Pages.VAN.Tcps
 {
     [Authorize(Roles = "manager, coordinator, supervisor")]
     public class IndexModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public IndexModel(Van_Authentication.Services.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
         //public IList<Tcp> Tcp { get;set; } = default!;
-        public IList<TcpFlatten> Tcp {  set; get; } = default!;
+        public IList<TcpFlatten> Tcp { set; get; } = default!;
 
         //Pagination variables
         public int pageIndex = 1;
@@ -45,7 +45,7 @@ namespace Van_Authentication.Pages.Tcps
 
         public async Task OnGetAsync(int? pageIndex, string? search, DateTime startDate, DateTime endDate)
         {
-            if(startDate != DateTime.MinValue && endDate != DateTime.MinValue)
+            if (startDate != DateTime.MinValue && endDate != DateTime.MinValue)
             {
                 this.startDate = startDate.ToString("yyyy-MM-dd");
                 this.endDate = endDate.ToString("yyyy-MM-dd");
@@ -71,8 +71,8 @@ namespace Van_Authentication.Pages.Tcps
                             Shift = wc.audit != null ? wc.audit.Shift : null,
                             Status = x.tcp.Status,
                             Line = wc.weldConcern != null ? wc.weldConcern.Line : null,
-                            Station = wc.weldConcern != null ? wc.weldConcern.Station : (int?)null,
-                            RobotNumber = wc.weldConcern != null ? wc.weldConcern.RobotNumber : (int?)null,
+                            Station = wc.weldConcern != null ? wc.weldConcern.Station : null,
+                            RobotNumber = wc.weldConcern != null ? wc.weldConcern.RobotNumber : null,
                             Production = x.tcp.Production,
                             Maintenance = x.tcp.Maintenance,
                             Engineering = x.tcp.Engineering,
@@ -104,17 +104,17 @@ namespace Van_Authentication.Pages.Tcps
             //    .Distinct();
             var start = startDate;
             var end = endDate;
-            
+
             // search functionality
             //by daterange if that is the only thing selected.
-            if(startDate != DateTime.MinValue && endDate != DateTime.MinValue) 
+            if (startDate != DateTime.MinValue && endDate != DateTime.MinValue)
             {
                 endDate = endDate.AddHours(24);
                 query = query.Where(x => x.CreatedAt > startDate && x.CreatedAt < endDate);
             }
 
             // for searching by tcp#, status or by line.
-            if(search != null)
+            if (search != null)
             {
                 this.search = search;
                 int x = 0;
@@ -128,8 +128,9 @@ namespace Van_Authentication.Pages.Tcps
                 }
 
                 //if search term is a number then search by TCP #
-                var id = Int32.TryParse(search, out x);
-                if (id){
+                var id = int.TryParse(search, out x);
+                if (id)
+                {
                     query = query.Where(id => id.TcpId == x && id.CreatedAt > startDate && id.CreatedAt < endDate);
                 }
                 else
@@ -146,7 +147,7 @@ namespace Van_Authentication.Pages.Tcps
                 pageIndex = 1;
             }
 
-            this.pageIndex = (int) pageIndex;
+            this.pageIndex = (int)pageIndex;
             decimal count = query.Count();
             totalPages = (int)Math.Ceiling(count / pageSize);
             query = query.Skip((this.pageIndex - 1) * pageSize)

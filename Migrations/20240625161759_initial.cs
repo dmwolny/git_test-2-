@@ -343,7 +343,7 @@ namespace Van_Authentication.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
+/*            migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
@@ -352,6 +352,17 @@ namespace Van_Authentication.Migrations
                     { "534125a6-516d-46e3-9ef8-90d0a1c4fc56", null, "auditor", "auditor" },
                     { "9992ccde-44f0-4f29-af48-f1d8498cf943", null, "supervisor", "supervisor" },
                     { "e5adedd6-c039-48d5-a18f-edca68c3c007", null, "coordinator", "coordinator" }
+                });*/
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "a5ad4384-dbc6-42a5-9b20-3f8e7f3aab0f", null, "manager", "manager" },
+                    { "a5ad952f-8141-4565-b883-49e7eadc3592", null, "auditor", "auditor" },
+                    { "27d509d5-b6f6-4a03-b6fa-d53a00bf95bd", null, "supervisor", "supervisor" },
+                    { "057a5e79-152c-43b9-bdbe-9015a9b5f481", null, "coordinator", "coordinator" }
                 });
 
             migrationBuilder.CreateIndex(

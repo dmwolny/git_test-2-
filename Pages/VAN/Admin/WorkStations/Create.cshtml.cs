@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.WorkStations
+namespace Van_Authentication.Pages.VAN.Admin.WorkStations
 {
     public class CreateModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CreateModel(Van_Authentication.Services.ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context)
         {
             _context = context;
         }

@@ -9,19 +9,19 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.RepairProcedures
+namespace Van_Authentication.Pages.VAN.Admin.RepairProcedures
 {
     [Authorize(Roles = "manager, coordinator")]
     public class IndexModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public IndexModel(Van_Authentication.Services.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IList<RepairProcedure> RepairProcedure { get;set; } = default!;
+        public IList<RepairProcedure> RepairProcedure { get; set; } = default!;
 
         public async Task OnGetAsync()
         {

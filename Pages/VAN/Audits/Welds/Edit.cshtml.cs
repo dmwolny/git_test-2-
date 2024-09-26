@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Audits.Welds
+namespace Van_Authentication.Pages.VAN.Audits.Welds
 {
     [Authorize(Roles = "manager, coordinator")]
     public class EditModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public EditModel(Van_Authentication.Services.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -32,14 +32,14 @@ namespace Van_Authentication.Pages.Audits.Welds
                 return NotFound();
             }
 
-            var weldconcern =  await _context.WeldConcerns.FirstOrDefaultAsync(m => m.WeldConcernID == id);
+            var weldconcern = await _context.WeldConcerns.FirstOrDefaultAsync(m => m.WeldConcernID == id);
             if (weldconcern == null)
             {
                 return NotFound();
             }
             WeldConcern = weldconcern;
-           ViewData["AuditID"] = new SelectList(_context.Audits, "AuditID", "Auditor");
-           ViewData["TcpID"] = new SelectList(_context.Tcps, "TcpId", "TcpId");
+            ViewData["AuditID"] = new SelectList(_context.Audits, "AuditID", "Auditor");
+            ViewData["TcpID"] = new SelectList(_context.Tcps, "TcpId", "TcpId");
             ViewData["Defect"] = new SelectList(_context.Defects, "DefectDesc", "DefectDesc");
             return Page();
         }
@@ -71,7 +71,7 @@ namespace Van_Authentication.Pages.Audits.Welds
                 }
             }
 
-            return RedirectToPage("../Edit", new { id = WeldConcern.AuditID});
+            return RedirectToPage("../Edit", new { id = WeldConcern.AuditID });
         }
 
         private bool WeldConcernExists(int id)

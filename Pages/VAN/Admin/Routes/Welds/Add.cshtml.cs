@@ -11,13 +11,13 @@ using Van_Authentication.Models;
 using Van_Authentication.Models.DTO;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Routes.Welds
+namespace Van_Authentication.Pages.VAN.Admin.Routes.Welds
 {
     public class AddModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public AddModel(Van_Authentication.Services.ApplicationDbContext context)
+        public AddModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -40,16 +40,16 @@ namespace Van_Authentication.Pages.Admin.Routes.Welds
 
         public IActionResult OnGet(int? routeID)
         {
-        ViewData["AuditRouteId"] = new SelectList(_context.AuditRoutes, "AuditRouteId", "AuditRouteName");
-        ViewData["WeldId"] = new SelectList(_context.Welds, "WeldID", "WeldID");
-        ViewData["RouteLine"] = new SelectList(_context.Robots.Select(x => x.Line).Distinct());
+            ViewData["AuditRouteId"] = new SelectList(_context.AuditRoutes, "AuditRouteId", "AuditRouteName");
+            ViewData["WeldId"] = new SelectList(_context.Welds, "WeldID", "WeldID");
+            ViewData["RouteLine"] = new SelectList(_context.Robots.Select(x => x.Line).Distinct());
 
             if (routeID != null)
             {
                 id = (int)routeID;
 
             }
-        return Page();
+            return Page();
         }
         public async Task<IActionResult> OnGetWeldsAsync(string Line, int Station, int RobotNumber, string Style)
         {
@@ -99,9 +99,9 @@ namespace Van_Authentication.Pages.Admin.Routes.Welds
             //    return Page();
             //}
 
-            foreach(var weld in WeldDTO)
+            foreach (var weld in WeldDTO)
             {
-                if(weld.Graphic != null)
+                if (weld.Graphic != null)
                 {
                     AuditRouteWeld temp = new AuditRouteWeld();
                     temp.AuditRouteId = id;
@@ -113,7 +113,7 @@ namespace Van_Authentication.Pages.Admin.Routes.Welds
 
             try
             {
-            _context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (DbUpdateException)
             {
@@ -121,7 +121,7 @@ namespace Van_Authentication.Pages.Admin.Routes.Welds
             }
 
 
-            return RedirectToPage("../Details", new { id = id });
+            return RedirectToPage("../Details", new { id });
 
             //AuditRouteWeld.AuditRouteId = id;
             //_context.AuditRouteWelds.Add(AuditRouteWeld);

@@ -4,8 +4,9 @@ namespace Van_Authentication.Models.Notes
 {
     public class MaintenanceNote
     {
+        public int Id { get; set; }
         [Required]
-        public string String { get; set; } = string.Empty;
+        public string Shift { get; set; } = string.Empty;
         [Required]
         [DataType(DataType.Date)]
         public DateOnly Date { get; set; }

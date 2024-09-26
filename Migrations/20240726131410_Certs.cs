@@ -13,7 +13,7 @@ namespace Van_Authentication.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
+            /*migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "04f7534a-2796-4c59-b328-f4dec022ce3d");
@@ -31,7 +31,7 @@ namespace Van_Authentication.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "f2983592-21d2-4194-89a9-b6a79de4ec8a");
+                keyValue: "f2983592-21d2-4194-89a9-b6a79de4ec8a");*/
 
             migrationBuilder.AlterColumn<string>(
                 name: "Model",
@@ -70,7 +70,7 @@ namespace Van_Authentication.Migrations
                     table.PrimaryKey("PK_Certs", x => x.CertId);
                 });
 
-            migrationBuilder.InsertData(
+          /*  migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
@@ -79,7 +79,7 @@ namespace Van_Authentication.Migrations
                     { "bc22fa67-63cb-4766-9e6f-29b6869c76d5", null, "coordinator", "coordinator" },
                     { "d6451243-bb09-4643-b23e-906d870fdc7c", null, "auditor", "auditor" },
                     { "dfe45d0a-e64b-4f0b-a4a4-96219e16aa46", null, "manager", "manager" }
-                });
+                });*/
         }
 
         /// <inheritdoc />
@@ -88,7 +88,7 @@ namespace Van_Authentication.Migrations
             migrationBuilder.DropTable(
                 name: "Certs");
 
-            migrationBuilder.DeleteData(
+         /*   migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "78475ec2-8fbe-4101-b6f9-0c48d6690c3b");
@@ -106,7 +106,7 @@ namespace Van_Authentication.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "dfe45d0a-e64b-4f0b-a4a4-96219e16aa46");
+                keyValue: "dfe45d0a-e64b-4f0b-a4a4-96219e16aa46");*/
 
             migrationBuilder.AlterColumn<string>(
                 name: "Model",
@@ -116,7 +116,7 @@ namespace Van_Authentication.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.InsertData(
+            /*migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
@@ -125,7 +125,7 @@ namespace Van_Authentication.Migrations
                     { "1379225d-ca7e-421c-b193-6cd85228fa8c", null, "manager", "manager" },
                     { "eab0a1d6-8df0-4584-bcbd-2bfbe0ad3743", null, "supervisor", "supervisor" },
                     { "f2983592-21d2-4194-89a9-b6a79de4ec8a", null, "auditor", "auditor" }
-                });
+                });*/
         }
     }
 }

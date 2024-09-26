@@ -8,22 +8,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
-using Van_Authentication.Pages.VAN.Robots;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Robots
+namespace Van_Authentication.Pages.VAN.Robots
 {
     [Authorize]
     public class IndexModel : RobotName
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public IndexModel(Van_Authentication.Services.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IList<Robot> Robot { get;set; } = default!;
+        public IList<Robot> Robot { get; set; } = default!;
         [BindProperty(SupportsGet = true)]
         public string? Line { get; set; }
 

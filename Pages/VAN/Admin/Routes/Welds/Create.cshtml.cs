@@ -8,21 +8,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Routes.Welds
+namespace Van_Authentication.Pages.VAN.Admin.Routes.Welds
 {
     public class CreateModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CreateModel(Van_Authentication.Services.ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
         public IActionResult OnGet()
         {
-        ViewData["AuditRouteId"] = new SelectList(_context.AuditRoutes, "AuditRouteId", "AuditRouteId");
-        ViewData["WeldId"] = new SelectList(_context.Welds, "WeldID", "WeldType");
+            ViewData["AuditRouteId"] = new SelectList(_context.AuditRoutes, "AuditRouteId", "AuditRouteId");
+            ViewData["WeldId"] = new SelectList(_context.Welds, "WeldID", "WeldType");
             return Page();
         }
 

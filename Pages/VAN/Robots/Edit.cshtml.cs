@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Robots
+namespace Van_Authentication.Pages.VAN.Robots
 {
     [Authorize(Roles = "manager, coordinator")]
     public class EditModel : PageModel
@@ -39,7 +39,7 @@ namespace Van_Authentication.Pages.Robots
                 return NotFound();
             }
 
-            var robot =  await context.Robots.FirstOrDefaultAsync(m => m.RobotID == id);
+            var robot = await context.Robots.FirstOrDefaultAsync(m => m.RobotID == id);
             if (robot == null)
             {
                 return NotFound();
@@ -58,7 +58,7 @@ namespace Van_Authentication.Pages.Robots
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -69,7 +69,7 @@ namespace Van_Authentication.Pages.Robots
             }
 
             var robot = context.Robots.FirstOrDefault(r => r.RobotID == id);
-            
+
             if (robot == null)
             {
                 return NotFound();

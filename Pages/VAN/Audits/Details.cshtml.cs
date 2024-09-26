@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Audits
+namespace Van_Authentication.Pages.VAN.Audits
 {
     [Authorize(Roles = "manager, coordinator")]
     public class DetailsModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DetailsModel(Van_Authentication.Services.ApplicationDbContext context)
+        public DetailsModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -49,7 +49,7 @@ namespace Van_Authentication.Pages.Audits
                 (combined, routeAudit) => new { combined, routeAudit })
                 .Where(m => m.routeAudit.AuditRouteName.Equals(audit.Route)).Select(x => x.combined.welds).ToList();
 
-            foreach(Weld weld in okWelds)
+            foreach (Weld weld in okWelds)
             {
                 //if route welds is not found in the weldconcerns list
                 if (!welds.Any(x => x.WeldID == weld.WeldID))
@@ -69,7 +69,7 @@ namespace Van_Authentication.Pages.Audits
                     wc.Style = _context.Robots.Where(x => x.RobotID == rbtID).Select(y => y.Style).FirstOrDefault();
                     wc.Defect = "None";
                     welds.Add(wc);
-                } 
+                }
             }
 
             if (audit == null)

@@ -7,7 +7,7 @@ using Van_Authentication.Models;
 using Van_Authentication.Services;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace Van_Authentication.Pages.Monitor
+namespace Van_Authentication.Pages.VAN.Monitor
 {
     public class WorkstationModel : PageModel
     {
@@ -33,7 +33,7 @@ namespace Van_Authentication.Pages.Monitor
 
         public async Task OnGetAsync(int? pageIndex, string? workstation, DateTime startDate, DateTime endDate)
         {
-            if(startDate != DateTime.MinValue && endDate != DateTime.MinValue)
+            if (startDate != DateTime.MinValue && endDate != DateTime.MinValue)
             {
                 this.startDate = startDate.ToString("yyyy-MM-dd");
                 this.endDate = endDate.ToString("yyyy-MM-dd");
@@ -101,7 +101,7 @@ namespace Van_Authentication.Pages.Monitor
                 sb.Append(Audits[i].Result + ",");
                 if (Audits[i].Notes != null)
                 {
-                    sb.Append(Audits[i].Notes.Replace("\r\n"," ") + ",");
+                    sb.Append(Audits[i].Notes.Replace("\r\n", " ") + ",");
                 }
                 else sb.Append(Audits[i].Notes + ",");
 

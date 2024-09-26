@@ -11,17 +11,17 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Tcps
+namespace Van_Authentication.Pages.VAN.Tcps
 {
     [Authorize(Roles = "manager, coordinator, supervisor")]
     public class EditModel : PageModel
     {
         private readonly IWebHostEnvironment _env;
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public EditModel(Van_Authentication.Services.ApplicationDbContext context, 
-            UserManager<ApplicationUser> userManager, 
+        public EditModel(ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
             IWebHostEnvironment env)
         {
             _env = env;
@@ -34,7 +34,7 @@ namespace Van_Authentication.Pages.Tcps
         [BindProperty]
         public bool TcpStatus { get; set; } = false;
         [BindProperty]
-        public IFormFile? PAN {  get; set; }
+        public IFormFile? PAN { get; set; }
         public string? Graphic { get; set; }
         public string? Auditor { get; set; }
 
@@ -47,7 +47,7 @@ namespace Van_Authentication.Pages.Tcps
 
             ViewData["RepairProcedures"] = new SelectList(_context.RepairProcedure, "RepairProcedureName", "RepairProcedureName");
 
-            var tcp =  await _context.Tcps.Include(x => x.WeldConcerns).FirstOrDefaultAsync(m => m.TcpId == id);
+            var tcp = await _context.Tcps.Include(x => x.WeldConcerns).FirstOrDefaultAsync(m => m.TcpId == id);
             var line = tcp.WeldConcerns.Select(x => x.Line).FirstOrDefault();
             var station = tcp.WeldConcerns.Select(x => x.Station).FirstOrDefault();
             var robot = tcp.WeldConcerns.Select(x => x.RobotNumber).FirstOrDefault();
@@ -81,7 +81,7 @@ namespace Van_Authentication.Pages.Tcps
             string newFileName = "";
             if (PAN != null)
             {
-                newFileName = "TCP-" + Tcp.TcpId.ToString() ;
+                newFileName = "TCP-" + Tcp.TcpId.ToString();
                 newFileName += Path.GetExtension(PAN.FileName);
 
                 string imageFullPath = _env.WebRootPath + "/Images/" + newFileName;
@@ -184,7 +184,7 @@ namespace Van_Authentication.Pages.Tcps
             }
 
             Tcp.Engineering = user.FirstName + " " + user.LastName;
-            if(TcpStatus == true)
+            if (TcpStatus == true)
             {
                 Tcp.Status = "Closed";
             }

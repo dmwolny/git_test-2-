@@ -11,22 +11,22 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Audits
+namespace Van_Authentication.Pages.VAN.Audits
 {
     [Authorize(Roles = "manager, coordinator, auditor")]
     public class IndexModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public IndexModel(Van_Authentication.Services.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public IndexModel(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        public IList<Audit> Audits { get;set; } = default!;
-        public string? Line {  get; set; }
+        public IList<Audit> Audits { get; set; } = default!;
+        public string? Line { get; set; }
         public string? Shift { get; set; }
 
         public async Task OnGetAsync(string? line, string? shift)
@@ -79,15 +79,15 @@ namespace Van_Authentication.Pages.Audits
             var data = new Audit();
 
             data.Shift = user.Shift;
-            data.Auditor = user.FirstName+" "+user.LastName;
+            data.Auditor = user.FirstName + " " + user.LastName;
             data.Line = user.Line;
             data.CreatedAt = DateTime.Now;
             data.Result = "Open";
-            
+
             _context.Audits.Add(data);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Edit",new { id = data.AuditID });
+            return RedirectToPage("./Edit", new { id = data.AuditID });
         }
     }
 }

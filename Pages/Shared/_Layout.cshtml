@@ -31,7 +31,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/VAN/Index">VAN</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/ShiftNotes">Shift Notes</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Maintenance/Index">Shift Notes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/ComingSoon">4P's</a>
@@ -50,6 +50,18 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <div class="toast-container position-fixed top-0 end-0 m-4">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="generic" data-bs-delay="10000">
+                    <div class="toast-header">
+                        <img src="/images/logos/arc weld.PNG" class="rounded me-2" width="20" height="20" alt="...">
+                        <strong class="me-auto">VAN</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <span id="message">Shift notes successfully sent!</span>
+                    </div>
+                </div>
+            </div>
             
             @RenderBody()
             @if (TempData["success"] != null)

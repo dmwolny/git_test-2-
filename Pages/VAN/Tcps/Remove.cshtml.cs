@@ -6,7 +6,7 @@ using Van_Authentication.Migrations;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Tcps
+namespace Van_Authentication.Pages.VAN.Tcps
 {
     public class RemoveModel : PageModel
     {
@@ -25,7 +25,7 @@ namespace Van_Authentication.Pages.Tcps
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -42,10 +42,10 @@ namespace Van_Authentication.Pages.Tcps
                 foreach (var tcp in tcps)
                 {
                     var lines = _context.WeldConcerns.Where(x => x.AuditID == id && x.TcpID == tcp).FirstOrDefault();
-                    if(lines != null)
+                    if (lines != null)
                     {
                         tcps_.Add(lines);
-                    }                    
+                    }
                 }
                 TcpList = tcps_;
             }
@@ -59,7 +59,7 @@ namespace Van_Authentication.Pages.Tcps
             {
                 var id = _context.WeldConcerns.Include(z => z.Audit).Where(x => x.TcpID.Equals(tcpId)).Select(y => y.AuditID).FirstOrDefault();
                 TempData["error"] = "Notes are required.";
-                return RedirectToPage("./Remove", new { id = id });
+                return RedirectToPage("./Remove", new { id });
             }
             //Get weldconcerns with TcpID
             var concerns = await _context.WeldConcerns.Include(z => z.Audit).Where(x => x.TcpID.Equals(tcpId)).ToListAsync();
@@ -67,7 +67,7 @@ namespace Van_Authentication.Pages.Tcps
             var tcp = await _context.Tcps.Where(x => x.TcpId.Equals(tcpId)).FirstOrDefaultAsync();
 
             //Loop through weldconerns and set TcpID to null
-            foreach(var item in concerns)
+            foreach (var item in concerns)
             {
                 item.TcpID = null;
             }
@@ -79,7 +79,7 @@ namespace Van_Authentication.Pages.Tcps
                 + "\r\nRobot#: " + concerns.Select(x => x.RobotNumber).FirstOrDefault()
                 + "\r\nDefect: " + concerns.Select(x => x.Defect).FirstOrDefault()
                 + "\r\nAuditor: " + concerns.Select(x => x.Audit.Auditor).FirstOrDefault()
-                + "\r\nReason: "+notes;
+                + "\r\nReason: " + notes;
             tcp.Status = "Closed";
             tcp.Engineering = User.Identity.Name.Replace('.', ' ');
 

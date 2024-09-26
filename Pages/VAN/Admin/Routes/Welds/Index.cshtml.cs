@@ -8,18 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Routes.Welds
+namespace Van_Authentication.Pages.VAN.Admin.Routes.Welds
 {
     public class IndexModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public IndexModel(Van_Authentication.Services.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IList<AuditRouteWeld> AuditRouteWeld { get;set; } = default!;
+        public IList<AuditRouteWeld> AuditRouteWeld { get; set; } = default!;
 
         public async Task OnGetAsync()
         {

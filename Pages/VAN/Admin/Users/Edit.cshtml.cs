@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Users
+namespace Van_Authentication.Pages.VAN.Admin.Users
 {
     [Authorize(Roles = "manager, coordinator")]
     public class EditModel : PageModel
@@ -17,12 +17,12 @@ namespace Van_Authentication.Pages.Admin.Users
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public EditModel(Van_Authentication.Services.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public EditModel(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
-       
+
         [Required]
         public string? FirstName { get; set; }
         [Required]
@@ -36,7 +36,7 @@ namespace Van_Authentication.Pages.Admin.Users
         [Required]
         [BindProperty]
         public string? assignRole { get; set; }
-      
+
         public async Task<IActionResult> OnGetAsync(string? id)
         {
             ViewData["WorkStationName"] = new SelectList(_context.WorkStations, "WorkStationName", "WorkStationName");
@@ -54,7 +54,7 @@ namespace Van_Authentication.Pages.Admin.Users
                 assignRole = _context.Roles.Where(x => x.Id.Equals(roleID)).Select(y => y.Name).FirstOrDefault();
             }
 
-            if (user == null) 
+            if (user == null)
             {
                 return NotFound();
             }
@@ -62,7 +62,7 @@ namespace Van_Authentication.Pages.Admin.Users
             FirstName = user.FirstName;
             LastName = user.LastName;
             Shift = user.Shift;
-            Line = user.Line;            
+            Line = user.Line;
 
             return Page();
 
@@ -83,7 +83,7 @@ namespace Van_Authentication.Pages.Admin.Users
 
             //Check to see if there is a role assigned to the user
             //if true then get the role.
-            if(_userManager.GetRolesAsync(user).Result.Count() > 0)
+            if (_userManager.GetRolesAsync(user).Result.Count() > 0)
             {
                 userRole = _userManager.GetRolesAsync(user).Result[0].ToString();
             }
@@ -95,11 +95,11 @@ namespace Van_Authentication.Pages.Admin.Users
                 await _context.SaveChangesAsync();
 
                 //if a userRole was found then remove the role
-                if(userRole.Count() > 0)
+                if (userRole.Count() > 0)
                 {
                     await _userManager.RemoveFromRoleAsync(user, userRole);
                 }
-                
+
                 //Assign the new role to the user
                 await _userManager.AddToRoleAsync(user, assignRole);
                 TempData["success"] = user.FirstName + " " + user.LastName + " was successfully updated.";

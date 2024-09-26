@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Routes.Welds
+namespace Van_Authentication.Pages.VAN.Admin.Routes.Welds
 {
     public class DeleteModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DeleteModel(Van_Authentication.Services.ApplicationDbContext context)
+        public DeleteModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -57,7 +57,7 @@ namespace Van_Authentication.Pages.Admin.Routes.Welds
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage("../Details", new { id = routeID});
+            return RedirectToPage("../Details", new { id = routeID });
         }
     }
 }

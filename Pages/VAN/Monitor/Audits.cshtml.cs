@@ -7,7 +7,7 @@ using System.ComponentModel;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Monitor
+namespace Van_Authentication.Pages.VAN.Monitor
 {
     public class AuditsModel : PageModel
     {
@@ -17,7 +17,7 @@ namespace Van_Authentication.Pages.Monitor
         public IList<AuditDTO> Audit { get; set; }
         public IList<RouteCount> RouteCount { get; set; }
         [BindProperty]
-        public DateOnly? date {  get; set; }
+        public DateOnly? date { get; set; }
         [BindProperty]
         public string Shift { get; set; }
 
@@ -41,7 +41,7 @@ namespace Van_Authentication.Pages.Monitor
             partModels = query.ToList();
             Parts = partModels;
 
-            List<Audit> audits = _context.Audits.Where(x => x.Shift.Equals(Shift) && (DateOnly.FromDateTime(x.CreatedAt)==date) ).ToList();
+            List<Audit> audits = _context.Audits.Where(x => x.Shift.Equals(Shift) && DateOnly.FromDateTime(x.CreatedAt) == date).ToList();
             List<AuditDTO> auditsDTO = new List<AuditDTO>();
             foreach (var item in audits)
             {
@@ -78,9 +78,9 @@ namespace Van_Authentication.Pages.Monitor
                     AuditType = x.combined.partmodel.PartModelType,
                     RouteName = x.auditroute.AuditRouteName
                 }).ToList();
-            
+
             //sub each workstation/routename into routeCount obj
-            foreach(var item in result)
+            foreach (var item in result)
             {
                 RouteCount sub = new RouteCount();
                 sub.Workstation = item.Workstation;
@@ -90,7 +90,7 @@ namespace Van_Authentication.Pages.Monitor
             }
 
             RouteCount = routeCount;
-        } 
+        }
 
         public JsonResult OnGetCompletedData(DateOnly? date, string? Shift)
         {
@@ -104,7 +104,7 @@ namespace Van_Authentication.Pages.Monitor
                             PartModelType = grouped.Key.PartModelType,
                             NumberOfAudits = grouped.Sum(x => x.partModel.LotControl)
                         };
-            List<Audit> audits = _context.Audits.Where(x => x.Shift.Equals(Shift) && (DateOnly.FromDateTime(x.CreatedAt) == date)).ToList();
+            List<Audit> audits = _context.Audits.Where(x => x.Shift.Equals(Shift) && DateOnly.FromDateTime(x.CreatedAt) == date).ToList();
             List<AuditDTO> auditsDTO = new List<AuditDTO>();
             foreach (var item in audits)
             {
@@ -122,7 +122,7 @@ namespace Van_Authentication.Pages.Monitor
                 audit.Result = item.Result;
                 auditsDTO.Add(audit);
             }
-            
+
             List<int> completed = new List<int>();
             List<int> missedWeld = new List<int>();
             List<int> required = new List<int>();
@@ -131,7 +131,7 @@ namespace Van_Authentication.Pages.Monitor
             List<string> workstations = new List<string>();
 
             // Get number of completed audits for Welds
-            foreach(var item in query.Where(x => x.PartModelType.Equals("Weld")))
+            foreach (var item in query.Where(x => x.PartModelType.Equals("Weld")))
             {
                 var numberOfMissedWelds = auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Result.Equals("Missed") && x.Type.Equals("Weld")).Select(z => z.Line).Count();
                 var numberOfCompleted = auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Weld") && !x.Result.Equals("Open")).Select(y => y.Line).Count();
@@ -150,12 +150,12 @@ namespace Van_Authentication.Pages.Monitor
             }
 
 
-            return new JsonResult( new {name = workstations, completed = completed, missedWeld = missedWeld, required = required, completedSealer = completedSealer, requiredSealer = requiredSealer} );
+            return new JsonResult(new { name = workstations, completed, missedWeld, required, completedSealer, requiredSealer });
         }
 
     }
 
-    public class PartModelDTO 
+    public class PartModelDTO
     {
         public string WorkStationName { get; set; }
         public string PartModelType { get; set; }

@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Admin.Defects
+namespace Van_Authentication.Pages.VAN.Admin.Defects
 {
     [Authorize(Roles = "manager, coordinator")]
     public class DetailsModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DetailsModel(Van_Authentication.Services.ApplicationDbContext context)
+        public DetailsModel(ApplicationDbContext context)
         {
             _context = context;
         }

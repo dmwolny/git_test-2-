@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace Van_Authentication.Pages.Admin.Users
+namespace Van_Authentication.Pages.VAN.Admin.Users
 {
     [Authorize(Roles = "manager, coordinator")]
     public class IndexModel : PageModel
     {
-        private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly Services.ApplicationDbContext _context;
 
-        public IndexModel(Van_Authentication.Services.ApplicationDbContext context)
+        public IndexModel(Services.ApplicationDbContext context)
         {
             _context = context;
         }
@@ -30,7 +30,7 @@ namespace Van_Authentication.Pages.Admin.Users
                 listUsers.Add(userInfo);
             }
 
-            foreach(var user in listUsers)
+            foreach (var user in listUsers)
             {
                 var roleID = _context.UserRoles.Where(x => x.UserId.Equals(user.id)).Select(y => y.RoleId).FirstOrDefault();
                 if (roleID != null)

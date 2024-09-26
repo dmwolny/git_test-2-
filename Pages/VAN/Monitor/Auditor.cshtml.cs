@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Van_Authentication.Models;
-using Van_Authentication.Pages.Admin.Users;
+using Van_Authentication.Pages.VAN.Admin.Users;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Monitor
+namespace Van_Authentication.Pages.VAN.Monitor
 {
     public class AuditorModel : PageModel
     {
@@ -36,7 +36,7 @@ namespace Van_Authentication.Pages.Monitor
             {
                 UserInfo userInfo = new UserInfo();
                 userInfo.id = user.Id;
-                userInfo.firstname = user.FirstName + " "+ user.LastName;
+                userInfo.firstname = user.FirstName + " " + user.LastName;
                 userInfo.lastname = user.LastName;
                 userInfo.shift = user.Shift;
                 userInfo.line = user.Line;
