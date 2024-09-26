@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Van_Authentication.Models.Notes
+namespace Van_Authentication.Models.DTO
 {
-    public class MaintenanceNote
+    public class MaintenanceDTO
     {
         public int Id { get; set; }
         [Required]
@@ -15,6 +15,6 @@ namespace Van_Authentication.Models.Notes
         public string? Delivery { get; set; }
         public string? Cost { get; set; }
         public string? Morale { get; set; }
-        public string? Graphic { get; set; }
+        public IFormFile? ImageFile { get; set; }
     }
 }

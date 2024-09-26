@@ -7,6 +7,12 @@ const group = "maint" + document.getElementById("Maintenance_Shift").value + doc
 conn.on("ReceiveCall", function (input, message) {
     document.getElementById(input).value = message;
 });
+conn.on("DeleteImage",  function (filename) {
+    removeCard(filename);
+})
+conn.on("AddImage", function (id, filename) {
+    console.log("add picture");
+})
 conn.start().then(() => {
     conn.invoke("JoinCallGroup", group);
 })
@@ -31,6 +37,21 @@ document.getElementById("Maintenance_Morale").addEventListener("input", (event) 
     sendCall(event);
 });
 
+async function deleteImage(id, fileName) {
+
+    await fetch("?handler=Delete&id=" + encodeURIComponent(id) + "&fileName=" + encodeURIComponent(fileName), {
+        method: "POST",
+        headers:
+        {
+            "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+        }
+    }).then(response => response.json())
+        .then(message => console.log(message))
+        .then(() => conn.invoke("ToDeleteImage", parseInt(id,10), fileName, group))
+        .catch(function (err) {
+            return console.error(err.toString());
+        });;
+}
 async function sendCall(event) {
     event.preventDefault();
     var input = event.target.id;
@@ -66,4 +87,12 @@ async function sendCall(event) {
             return console.error(err.toString());
         });
 
+}
+
+function removeCard(filename) {
+    const card = document.querySelector('.col-lg-4[data-id="' + filename + '"]');
+    console.log("is this being called?");
+    if (card) {
+        card.remove();
+    }
 }
