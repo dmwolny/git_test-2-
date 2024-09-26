@@ -1,0 +1,256 @@
+﻿@page
+@model Van_Authentication.Pages.Maintenance.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<h1>Edit</h1>
+
+<h4>Maintenance</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" id="form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Maintenance.Id" />
+            <div class="form-group">
+                <label asp-for="Maintenance.Shift" class="control-label"></label>
+                <input asp-for="Maintenance.Shift" class="form-control" />
+                <span asp-validation-for="Maintenance.Shift" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Maintenance.Date" class="control-label"></label>
+                <input asp-for="Maintenance.Date" class="form-control" />
+                <span asp-validation-for="Maintenance.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Maintenance.Safety" class="control-label"></label>
+                <input asp-for="Maintenance.Safety" class="form-control" />
+                <span asp-validation-for="Maintenance.Safety" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Maintenance.Quality" class="control-label"></label>
+                <input asp-for="Maintenance.Quality" class="form-control" />
+                <span asp-validation-for="Maintenance.Quality" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Maintenance.Delivery" class="control-label"></label>
+                <input asp-for="Maintenance.Delivery" class="form-control" />
+                <span asp-validation-for="Maintenance.Delivery" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Maintenance.Cost" class="control-label"></label>
+                <input asp-for="Maintenance.Cost" class="form-control" />
+                <span asp-validation-for="Maintenance.Cost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Maintenance.Morale" class="control-label"></label>
+                <textarea asp-for="Maintenance.Morale" class="form-control" />@Model.Maintenance.Morale</textarea>
+                <span asp-validation-for="Maintenance.Morale" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="button" value="Send Report" class="btn btn-primary" id="sendReport">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden id="spinner"></span>
+                    Send Report
+                </button>
+            </div>
+        </form>
+        
+    </div><div class="col-md-6">
+        <!-- Carousel wrapper -->
+        <div id="carouselMultiItemExample" data-mdb-carousel-init="" class="carousel slide carousel-dark text-center" data-mdb-ride="carousel">
+            <!-- Controls -->
+            <div class="d-flex justify-content-center mb-4">
+                <button data-bs-button-init="" class="carousel-control-prev position-relative" type="button" data-bs-target="#carouselMultiItemExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button data-bs-button-init="" class="carousel-control-next position-relative" type="button" data-bs-target="#carouselMultiItemExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <!-- Inner -->
+            <div class="carousel-inner py-4">
+                <!-- Single item -->
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <img src="/images/Center Floor Rbt 6.png" class="card-img-top" alt="Waterfall">
+                                    <div class="card-body">
+
+                                        <a href="#!" data-mdb-ripple-init="" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 d-none d-lg-block">
+                                <div class="card">
+                                    <img src="/images/center floor rbt 1.png" class="card-img-top" alt="Sunset Over the Sea">
+                                    <div class="card-body">
+
+                                        <a href="#!" data-mdb-ripple-init="" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 d-none d-lg-block">
+                                <div class="card">
+                                    <img src="/images/logos/IMG_8595.jpg" class="card-img-top" alt="Sunset over the Sea">
+                                    <div class="card-body">
+
+                                        <a href="#!" data-mdb-ripple-init="" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single item -->
+                <div class="carousel-item">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12">
+                                <div class="card">
+                                    <img src="/images/logos/logo.png" class="card-img-top" alt="Fissure in Sandstone">
+                                    <div class="card-body">
+
+                                        <a href="#!" data-mdb-ripple-init="" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 d-none d-lg-block">
+                                <div class="card">
+                                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/185.webp" class="card-img-top" alt="Storm Clouds">
+                                    <div class="card-body">
+
+                                        <a href="#!" data-mdb-ripple-init="" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 d-none d-lg-block">
+                                <div class="card">
+                                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/186.webp" class="card-img-top" alt="Hot Air Balloons">
+                                    <div class="card-body">
+
+                                        <a href="#!" data-mdb-ripple-init="" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single item -->
+                <div class="carousel-item">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                <div class="card">
+                                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/187.webp" class="card-img-top" alt="Peaks Against the Starry Sky">
+                                    <div class="card-body">
+
+                                        <a href="#!" data-mdb-ripple-init="" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4 mb-lg-0 d-none d-lg-block">
+                                <div class="card">
+                                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/188.webp" class="card-img-top" alt="Bridge Over Water">
+                                    <div class="card-body">
+
+                                        <a href="#!" data-mdb-ripple-init="" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4 mb-lg-0 d-none d-lg-block">
+                                <div class="card">
+                                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/189.webp" class="card-img-top" alt="Purbeck Heritage Coast">
+                                    <div class="card-body">
+
+                                        <a href="#!" data-mdb-ripple-init="" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Inner -->
+        </div>
+        <!-- Carousel wrapper -->
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+    <button class="btn btn-primary" id="postit"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden id="spinner2"></span>Generator Post it</button>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/call.js"></script>
+    <script>
+
+        document.getElementById("sendReport").addEventListener("click", (event) => {
+            event.preventDefault();
+            document.getElementById("sendReport").disabled = true;
+            document.getElementById("spinner").hidden = false;
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+                "date": document.getElementById('Maintenance_Date').value,
+                "safety": document.getElementById('Maintenance_Safety').value,
+                "quality": document.getElementById('Maintenance_Quality').value,
+                "delivery": document.getElementById('Maintenance_Delivery').value,
+                "cost": document.getElementById('Maintenance_Cost').value,
+                "morale": document.getElementById('Maintenance_Morale').value
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("https://prod-166.westeurope.logic.azure.com:443/workflows/4b7920583bf54e80adace00f07adc0b9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nD6W3vZvvVLS-V78w_TQNVBXswaR-lXDwdtt5ihsdbc", requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    document.getElementById("sendReport").disabled = false;
+                    document.getElementById("spinner").hidden = true;
+                    displayToast(result);
+                })
+                .catch((error) => displayToast(error));
+        });
+        document.getElementById("postit").addEventListener("click", () => {
+            document.getElementById("spinner2").hidden = false;
+            document.getElementById("postit").disabled = true;
+            generatePostIt();
+        });
+
+        const imgElement = document.querySelectorAll("img.card-img-top");
+        imgElement.forEach((image) => {
+            getBase64FromImgSrc(image.src)
+                .then(base64 => {
+                    console.log(image.src + ": " + base64.split(',')[1]); // The base64 string of the image
+                })
+                .catch(error => {
+                    console.error("Error converting image to base64:", error);
+                });
+        });
+    </script>
+}
