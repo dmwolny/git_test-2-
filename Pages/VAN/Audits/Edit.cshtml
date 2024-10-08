@@ -14,7 +14,13 @@
             <input type="hidden" asp-for="Audit.AuditID" />
             <div class="form-group">
                 <label asp-for="Audit.CreatedAt" class="control-label"></label>
-                <input readonly asp-for="Audit.CreatedAt" class="form-control" />
+                @if (User.IsInRole("manager") || User.IsInRole("coordinator")){
+                    <input asp-for="Audit.CreatedAt" class="form-control" />
+                }
+                else
+                {
+                    <input readonly asp-for="Audit.CreatedAt" class="form-control" />
+                }
                 <span asp-validation-for="Audit.CreatedAt" class="text-danger"></span>
             </div>
             <div class="form-group">

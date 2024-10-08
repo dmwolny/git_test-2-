@@ -2,12 +2,7 @@
 "use strict";
 
 const conn = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-if (document.getElementById("Maintenance_Shift")) {
-    const group = "maint" + document.getElementById("Maintenance_Shift").value + document.getElementById("Maintenance_Date").value;
-} else if (document.getElementById("Engineering_Shift")) {
-    const group = "eng" + document.getElementById("Engineering_Shift").value + document.getElementById("Engineering_Date").value;
-}
-
+const group = "eng" + document.getElementById("Engineering_Shift").value + document.getElementById("Engineering_Date").value;
 
 conn.on("ReceiveCall", function (input, message) {
     document.getElementById(input).value = message;
@@ -23,23 +18,23 @@ conn.start().then(() => {
     conn.invoke("JoinCallGroup", group);
 })
 
-document.getElementById("Maintenance_Safety").addEventListener("input", (event) => {
+document.getElementById("Engineering_Safety").addEventListener("input", (event) => {
     sendCall(event);
 });
 
-document.getElementById("Maintenance_Quality").addEventListener("input", (event) => {
+document.getElementById("Engineering_Quality").addEventListener("input", (event) => {
     sendCall(event);
 });
 
-document.getElementById("Maintenance_Delivery").addEventListener("input", (event) => {
+document.getElementById("Engineering_Delivery").addEventListener("input", (event) => {
     sendCall(event);
 });
 
-document.getElementById("Maintenance_Cost").addEventListener("input", (event) => {
+document.getElementById("Engineering_Cost").addEventListener("input", (event) => {
     sendCall(event);
 });
 
-document.getElementById("Maintenance_Morale").addEventListener("input", (event) => {
+document.getElementById("Engineering_Morale").addEventListener("input", (event) => {
     sendCall(event);
 });
 
@@ -64,17 +59,17 @@ async function sendCall(event) {
     var message = document.getElementById(input).value;
     var form = document.getElementById("form");
     // Grab the date and format it to razor standards
-    var dateOnly = new Date(form.Maintenance_Date.value).toISOString().slice(0, 10);
+    var dateOnly = new Date(form.Engineering_Date.value).toISOString().slice(0, 10);
     // Grab all data from the form
     const data = {
-        Id: form.Maintenance_Id.value,
-        Shift: form.Maintenance_Shift.value,
+        Id: form.Engineering_Id.value,
+        Shift: form.Engineering_Shift.value,
         Date: dateOnly,
-        Safety: form.Maintenance_Safety.value,
-        Quality: form.Maintenance_Quality.value,
-        Delivery: form.Maintenance_Delivery.value,
-        Cost: form.Maintenance_Cost.value,
-        Morale: form.Maintenance_Morale.value
+        Safety: form.Engineering_Safety.value,
+        Quality: form.Engineering_Quality.value,
+        Delivery: form.Engineering_Delivery.value,
+        Cost: form.Engineering_Cost.value,
+        Morale: form.Engineering_Morale.value
     };
     // Send http request to submit notes to SendCall method.
     await fetch(`?handler=SendCall`, {

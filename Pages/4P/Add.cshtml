@@ -1,0 +1,160 @@
+﻿@page
+@model Van_Authentication.Pages._4P.AddModel
+@{
+}
+<h1>Submit 4P</h1>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto rounded border p-3 bg-white shadow">
+        <form enctype="multipart/form-data">
+
+            <div class="col-lg-7">
+                <div class="form-group">
+                    <label class="control-label">Upload 4P</label>
+                    <input type="file" class="form-control" accept="image/png, image/gif, image/jpeg, application/pdf" onchange="updatePreview(this, 'image-preview')" id="fileInput" />
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary mt-3" id="submit">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden id="spinner"></span>
+                        Submit 4P
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-3 ml-auto">
+                <img src="" class="form-control" id="image-preview" height="200" width="200" hidden />
+            </div>
+            
+        </form>
+
+        <form id="extractedFields" asp-page-handler="Post" hidden>
+            <div class="row col-lg-7">
+                <div class="form-group">
+                    <label class="control-label">Operator Name</label>
+                    <input asp-for="Certifiy.FirstName" class="form-control" type="text" id="firstName" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Operator Name</label>
+                    <input asp-for="Certifiy.LastName" class="form-control" type="text" id="lastName" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Operator TID</label>
+                    <input asp-for="Certifiy.MasterNumber" class="form-control" type="text" id="tid" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Station #</label>
+                    <input asp-for="Certifiy.StationNo" class="form-control" type="text" id="stationNo" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Station Name</label>
+                    <input asp-for="Certifiy.StationName" class="form-control" type="text" id="stationName" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Shift</label>
+                    <input asp-for="Certifiy.Shift" class="form-control" type="text" id="shift" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Department</label>
+                    <input asp-for="Certifiy.Dept" class="form-control" type="text" id="dept" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Zone/Team</label>
+                    <input asp-for="Certifiy.Zone" class="form-control" type="text" id="zone" />
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        const submit = document.getElementById('submit');
+        const fileInput = document.getElementById('fileInput');
+        
+        submit.addEventListener('click', async (event) => {
+            event.preventDefault();
+            displayToast("4P file sent for AI text extraction");
+            document.getElementById("submit").disabled = true;
+            document.getElementById("spinner").hidden = false;
+            const file = fileInput.files[0];
+            const base64 = await getBase64(file);
+            const packet = {
+                "contentBytes":base64.split(',')[1]
+            }
+
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+                "contentBytes": base64.split(',')[1]
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            setTimeout(() => {
+                displayToast("Analyzing text...");
+            }, 2000);
+            setTimeout(() => {
+                displayToast("AI extracting text...");
+            }, 6000);
+
+            fetch("https://prod-12.westeurope.logic.azure.com:443/workflows/93edabc7cdfd46a3856877b2aa640cd5/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=zvpXxuA6Up1LXEyqqzWC1PcelGEMIcuHNftd0hNUEEU", requestOptions)
+                .then((response) => response.json())
+                .then((result) => {
+                    console.log(result);
+                    displayToast("Success! Verify the ai entered in the correct information.");
+                    document.getElementById("extractedFields").hidden = false;
+                    document.getElementById("firstName").value = result.name.split(' ')[0];
+                    document.getElementById("lastName").value = result.name.split(' ')[1];
+                    document.getElementById("tid").value = result.tid;
+                    document.getElementById("stationNo").value = result.stationNo;
+                    document.getElementById("stationName").value = result.stationName;
+                    document.getElementById("shift").value = result.shift;
+                    document.getElementById("dept").value = result.dept;
+                    document.getElementById("zone").value = result.zone;
+                })
+                .then(() => {
+                    document.getElementById("submit").hidden = true;
+                    document.getElementById("spinner").hidden = true;
+                })
+                .catch((error) => {
+                    displayToast(error);
+                    document.getElementById("submit").disabled = false;
+                    document.getElementById("spinner").hidden = true;
+                });
+        });
+
+        function updatePreview(input, target) {
+            let file = input.files[0];
+            let reader = new FileReader();
+
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                let img = document.getElementById(target);
+                // can also use "this.result"
+                img.src = reader.result;
+                img.hidden = true;
+            }
+        }
+    </script>
+}

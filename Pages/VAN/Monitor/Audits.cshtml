@@ -42,7 +42,7 @@
             <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@item.WorkStationName.Replace(" ", "")-@item.PartModelType">
                     @item.WorkStationName @item.PartModelType Audits: 
-                        @Model.Audit.Where(y => y.Line.Equals(lineItem) && y.Type.Equals(typeItem) && !y.Result.Equals("Open")).Select(x => x.Line).Count()
+                        @Model.Audit.Where(y => y.Line.Equals(lineItem) && y.Type.Equals(typeItem) && !y.Result.Equals("Open")).Count()
                         / @item.NumberOfAudits Completed | Explained Loses: @Model.Audit.Where(x => x.Line.Equals(lineItem) && x.Type.Equals(typeItem) && x.Barcode.ToLower().Equals("audit missed")).Count()
                         | Routes: 
                         @foreach (var routeItem in routeList)
@@ -165,6 +165,11 @@
                                 data: jsondata.completedSealer,
                                 stack: 'Stack 1' // For multiple stacking
                             }, {
+                                label: 'Sealer Audits Missed',
+                                backgroundColor: 'rgb(254,205,80,0.8)',
+                                data: jsondata.missedSealer,
+                                stack: 'Stack 1',
+                            }, {
                                 label: 'Sealer Audits Not Completed',
                                 backgroundColor: 'rgb(228,35,19,0.8)',
                                 data: jsondata.requiredSealer,
@@ -196,7 +201,7 @@
                         }
                     });
 
-                });            
+                });
         });
 
         function referer() {

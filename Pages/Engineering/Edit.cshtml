@@ -1,0 +1,291 @@
+﻿@page "{id}"
+@model Van_Authentication.Pages.Engineering.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" id="form" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Engineering.Id" />
+            <div class="form-group">
+                <label asp-for="Engineering.Shift" class="control-label"></label>
+                <input asp-for="Engineering.Shift" class="form-control" />
+                <span asp-validation-for="Engineering.Shift" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Engineering.Date" class="control-label"></label>
+                <input asp-for="Engineering.Date" class="form-control" />
+                <span asp-validation-for="Engineering.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Engineering.Safety" class="control-label"></label>
+                <input asp-for="Engineering.Safety" class="form-control" />
+                <span asp-validation-for="Engineering.Safety" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Engineering.Quality" class="control-label"></label>
+                <input asp-for="Engineering.Quality" class="form-control" />
+                <span asp-validation-for="Engineering.Quality" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Engineering.Delivery" class="control-label"></label>
+                <input asp-for="Engineering.Delivery" class="form-control" />
+                <span asp-validation-for="Engineering.Delivery" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Engineering.Cost" class="control-label"></label>
+                <input asp-for="Engineering.Cost" class="form-control" />
+                <span asp-validation-for="Engineering.Cost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Engineering.Morale" class="control-label"></label>
+                <input asp-for="Engineering.Morale" class="form-control" />
+                <span asp-validation-for="Engineering.Morale" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Engineering.ImageFile" class="control-label"></label>
+                <input asp-for="Engineering.ImageFile" class="form-control"  accept="image/*"/>
+                <span asp-validation-for="Engineering.ImageFile" class="text-danger"></span>
+            </div>
+            <div>
+                <div class="form-group">
+                    <input type="submit" value="Upload" asp-page-handler="Upload" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="button" value="Send Report" class="btn btn-primary" id="sendReport">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden id="spinner"></span>
+                    Send Report
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <!-- Carousel wrapper -->
+        <div id="carouselMultiItemExample" data-mdb-carousel-init="" class="carousel slide carousel-dark text-center" data-mdb-ride="carousel">
+            <!-- Controls -->
+            <div class="d-flex justify-content-center mb-4">
+                <button data-bs-button-init="" class="carousel-control-prev position-relative" type="button" data-bs-target="#carouselMultiItemExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button data-bs-button-init="" class="carousel-control-next position-relative" type="button" data-bs-target="#carouselMultiItemExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <!-- Inner -->
+            <div class="carousel-inner py-4">
+                <!-- Single item -->
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+
+
+                            @foreach (var image in Model.Images)
+                            {
+                                <div class="col-lg-4" data-id="@image.ToString()">
+                                    <div class="card mb-2">
+                                        <img src="/images/Shift Notes/@image" class="card-img-top" alt="Waterfall">
+                                        <div class="card-body">
+
+                                            <a href="#!" data-mdb-ripple-init="" class="btn btn-danger" filename="@image.ToString()" data-id="@Model.Engineering.Id">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <span id="chart"></span>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Inner -->
+        </div>
+        <!-- Carousel wrapper -->
+    </div>
+
+</div>
+
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+<canvas id="myChart" hidden></canvas>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/eng.js"></script>
+    <script>
+
+        const pics = document.querySelectorAll(".btn-danger");
+
+        pics.forEach(item => {
+            item.addEventListener('click', function () {
+                const filename = this.getAttribute('filename');
+                const id = this.getAttribute('data-id')
+                console.log(id + ", " + filename);
+                deleteImage(id, filename);
+            })
+        });
+
+        document.getElementById("sendReport").addEventListener("click", (event) => {
+            event.preventDefault();
+            document.getElementById("sendReport").disabled = true;
+            document.getElementById("spinner").hidden = false;
+            const imgElement = document.querySelectorAll("img.card-img-top");
+            const promises = Array.from(imgElement).map(image => readImages(image));
+
+            Promise.all(promises).then(response => {
+                getWeldAuditChart(response).then((response) => { 
+                    const myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+
+                    const raw = JSON.stringify({
+                        "date": document.getElementById('Engineering_Date').value,
+                        "shift":document.getElementById('Engineering_Shift').value,
+                        "safety": document.getElementById('Engineering_Safety').value,
+                        "quality": document.getElementById('Engineering_Quality').value,
+                        "delivery": document.getElementById('Engineering_Delivery').value,
+                        "cost": document.getElementById('Engineering_Cost').value,
+                        "morale": document.getElementById('Engineering_Morale').value,
+                        "dept": "Engineering",
+                        "images": response
+                    });
+
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: raw,
+                        redirect: "follow"
+                    };
+
+                    fetch("https:prod-166.westeurope.logic.azure.com:443/workflows/4b7920583bf54e80adace00f07adc0b9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nD6W3vZvvVLS-V78w_TQNVBXswaR-lXDwdtt5ihsdbc", requestOptions)
+                        .then((response) => response.text())
+                        .then((result) => {
+                            document.getElementById("sendReport").disabled = false;
+                            document.getElementById("spinner").hidden = true;
+                            displayToast(result);
+                        })
+                        .catch((error) => displayToast(error));
+                });
+                
+            }).catch(error => {
+                console.error("Error reading images: ", error);
+            });
+           // let files = grabAllImages();
+        });
+
+        function getWeldAuditChart(objArry) {
+            let date = document.getElementById('Engineering_Date').value;
+            let shift = document.getElementById('Engineering_Shift').value;
+
+            let promise = new Promise((resolve, reject) => {
+                fetch(`/VAN/Monitor/Audits?handler=CompletedData&date=` + encodeURIComponent(date) + "&Shift=" + encodeURIComponent(shift))
+                    .then(res => res.json())
+                    .then(jsondata => {
+                        const plugin = {
+                            id: 'customCanvasBackgroundColor',
+                            beforeDraw: (chart, args, options) => {
+                                const { ctx } = chart;
+                                ctx.save();
+                                ctx.globalCompositeOperation = 'destination-over';
+                                ctx.fillStyle = 'white';
+                                ctx.fillRect(0, 0, chart.width, chart.height);
+                                ctx.restore();
+                            }
+                        };
+                        var myContext = document.getElementById('myChart').getContext('2d');
+                        var myChart = new Chart(myContext, {
+                            type: 'bar',
+                            data: {
+                                labels: jsondata.name,
+                                datasets: [{
+                                    label: 'Weld Audits Completed',
+                                    backgroundColor: 'rgb(67,170,160,0.8)',
+                                    data: jsondata.completed,
+                                    stack: 'Stack 0',
+                                }, {
+                                    label: 'Weld Audits Missed',
+                                    backgroundColor: 'rgb(254,205,80,0.8)',
+                                    data: jsondata.missedWeld,
+                                    stack: 'Stack 0',
+                                }, {
+                                    label: 'Weld Audits Not Completed',
+                                    backgroundColor: 'rgb(228,35,19,0.8)',
+                                    data: jsondata.required,
+                                    stack: 'Stack 0',
+                                }, {
+                                    label: 'Sealer Audits Completed',
+                                    backgroundColor: 'rgb(67,170,160,0.8)',
+                                    data: jsondata.completedSealer,
+                                    stack: 'Stack 1' // For multiple stacking
+                                }, {
+                                    label: 'Sealer Audits Missed',
+                                    backgroundColor: 'rgb(254,205,80,0.8)',
+                                    data: jsondata.missedSealer,
+                                    stack: 'Stack 1',
+                                }, {
+                                    label: 'Sealer Audits Not Completed',
+                                    backgroundColor: 'rgb(228,35,19,0.8)',
+                                    data: jsondata.requiredSealer,
+                                    stack: 'Stack 1' // For multiple stacking
+                                }],
+                            },                            
+                            options: {
+                                plugins: {
+                                    title: {
+                                        display: true,
+                                        text: 'Audit Completion'
+                                    },
+                                    legend: {
+                                        display: false
+                                    },
+                                },
+                                interaction: {
+                                    intersect: false,
+                                },
+                                scales: {
+                                    x: {
+                                        stacked: true,
+                                    },
+                                    y: {
+                                        stacked: true
+                                    }
+                                },
+                                animation: {
+                                    onComplete: function () {
+                                        const dataUrl = myChart.toBase64Image();
+                                        let obj = {
+                                            data: dataUrl,
+                                            name: "Weld Audit Chart.png"
+                                        }
+                                        objArry.push(obj);
+                                        resolve(objArry);
+                                    }
+                                },
+                                responsive: true
+                            },
+                            plugins: [plugin]
+                        });
+
+                    });
+            });
+            return promise;
+        }
+
+    </script>
+}

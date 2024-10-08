@@ -5,32 +5,32 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Van_Authentication.Hubs;
-using Van_Authentication.Models;
 using Van_Authentication.Models.DTO;
 using Van_Authentication.Models.Notes;
 using Van_Authentication.Services;
 
-namespace Van_Authentication.Pages.Maintenance
+namespace Van_Authentication.Pages.Engineering
 {
     public class EditModel : PageModel
     {
-        private readonly IWebHostEnvironment _env;
         private readonly Van_Authentication.Services.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _env;
         private readonly ChatHub _hub;
 
-        public EditModel(IWebHostEnvironment env, Van_Authentication.Services.ApplicationDbContext context, ChatHub hub)
+        public EditModel(Van_Authentication.Services.ApplicationDbContext context, IWebHostEnvironment env, ChatHub hub)
         {
-            _env = env;
             _context = context;
+            _env = env;
             _hub = hub;
         }
 
-        public MaintenanceNote Notes { get; set; } = default!;
+        public EngineeringNote Notes { get; set; } = default!;
         [BindProperty]
-        public MaintenanceDTO Maintenance { get; set; } = new MaintenanceDTO();
-
+        public EngineeringDTO Engineering { get; set; } = new EngineeringDTO();
         public List<string> Images = new List<string>();
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -40,29 +40,24 @@ namespace Van_Authentication.Pages.Maintenance
                 return NotFound();
             }
 
-            var maintenance = await _context.maintenanceNotes.FirstOrDefaultAsync(m => m.Id == id);
-
-            if (maintenance == null)
+            var engineeringnote =  await _context.EngineeringNotes.FirstOrDefaultAsync(m => m.Id == id);
+            if (engineeringnote == null)
             {
                 return NotFound();
             }
 
-            Maintenance.Id = maintenance.Id;
-            Maintenance.Shift = maintenance.Shift;
-            Maintenance.Date = maintenance.Date;
-            Maintenance.Safety = maintenance.Safety;
-            Maintenance.Quality = maintenance.Quality;
-            Maintenance.Delivery = maintenance.Delivery;
-            Maintenance.Cost = maintenance.Cost;
-            Maintenance.Morale = maintenance.Morale;
-
-            if(maintenance.Graphic != null)
+            Engineering.Id = engineeringnote.Id;
+            Engineering.Shift = engineeringnote.Shift;
+            Engineering.Date = engineeringnote.Date;
+            Engineering.Safety = engineeringnote.Safety;
+            Engineering.Quality = engineeringnote.Quality;
+            Engineering.Delivery = engineeringnote.Delivery;
+            Engineering.Cost = engineeringnote.Cost;
+            Engineering.Morale = engineeringnote.Morale;
+            if (engineeringnote.Graphic != null)
             {
-                Images = maintenance.Graphic.Split(',').ToList();
+                Images = engineeringnote.Graphic.Split(',').ToList();
             }
-
-
-            Notes = maintenance;
             return Page();
         }
 
@@ -75,7 +70,7 @@ namespace Van_Authentication.Pages.Maintenance
                 return Page();
             }
 
-            _context.Attach(Notes).State = EntityState.Modified;
+            _context.Attach(Engineering).State = EntityState.Modified;
 
             try
             {
@@ -83,7 +78,7 @@ namespace Van_Authentication.Pages.Maintenance
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MaintenanceExists(Notes.Id))
+                if (!EngineeringNoteExists(Engineering.Id))
                 {
                     return NotFound();
                 }
@@ -96,9 +91,11 @@ namespace Van_Authentication.Pages.Maintenance
             return RedirectToPage("./Index");
         }
 
-        public async Task<JsonResult> OnPostSendCallAsync([FromBody] MaintenanceNote data)
+        public async Task<JsonResult> OnPostSendCallAsync([FromBody] EngineeringNote data)
         {
             var result = data;
+            //get the images stored in the graphic field
+            result.Graphic = _context.EngineeringNotes.Where(m => m.Id == data.Id).Select(x => x.Graphic).FirstOrDefault();
             _context.Attach(result).State = EntityState.Modified;
             try
             {
@@ -106,7 +103,7 @@ namespace Van_Authentication.Pages.Maintenance
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MaintenanceExists(Maintenance.Id))
+                if (!EngineeringNoteExists(Engineering.Id))
                 {
                     return new JsonResult("not found");
                 }
@@ -115,41 +112,40 @@ namespace Van_Authentication.Pages.Maintenance
                     throw;
                 }
             }
-
             return new JsonResult(result);
-
         }
 
         public async Task<IActionResult> OnPostUploadAsync()
         {
-            if (Maintenance.ImageFile == null)
+            if (Engineering.ImageFile == null)
             {
-                return RedirectToPage("./Edit",Maintenance.Id);
+                return RedirectToPage("./Edit", Engineering.Id);
             }
 
             // Update the image file if we have a new image file
             string newFileName = string.Empty;
-            if (Maintenance.ImageFile != null)
+            if (Engineering.ImageFile != null)
             {
-                newFileName = Path.GetFileName(Maintenance.ImageFile.FileName);
+                newFileName = Path.GetFileName(Engineering.ImageFile.FileName);
 
                 string imageFullPath = _env.WebRootPath + "/Images/Shift Notes/" + newFileName;
                 using (var stream = System.IO.File.Create(imageFullPath))
                 {
-                    Maintenance.ImageFile.CopyTo(stream);
+                    Engineering.ImageFile.CopyTo(stream);
                 }
             }
-            var maintenance = await _context.maintenanceNotes.FirstOrDefaultAsync(m => m.Id == Maintenance.Id);
+            var engineering = await _context.EngineeringNotes.FirstOrDefaultAsync(m => m.Id == Engineering.Id);
             //save the new robot in the database
-            if (maintenance.Graphic == null)
+            if (engineering.Graphic == null)
             {
-                maintenance.Graphic = newFileName;
-            } else
+                engineering.Graphic = newFileName;
+            }
+            else
             {
-                maintenance.Graphic += "," + newFileName;
+                engineering.Graphic += "," + newFileName;
             }
 
-            _context.maintenanceNotes.Update(maintenance);
+            _context.EngineeringNotes.Update(engineering);
 
             try
             {
@@ -157,7 +153,7 @@ namespace Van_Authentication.Pages.Maintenance
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MaintenanceExists(Maintenance.Id))
+                if (!EngineeringNoteExists(Engineering.Id))
                 {
                     NotFound();
                 }
@@ -166,31 +162,31 @@ namespace Van_Authentication.Pages.Maintenance
                     throw;
                 }
             }
-            var group = "maint" + maintenance.Shift + maintenance.Date.ToString("yyyy-MM-dd");
-            await _hub.ToAddImage(maintenance.Id, newFileName, group);
-            return RedirectToPage("./Edit", Maintenance.Id);
+            var group = "eng" + engineering.Shift + engineering.Date.ToString("yyyy-MM-dd");
+            await _hub.ToAddImage(engineering.Id, newFileName, group);
+            return RedirectToPage("./Edit", Engineering.Id);
         }
 
         public async Task<JsonResult> OnPostDeleteAsync(int id, string fileName)
         {
-            var maintenance = await _context.maintenanceNotes.FirstOrDefaultAsync(m => m.Id == id);
-            if(maintenance.Graphic != null)
+            var engineering = await _context.EngineeringNotes.FirstOrDefaultAsync(m => m.Id == id);
+            if (engineering.Graphic != null)
             {
-                Images = maintenance.Graphic.Split(',').ToList();
+                Images = engineering.Graphic.Split(',').ToList();
                 Images.Remove(fileName);
                 string imagePath = _env.WebRootPath + "/Images/Shift Notes/" + fileName;
                 System.IO.File.Delete(imagePath);
-                if(Images.Count > 0)
+                if (Images.Count > 0)
                 {
-                    maintenance.Graphic = string.Join(",", Images);
+                    engineering.Graphic = string.Join(",", Images);
                 }
                 else
                 {
-                    maintenance.Graphic = null;
-                }                
+                    engineering.Graphic = null;
+                }
             }
 
-            _context.maintenanceNotes.Update(maintenance);
+            _context.EngineeringNotes.Update(engineering);
 
             try
             {
@@ -198,7 +194,7 @@ namespace Van_Authentication.Pages.Maintenance
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MaintenanceExists(Maintenance.Id))
+                if (!EngineeringNoteExists(Engineering.Id))
                 {
                     return new JsonResult("not found");
                 }
@@ -210,9 +206,9 @@ namespace Van_Authentication.Pages.Maintenance
             return new JsonResult("Success!");
         }
 
-        private bool MaintenanceExists(int id)
+        private bool EngineeringNoteExists(int id)
         {
-            return _context.maintenanceNotes.Any(e => e.Id == id);
+            return _context.EngineeringNotes.Any(e => e.Id == id);
         }
     }
 }

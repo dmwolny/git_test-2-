@@ -1,0 +1,74 @@
+﻿@page
+@model Van_Authentication.Pages._4P.IndexModel
+@{
+}
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FourPs[0].Shift)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FourPs[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FourPs[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FourPs[0].MasterNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FourPs[0].Dept)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FourPs[0].Zone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FourPs[0].StationNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FourPs[0].StationName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.FourPs)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Shift)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MasterNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dept)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Zone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StationNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StationName)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

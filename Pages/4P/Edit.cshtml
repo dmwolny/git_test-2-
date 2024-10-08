@@ -1,0 +1,52 @@
+﻿@page "{id}"
+@model Van_Authentication.Pages._4P.EditModel
+@{
+}
+<form id="extractedFields">
+    <div class="row col-lg-7">
+        <div class="form-group">
+            <label class="control-label">Operator Name</label>
+            <input asp-for="Certifiy.FirstName" class="form-control" type="text" id="firstName" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Operator Name</label>
+            <input asp-for="Certifiy.LastName" class="form-control" type="text" id="lastName" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Operator TID</label>
+            <input asp-for="Certifiy.MasterNumber" class="form-control" type="text" id="tid" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Station #</label>
+            <input asp-for="Certifiy.StationNo" class="form-control" type="text" id="stationNo" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Station Name</label>
+            <input asp-for="Certifiy.StationName" class="form-control" type="text" id="stationName" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Shift</label>
+            <input asp-for="Certifiy.Shift" class="form-control" type="text" id="shift" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Department</label>
+            <input asp-for="Certifiy.Dept" class="form-control" type="text" id="dept" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Zone/Team</label>
+            <input asp-for="Certifiy.Zone" class="form-control" type="text" id="zone" />
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+
+</form>

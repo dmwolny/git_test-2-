@@ -77,14 +77,14 @@ namespace Van_Authentication.Pages.VAN.Tcps
             }
 
 
-            // Update the image file if we have a new image file
+            // Update the tcp purge file if we have a new tcp purge file
             string newFileName = "";
             if (PAN != null)
             {
                 newFileName = "TCP-" + Tcp.TcpId.ToString();
                 newFileName += Path.GetExtension(PAN.FileName);
 
-                string imageFullPath = _env.WebRootPath + "/Images/" + newFileName;
+                string imageFullPath = _env.WebRootPath + "/docs/" + newFileName;
                 using (var stream = System.IO.File.Create(imageFullPath))
                 {
                     PAN.CopyTo(stream);

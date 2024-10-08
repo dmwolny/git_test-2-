@@ -40,7 +40,13 @@ namespace Van_Authentication.Pages.VAN.Certs
             await _context.SaveChangesAsync();
 
             TempData["success"] = Cert.Type + " Cert #: " + Cert.CertId + " has been submitted.";
-            TempData["subject"] = Cert.Type + " Cert #: " + Cert.CertId + " has been submitted";
+            TempData["subject"] = "{'link':'/Certs/Edit/',"
+                                +"'type':'Weld Cert',"
+                                +"'number':'"+Cert.CertId+"',"
+                                +"'name':'"+Cert.Requestor+"',"
+                                +"'line':'"+Cert.Line+"',"
+                                +"'station':'"+Cert.Station+"',"
+                                +"'robot':'"+Cert.RobotNumber+"'}";
             TempData["message"] = User.Identity.Name + " has submitted a "
                 + "<a href= 'http://10.92.16.89:8055/Certs/Edit/" + Cert.CertId + "'>" + Cert.Type + "  Cert #: " + Cert.CertId + "</a>"
                 + " from " + Cert.Line + "<br>Station: " + Cert.Station + "<br>Robot #: " + Cert.RobotNumber;

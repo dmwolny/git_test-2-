@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Van_Authentication.Models;
+using Van_Authentication.Models.FourP;
 using Van_Authentication.Models.Notes;
 
 namespace Van_Authentication.Services
@@ -28,6 +29,8 @@ namespace Van_Authentication.Services
         public DbSet<AuditRouteWeld> AuditRouteWelds { get; set; }
         public DbSet<Cert> Certs { get; set; }
         public DbSet<MaintenanceNote> maintenanceNotes { get; set; }
+        public DbSet<EngineeringNote> EngineeringNotes { get; set; }
+        public DbSet<Certifiy> Certifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

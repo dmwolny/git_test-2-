@@ -1,7 +1,7 @@
 ﻿@page
 @model Van_Authentication.Pages.ComingSoonModel
 @{
-    ViewData["Title"] = "Coming Soon";
+    ViewData["Title"] = "4P's";
 }
 <div class="container col-xxl-8 px-4 py-5">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
@@ -10,10 +10,11 @@
         </div>
         <div class="col-lg-6">
             <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Coming Soon</h1>
-            <p class="lead">Easily create, and save 4Ps to better track/manage the line's versatility</p>
+            <p class="lead">Easily create, and save 4Ps to better track/manage the line's versatility. Prepare, present, perform, provide</p>
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Primary</button>
-                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Default</button>
+                <a asp-page="/4P/Create" class="btn btn-primary btn-lg px-4 me-md-2">Download 4P</a>
+                <a asp-page="/4P/Add" class="btn btn-outline-secondary btn-lg px-4">Submit 4P</a>
+                <a asp-page="/4P/Index" class="btn btn-outline-secondary btn-lg px-4">List of 4Ps</a>
             </div>
         </div>
     </div>

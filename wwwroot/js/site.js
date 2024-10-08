@@ -12,9 +12,28 @@ function getBase64(file) {
     }
     );
 }
+async function readImages(image) {
+    return fetch(image.src)
+        .then((res) => res.blob())
+        .then((blob) => {
+            // Read the Blob as DataURL using the FileReader API
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const ary = {
+                        data: reader.result,
+                        name: image.src.split('/').pop()
+                    }
+                    resolve(ary);
+                };
+                reader.readAsDataURL(blob);
+            });
+            
+        });
+}
 
-function getBase64FromImgSrc(imgSrc) {
-    return new Promise((resolve, reject) => {
+async function getBase64FromImgSrc(imgSrc) {
+    const createPromise = new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = "anonymous";
         // For CORS-enabled images
@@ -32,6 +51,8 @@ function getBase64FromImgSrc(imgSrc) {
         img.src = imgSrc;
     }
     );
+    const waitPromise = await createPromise;
+    return waitPromise;
 }
 
 function generatePostIt() {
@@ -61,10 +82,12 @@ function generatePostIt() {
         redirect: "follow"
     };
 
-    fetch("https://prod-237.westeurope.logic.azure.com:443/workflows/aee1ea17fc224aa1ad80f8c1bca63bc5/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=v9Vv7ZgX3liE2nnTzMqFHGXUIJFErnX1AL5SMvarIzs", requestOptions).then((response) => response.text()).then((result) => {
+    fetch("https://prod-237.westeurope.logic.azure.com:443/workflows/aee1ea17fc224aa1ad80f8c1bca63bc5/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=v9Vv7ZgX3liE2nnTzMqFHGXUIJFErnX1AL5SMvarIzs", requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
         console.log([result]);
         let blob = decodeBase64([result]);
-        download(blob);
+        download(blob,'postit.xlsx');
     }
     ).then(() => {
         document.getElementById("spinner2").hidden = true;
@@ -89,11 +112,11 @@ function decodeBase64(base64) {
     return blob;
 }
 
-function download(file) {
+function download(file,fileName) {
     // Create a temporary anchor element
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(file);
-    link.download = 'downloaded_template.xlsx';
+    link.download = fileName;
     // File name
     document.body.appendChild(link);
 
@@ -111,4 +134,31 @@ function displayToast(message) {
 
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(genericToast);
     toastBootstrap.show();
+}
+
+function grabAllImages() {
+    let filesArray = new Array();
+    let ary = new Array();
+    const imgElement = document.querySelectorAll("img.card-img-top");
+    imgElement.forEach((image) => {
+       readImages(image)
+            .then(base64 => filesArray.push(base64))
+            .catch(error => console.error("error converting image to base64: ", error))
+        //getBase64FromImgSrc(image.src)
+        //    .then(base64 => {
+        //        const img = base64.split(',')[1];
+        //        const filename = decodeURIComponent(image.src.split('/').pop());
+
+        //        const fileObject =
+        //        {
+        //            "datastream": img,
+        //            "name": filename
+        //        };
+        //        filesArray.push(fileObject);
+        //    })
+        //    .catch(error => {
+        //        console.error("Error converting image to base64:", error);
+        //    });
+    });
+    return filesArray;
 }

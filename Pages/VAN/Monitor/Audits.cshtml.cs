@@ -47,7 +47,7 @@ namespace Van_Authentication.Pages.VAN.Monitor
             {
                 AuditDTO audit = new AuditDTO();
                 audit.Type = _context.PartModels
-                    .Where(x => x.WorkStation.WorkStationName.Equals(item.Line)).Select(y => y.PartModelType)
+                    .Where(x => x.PartModelName.Equals(item.Model)).Select(y => y.PartModelType)
                     .FirstOrDefault();
                 audit.AuditId = item.AuditID;
                 audit.CreatedAt = item.CreatedAt;
@@ -110,7 +110,7 @@ namespace Van_Authentication.Pages.VAN.Monitor
             {
                 AuditDTO audit = new AuditDTO();
                 audit.Type = _context.PartModels
-                    .Where(x => x.WorkStation.WorkStationName.Equals(item.Line)).Select(y => y.PartModelType)
+                    .Where(x => x.PartModelName.Equals(item.Model)).Select(y => y.PartModelType)
                     .FirstOrDefault();
                 audit.AuditId = item.AuditID;
                 audit.CreatedAt = item.CreatedAt;
@@ -127,6 +127,7 @@ namespace Van_Authentication.Pages.VAN.Monitor
             List<int> missedWeld = new List<int>();
             List<int> required = new List<int>();
             List<int> completedSealer = new List<int>();
+            List<int> missedSealer = new List<int>();
             List<int> requiredSealer = new List<int>();
             List<string> workstations = new List<string>();
 
@@ -144,13 +145,16 @@ namespace Van_Authentication.Pages.VAN.Monitor
             // Get number of completed audits for Sealer
             foreach (var item in query.Where(x => x.PartModelType.Equals("Sealer")))
             {
-                completedSealer.Add(auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Sealer") && !x.Result.Equals("Open")).Select(y => y.Line).Count());
+                var numberofMissedSealers = auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Sealer") && x.Result.Equals("Missed")).Select(y => y.Line).Count();
+                var numberOfCompletedSealers = auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Sealer") && !x.Result.Equals("Open")).Select(y => y.Line).Count();
+                completedSealer.Add(numberOfCompletedSealers - numberofMissedSealers);
+                missedSealer.Add(numberofMissedSealers);
                 requiredSealer.Add(item.NumberOfAudits -
                     auditsDTO.Where(x => x.Line.Equals(item.WorkStationName) && x.Type.Equals("Sealer") && !x.Result.Equals("Open")).Select(y => y.Line).Count());
             }
 
 
-            return new JsonResult(new { name = workstations, completed, missedWeld, required, completedSealer, requiredSealer });
+            return new JsonResult(new { name = workstations, completed, missedWeld, required, completedSealer, requiredSealer, missedSealer });
         }
 
     }

@@ -1,0 +1,117 @@
+﻿@page
+@model Van_Authentication.Pages._4P.CreateModel
+@{
+}
+
+<h1>Create 4P</h1>
+
+<div class="row">
+    <div class="col-md-8 mx-auto rounded border p-3 bg-white shadow">
+        <form>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Operator Name</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" id="name" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">TID</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" id="tid" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Department</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="number" id="dept" />
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Zone</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="number" id="zone" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Station Number</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" id="stationNo" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Sation Name</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" id="stationName" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Shift</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" id="shift" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mt-3" id="submit">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden id="spinner"></span>
+                    Generate 4P File
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('submit').addEventListener('click', (event) => {
+            event.preventDefault();
+            document.getElementById("submit").disabled = true;
+            document.getElementById("spinner").hidden = false;
+            const myHeaders = new Headers();
+            const fileName = document.getElementById('name').value + " - " + document.getElementById('stationName').value + " 4P.xlsx";
+            myHeaders.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+                "name": document.getElementById('name').value,
+                "tid": document.getElementById('tid').value,
+                "dept": parseInt(document.getElementById('dept').value),
+                "zone": parseInt(document.getElementById('zone').value),
+                "stationNo": document.getElementById('stationNo').value,
+                "stationName": document.getElementById('stationName').value,
+                "shift": document.getElementById('shift').value
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("https://prod-08.westeurope.logic.azure.com:443/workflows/cd47d4e634bf4ee6afe47513e4e514f6/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FC3Iv65Xoh-uUUhw6kK1--8-LkpJBXO27w_QcxDoXw0", requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    console.log([result]);
+                    let blob = decodeBase64([result]);
+                    download(blob, fileName);
+                    displayToast("4P was successfully generated. Download will proceed automatically.");
+                })
+                .then(() => {
+                    document.getElementById("submit").disabled = false;
+                    document.getElementById("spinner").hidden = true;
+                })
+                .catch((error) => {
+                    displayToast(error);
+                    document.getElementById("submit").disabled = false;
+                    document.getElementById("spinner").hidden = true;
+                });
+        });
+    </script>
+}

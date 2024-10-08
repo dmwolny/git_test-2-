@@ -35,6 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\files\tcps\" />
+    <Folder Include="wwwroot\images\robots\" />
     <Folder Include="wwwroot\images\Shift Notes\" />
   </ItemGroup>
 

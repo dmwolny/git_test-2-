@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Nancy.Extensions;
 using Nancy.Routing.Trie;
 using Newtonsoft.Json;
 using NuGet.Protocol;
@@ -301,7 +302,6 @@ namespace Van_Authentication.Pages.VAN.Audits
             List<WeldConcern> weldConcerns = new List<WeldConcern>();
             foreach (var item in WeldDTO)
             {
-                htmlTable += "<tr>";
 
                 //If the weldconcern has a defect then add it
                 if (item.Graphic.Length > 0)
@@ -322,6 +322,7 @@ namespace Van_Authentication.Pages.VAN.Audits
                     {
                         tcpFlag = true;
                     }
+                    htmlTable += "<tr>";
                     htmlTable += "<td>" + item.WeldID + "</td>"
                             + "<td>" + item.WeldType + "</td>"
                             + "<td>" + item.NuggetSize + "</td>"
@@ -355,7 +356,14 @@ namespace Van_Authentication.Pages.VAN.Audits
                     ent.Tcp = tcpRecord;
                     TempData["success"] = null;
                     TempData["tcp"] = "TCP #: " + tcpRecord.TcpId + " has been submitted. Inform your supervisor.";
-                    TempData["subject"] = "TCP #: " + tcpRecord.TcpId + " has been submitted";
+                    TempData["subject"] = "{'link':'/Tcps/Edit/',"
+                                + "'type':'TCP',"
+                                + "'number':'" + tcpRecord.TcpId + "',"
+                                + "'name':'" + User.Identity.Name + "',"
+                                + "'line':'" + ent.Line + "',"
+                                + "'station':'" + ent.Station + "',"
+                                + "'robot':'" + ent.RobotNumber + "',"
+                                + "'welds': '"+htmlTable+"'}";
                     TempData["message"] = User.Identity.Name + " has submitted TCP #: " + tcpRecord.TcpId
                         + "<a href= 'http://10.92.16.89:8055/VAN/Tcps/Edit/" + tcpRecord.TcpId + "'>Link to form</a>"
                         + " from " + ent.Line + "<br>Station: " + ent.Station + "<br>Robot #: " + ent.RobotNumber + htmlTable;

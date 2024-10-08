@@ -26,6 +26,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddSingleton<ApplicationUser>();
+builder.Services.AddSingleton<ChatHub>();
 
 var app = builder.Build();
 
